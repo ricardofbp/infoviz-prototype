@@ -1,0 +1,64 @@
+<html>
+
+  <head>
+   <title>NBA CHampion</title>
+   <link rel="stylesheet" href="css/nba.css">
+   <link rel="stylesheet" href="css/bootstrap.min.css">
+   <link rel="stylesheet" href="css/bootstrap-slider.css">
+   <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+   
+   <script type ="text/javascript" src="js/jquery.min.js"></script>
+   <script type ="text/javascript" src="js/bootstrap-slider.js"></script>
+   <script type="text/javascript" src="js/nba.js"></script>
+
+  </head>
+
+  <body>
+    <h1>Become an NBA champion!</h1>
+    <div id = "dashboard">
+      <div id ="selectors">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Select a team</button>
+            <div id="myDropdown" class="dropdown-content">
+              <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+              <a href="#atlanta_hawks" class ="team" onclick="changeIdioms(this)">Atlanta Hawks</a>
+              <a href="#boston_celtics" class ="team" onclick="changeIdioms(this)">Boston Celtics</a>
+              <a href="#brooklyn_nets" class ="team" onclick="changeIdioms(this)">Brooklyn Nets</a>
+              <a href="#charlotte_hornet" class ="team" onclick="changeIdioms(this)">Charlotte Hornets</a>
+              <a href="#chicago_bulls" class ="team" onclick="changeIdioms(this)">Chicago Bulls</a>
+              <a href="#cleveland_cavaliers" class ="team" onclick="changeIdioms(this)">Cleveland Cavaliers</a>
+              <a href="#dallas_mavericks" class ="team" onclick="changeIdioms(this)">Dallas Mavericks</a>
+              <a href="#denver_nuggets" class ="team" onclick="changeIdioms(this)">Denver Nuggets</a>
+              <a href="#detroit_pistons" class ="team" onclick="changeIdioms(this)">Detroit Pistons</a>
+              <a href="#gsw"  class ="team" onclick="changeIdioms(this)">Golden State Warriors</a>
+              <a href="#houston_rockets" class ="team" onclick="changeIdioms(this)">Houston Rockets</a>
+              <a href="#indiana_pacers" class ="team" onclick="changeIdioms(this)">Indiana Pacers</a>
+              <a href="la_clippers" class ="team" onclick="changeIdioms(this)">Los Angeles Clippers</a>
+              <a href="#la_lakers" class ="team" onclick="changeIdioms(this)">Los Angeles Lakers</a>
+              <a href="#memphis_grizzlies" class ="team" onclick="changeIdioms(this)">Memphis Grizzlies</a>
+              <a href="#miami_heat" class ="team" onclick="changeIdioms(this)">Miami Heat</a>
+              <a href="#milwaukee_bucks" class ="team" onclick="changeIdioms(this)">Milwaukee Bucks</a>
+              <a href="#minnesota_timberwolves" class ="team" onclick="changeIdioms(this)">Minnesota Timberwolves</a>
+              <a href="#no_pelicans" class ="team" onclick="changeIdioms(this)">New Orleans Pelicans</a>
+              <a href="#ny_knicks" class ="team" onclick="changeIdioms(this)">New York Knicks</a>
+              <a href="#okc_thunder" class ="team" onclick="changeIdioms(this)">Oklahoma City Thunder</a>
+              <a href="#orlando_magic" class ="team" onclick="changeIdioms(this)">Orlando Magic</a>
+              <a href="#76ers" class ="team" onclick="changeIdioms(this)">Philadelphia 76ers</a>
+              <a href="#phoenix_suns" class ="team" onclick="changeIdioms(this)">Phoenix Suns</a>
+              <a href="#pt_blazers" class ="team" onclick="changeIdioms(this)">Portland Trail Blazers</a>
+              <a href="#sacramento_kings" class ="team" onclick="changeIdioms(this)">Sacramento Kings</a>
+              <a href="#san_antonio_spurs" class ="team" onclick="changeIdioms(this)">San Antonio Spurs</a>
+              <a href="#toronto_raptors" class ="team" onclick="changeIdioms(this)">Toronto Raptors</a>
+              <a href="#utah_jazz" class ="team" onclick="changeIdioms(this)">Utah Jazz</a>
+              <a href="#washington_wizards" class ="team" onclick="changeIdioms(this)">Washington Wizards</a>
+            </div>
+          </div>
+          <div id="year">
+            <input id="ex13" type="text" width="600px" data-provide="slider" data-slider-ticks="[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]" data-slider-ticks-snap-bounds="30" data-slider-ticks-labels='[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]'/>
+          </div>
+      </div>
+    </div>
+  
+  </body>
+
+</html>
