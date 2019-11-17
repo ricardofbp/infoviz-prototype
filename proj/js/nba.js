@@ -1,5 +1,8 @@
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
+
+var slider;
+
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
@@ -25,9 +28,3 @@ function changeIdioms(e){
  team_filter = e.innerText;
 
 }
-
-var slider = new Slider("#ex13", {
-  ticks: [0, 100, 200, 300, 400],
-  ticks_labels: ['$0', '$100', '$200', '$300', '$400'],
-  ticks_snap_bounds: 30
-});
