@@ -21,7 +21,8 @@ function filterFunction() {
 }
 
 function changeIdioms(e){
- document.getElementById("myInput").value = e.innerText;
+ document.getElementById("myInput").value = e.innerText
+ team_filter = e.innerText;
 
 }
 

@@ -1,4 +1,4 @@
-name,salary,season,team,shoots,height_cm,weight_kg,age,games_played,mins_played,pts,pts/min,pts/game
+name,salary,season,team,shoots,height_cm,weight_kg,age,games_played,mins_played,pts,ppm,ppg
 A.C. Green,1700000,2000,Los Angeles Lakers,Right,205.74,99.88,36,82,1929,413,0.2141,5.03659
 A.C. Green,2250000,2001,Miami Heat,Right,205.74,99.88,37,82,1411,367,0.2601,4.47561
 A.J. Bramlett,118974,2000,Cleveland Cavaliers,Right,208.28,103.058,23,8,61,8,0.13115,1
