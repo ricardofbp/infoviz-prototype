@@ -23,8 +23,30 @@ function filterFunction() {
   }
 }
 
+var original_value = 2000;
+
+function start_slider(){
+  var slider = new Slider("#year", {
+    ticks: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
+    ticks_snap_bounds: 30,
+    ticks_labels: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+  });
+
+  slider.on('slideStart', function(value){
+      original_value = document.getElementById("year").value;
+
+    });
+
+  slider.on('slideStop', function(value){
+      var new_val = document.getElementById("year").value;
+      if(original_value != new_val){
+        season_filter = new_val;
+      }
+
+    });
+}
+
 function changeIdioms(e){
  document.getElementById("myInput").value = e.innerText
  team_filter = e.innerText;
-
 }

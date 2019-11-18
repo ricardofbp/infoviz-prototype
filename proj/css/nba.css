@@ -76,3 +76,12 @@
 .team {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
+.Idioms{
+  display: flex;
+  margin: 20 10 10 10;
+}
+
+#radar{
+  margin-left: 150px;
+}

@@ -24,8 +24,8 @@ d3.csv("../dataset/all_player_stats.csv", function(d) {
 
 function render() {
   // Add X axis
-  var w = 800;
-  var h = 400;
+  var w = 600;
+  var h = 300;
 
   var padding = 30;
 
