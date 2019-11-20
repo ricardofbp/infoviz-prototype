@@ -3,6 +3,8 @@ toggle between hiding and showing the dropdown content */
 
 var slider;
 
+var dispatch = d3.dispatch("year");
+
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
@@ -34,6 +36,7 @@ function start_slider(){
 
   slider.on('slideStart', function(value){
       original_value = document.getElementById("year").value;
+     //dispatch.call("year");
 
     });
 
@@ -42,7 +45,7 @@ function start_slider(){
       if(original_value != new_val){
         season_filter = new_val;
       }
-
+      dispatch.call("year");
     });
 }
 

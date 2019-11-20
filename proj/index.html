@@ -40,7 +40,7 @@
               <a href="#gsw"  class ="team" onclick="changeIdioms(this)">Golden State Warriors</a>
               <a href="#houston_rockets" class ="team" onclick="changeIdioms(this)">Houston Rockets</a>
               <a href="#indiana_pacers" class ="team" onclick="changeIdioms(this)">Indiana Pacers</a>
-              <a href="la_clippers" class ="team" onclick="changeIdioms(this)">Los Angeles Clippers</a>
+              <a href="#la_clippers" class ="team" onclick="changeIdioms(this)">Los Angeles Clippers</a>
               <a href="#la_lakers" class ="team" onclick="changeIdioms(this)">Los Angeles Lakers</a>
               <a href="#memphis_grizzlies" class ="team" onclick="changeIdioms(this)">Memphis Grizzlies</a>
               <a href="#miami_heat" class ="team" onclick="changeIdioms(this)">Miami Heat</a>
@@ -60,20 +60,29 @@
               <a href="#washington_wizards" class ="team" onclick="changeIdioms(this)">Washington Wizards</a>
             </div>
           </div>
-          <div id="year">
+          <div id="year" >
           </div>
 
       </div>
-      <div class = "Idioms">
-        <div id = "all_scatterplot">
-          <div id="scatterplot"></div>
-          <span class="btn" id="ppg"> PPG </span> 
-          <span class="btn" id="ppm"> PPM </span>
+      <div class = "Idioms" style=" flex-flow: row wrap;">
+        <div class = "top-container" style = "display: inline-flex;">
+          <div id = "parallelcoords">
+          <!-- 
+          <img src="placeholder_parallel.png" alt="" />
+          -->
+          </div>
         </div>
-        <div id = "radar">
-          <div class="radarChart" style="display: inline-flex;"></div>
+        <div class = "bottom-container" style = "display: inline-flex;">
+          <div id = "map"></div>
+          <div id = "all_scatterplot">
+            <div id="scatterplot"></div>
+            <span class="btn" id="ppg"> PPG </span> 
+            <span class="btn" id="ppm"> PPM </span>
+          </div>
+          <div id = "radar">
+            <div class="radarChart"></div>
+          </div>
         </div>
-      </div>
     </div>
 
 
