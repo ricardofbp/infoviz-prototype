@@ -18,8 +18,6 @@ d3.csv("../dataset/all_player_stats.csv", function(d) {
 }).then(function(d) {
   data_scatter = d;
   render();
-  console.log("linha1: " + d[0].name);
-  console.log("name: " + d.name);
 });
 
 
@@ -49,25 +47,24 @@ function render() {
 
     var bar_w = Math.floor((w-padding*2)/data_scatter.length)-1;
 
-    var xscalePPM = d3.scaleLinear()
-        .domain([0, maxPPM])
-        .range([padding,w-padding]);
-
-    var xscalePPG = d3.scaleLinear()
-        .domain([0, maxPPG])
-        .range([padding,w-padding]);
-
-    var hscale = d3.scaleLinear()
-        .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
-        .range([h-padding,padding]);
-
-
     svg_scatterplot = d3.select("#scatterplot")
         .append("svg")
         .attr("width", w)
         .attr("height", h);
 
-    var yaxis = d3.axisLeft()
+    var xscalePPM = d3.scaleLinear()
+        .domain([0, maxPPM])
+        .range([padding+20,w-padding]);
+
+    var xscalePPG = d3.scaleLinear()
+        .domain([0, maxPPG])
+        .range([padding+20,w-padding]);
+
+    var hscale = d3.scaleLinear()
+        .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
+        .range([h-padding,padding]);
+
+    var ySalary = d3.axisLeft()
           .scale(hscale);
 
     var xPPG = d3.axisBottom()
@@ -85,13 +82,14 @@ function render() {
     //appends both initial axis (salary and PPG)
     var xaxis = svg_scatterplot.append("g")
         .attr("id", "axisPPG")
-        .attr("transform","translate(0," + (h-padding) + ")")
+        .attr("transform","translate(20," + (h-padding) + ")")
         .call(xPPG);
 
-    svg_scatterplot.append("g")
+    var yaxis = svg_scatterplot.append("g")
         .attr("id", "yaxis")
-        .attr("transform", "translate(30,0)")
-        .call(yaxis);
+       // .style("padding-left", "100px")
+        .attr("transform", "translate(50,0)")
+        .call(ySalary);
 
     //tooltip related
     var tooltip = d3.select("#scatterplot")
@@ -146,7 +144,7 @@ function render() {
         .attr("stroke-width", borderWidth)
         .attr("cx", function(d, i){
         //console.log(xscale("xscale ppg: " + d.ppg));
-            if (d.ppg == 0) {return padding;}
+            if (d.ppg == 0) {return padding+20;}
             return xscalePPG(d.ppg);
         })
         .attr("cy", function(d) {
@@ -158,7 +156,7 @@ function render() {
 
 
     //changes circles when selecting a team
-    dispatch.on("team", function() { 
+    dispatch.on("team.scatter", function() { 
         changeCircles();        
     })
 
@@ -211,7 +209,7 @@ function render() {
             })
             .attr("stroke-width", borderWidth)
             .attr("cx", function(d){
-                if (d.ppg == 0) {return padding;}
+                if (d.ppg == 0) {return padding+20;}
                 if (isPPG) {return xscalePPG(d.ppg);}
                 else { return xscalePPM(d.ppm); }
             })
@@ -228,13 +226,5 @@ function render() {
             else toRemove = "flag1";
             svg_scatterplot.selectAll("." + toRemove).remove()
             */
-
-            /*
-            d3.select("#xaxis")
-            svg_scatterplot.append("g")
-                .attr("id", "xaxis")
-                .attr("transform","translate(0," + (h-padding) + ")")
-                .call(axis);
-                */
     }
 }
