@@ -70,30 +70,23 @@ function render() {
     var yaxis = d3.axisLeft()
           .scale(hscale);
 
-    var xaxisPPG = d3.axisBottom()
+    var xPPG = d3.axisBottom()
         .scale(d3.scaleLinear()
         .domain([0, maxPPG])
         .range([padding+bar_w/2,w-padding-bar_w/2]))
           //.tickFormat(d3.format("d"))
           //.ticks(data.length/4);
 
-    var xaxisPPM = d3.axisBottom()
+    var xPPM = d3.axisBottom()
         .scale(d3.scaleLinear()
         .domain([0, maxPPM])
         .range([padding+bar_w/2,w-padding-bar_w/2]))
 
     //appends both initial axis (salary and PPG)
-    svg_scatterplot.append("g")
-        .attr("id", "xaxisPPG")
+    var xaxis = svg_scatterplot.append("g")
+        .attr("id", "axisPPG")
         .attr("transform","translate(0," + (h-padding) + ")")
-        .style("opacity", 1)
-        .call(xaxisPPG);
-
-    svg_scatterplot.append("g")
-        .attr("id", "xaxisPPM")
-        .attr("transform","translate(0," + (h-padding) + ")")
-        .style("opacity", 0)
-        .call(xaxisPPM);
+        .call(xPPG);
 
     svg_scatterplot.append("g")
         .attr("id", "yaxis")
@@ -170,61 +163,64 @@ function render() {
     })
 
     //change circles when year slider changes
-    dispatch.on("year", function() { 
+    dispatch.on("year.scatter", function() { 
         changeCircles();        
     })
 
     //changes circles when changing to PPG
     d3.select("#ppg")
       .on("click", function() { 
+            console.log("isppmSTART");
             isPPG = true;
+            xaxis.transition().duration(1000).call(xPPG);
+            //axisPPG.style("opacity", 1);
+            //axisPPM.style("opacity", 0);
+            console.log("isppmEND");
             changeCircles();
-            console.log("isppm");
-            //works on console, doesnt work here...
-            d3.select("#axisPPG").style("opacity", 0);
-            d3.select("#axisPPM").style("opacity", 1);
         
     })
 
     //changes circles when changing to PPM
     d3.select("#ppm")
       .on("click", function() { 
+            console.log("isppg START");
             isPPG = false;
+            xaxis.transition().duration(1000).call(xPPM);
+           // axisPPG.style("opacity", 0);
+            //axisPPM.style("opacity", 1);
+            console.log("isppgEND");
             changeCircles();
-            console.log("isppg");
-            d3.select("#axisPPG").style("opacity", 1);
-            d3.select("#axisPPM").style("opacity", 0);
 
     })
 
     function changeCircles() {
         svg_scatterplot.selectAll("circle")
             .data(data_scatter                
-                    .filter(function(d){ return d.season == season_filter; })
-                    .filter(function(d){ return d.team == team_filter; })).
-                transition().duration(1000)
-                .attr("class", function(d) {
-                    return circleRemoveFlag;
-                })
-                .attr("r", r)
-                .attr("fill", function(d){
-                    return teamColor(d.team, 1);
-                })
-                .attr("stroke", function(d){
-                    return teamColor(d.team, 2);
-                })
-                .attr("stroke-width", borderWidth)
-                .attr("cx", function(d, i){
-                    if (d.ppg == 0) {return padding;}
-                    if (isPPG) {return xscalePPG(d.ppg);}
-                    else { return xscalePPM(d.ppm); }
-                })
-                .attr("cy", function(d) {
-                    return hscale(d.salary/10000);
-                })
-                .on("mouseover", mouseover )
-                .on("mousemove", mousemove )
-                .on("mouseleave", mouseleave )
+                .filter(function(d){ return d.season == season_filter; })
+                .filter(function(d){ return d.team == team_filter; }))
+            .transition().duration(1000)
+            .attr("class", function(d) {
+                return circleRemoveFlag;
+            })
+            .attr("r", r)
+            .attr("fill", function(d){
+                return teamColor(d.team, 1);
+            })
+            .attr("stroke", function(d){
+                return teamColor(d.team, 2);
+            })
+            .attr("stroke-width", borderWidth)
+            .attr("cx", function(d){
+                if (d.ppg == 0) {return padding;}
+                if (isPPG) {return xscalePPG(d.ppg);}
+                else { return xscalePPM(d.ppm); }
+            })
+            .attr("cy", function(d) {
+                return hscale(d.salary/10000);
+            })
+            .on("mouseover", mouseover )
+            .on("mousemove", mousemove )
+            .on("mouseleave", mouseleave )
             
             /* code to remove extra circles, not working
             var toRemove;

@@ -344,7 +344,7 @@ function gen_viz() {
 	//////////////////////////////////////////////////
 	/////////////// ON CLICK /////////////////////////
 	//////////////////////////////////////////////////
-	dispatch.on("year", function(){
+	dispatch.on("team.radar", function(){
 	//d3.selectAll("#ppm").on("click", function(){
 
 	  	console.log(team_filter);
