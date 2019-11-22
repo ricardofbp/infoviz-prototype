@@ -43,12 +43,13 @@ function render() {
     var w = 300;
     var h = 300;
 
-    var r = 3;
+    //circle options
+    var r = 3; //radius
+    var borderWidth = 1
 
     var padding = 30;
 
     var bar_w = Math.floor((w-padding*2)/data_scatter.length)-1;
-
 
     var xscalePPM = d3.scaleLinear()
         .domain([0, maxPPM])
@@ -121,12 +122,10 @@ function render() {
     }
 
     var mousemove = function(d) {
-        if (isPPG) {
-            tooltip
-            .html("Player: " + d.name + "<br>PPG: " + d.ppg + "<br>PPM: " + d.ppm + "<br>Salary: $" + d.salary)
-            .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-            .style("top", (d3.mouse(this)[1]) + "px")
-        }
+        tooltip
+        .html("Player: " + d.name + "<br>PPG: " + d.ppg + "<br>PPM: " + d.ppm + "<br>Salary: $" + d.salary)
+        .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (d3.mouse(this)[1]) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -137,6 +136,19 @@ function render() {
             .style("opacity", 0)
     }
 
+    function teamColor(teamName, type) {
+        for (let i = 0; i < teamColors.length; i++) {
+            console.log(teamColors[i].team + " - " + teamName);
+            if (teamColors[i].team == teamName) { 
+                //console.log(item.color);
+                if (type == 1) return teamColors[i].color1; 
+                if (type == 2) return teamColors[i].color2; 
+            }
+        }
+        //console.log("f teamcolo");
+        return "#000000";
+    }
+
     //appends the circles
     svg_scatterplot.selectAll("circle")
         .data(data_scatter                
@@ -144,7 +156,13 @@ function render() {
             .filter(function(d){ return d.team == team_filter; }))
         .enter().append("circle")
         .attr("r", r)
-        .attr("fill", "rgba(128, 0, 128, 0.5)")
+        .attr("fill", function(d){
+            return teamColor(d.team, 1);
+        })
+        .attr("stroke", function(d){
+            return teamColor(d.team, 2);
+        })
+        .attr("stroke-width", borderWidth)
         .attr("cx", function(d, i){
         //console.log(xscale("xscale ppg: " + d.ppg));
             if (d.ppg == 0) {return padding;}
@@ -160,15 +178,54 @@ function render() {
 
     //changes circles when selecting a team
     d3.selectAll(".team")
-        .on("click", function() { //clickevent
+        .on("click", function() { 
+            changeCircles();        
+    })
 
-            svg_scatterplot.selectAll("circle")
-                .data(data_scatter                
-                    .filter(function(d){ return d.season == season_filter; })
-                    .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
+    //change circles when year slider changes
+    dispatch.on("year", function() { 
+        changeCircles();        
+    })
+
+    //changes circles when changing to PPG
+    d3.select("#ppg")
+      .on("click", function() { //clickevent
+            isPPG = true;
+            changeCircles();
+        
+    })
+
+    //changes circles when changing to PPM
+    d3.select("#ppm")
+      .on("click", function() { //clickevent
+            isPPG = false;
+            changeCircles();
+
+    })
+
+    function changeCircles() {
+        var axis;
+
+        if (isPPG) {
+            axis = xaxisPPG; 
+        } else {
+            axis = xaxisPPM;
+        }
+
+        svg_scatterplot.selectAll("circle")
+            .data(data_scatter                
+                .filter(function(d){ return d.season == season_filter; })
+                .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
                 .attr("r", r)
-                .attr("fill", "rgba(128, 0, 128, 0.5)")
+                .attr("fill", function(d){
+                    return teamColor(d.team, 1);
+                })
+                .attr("stroke", function(d){
+                    return teamColor(d.team, 2);
+                })
+                .attr("stroke-width", borderWidth)
                 .attr("cx", function(d, i){
+                //console.log(xscale("xscale ppg: " + d.ppg));
                     if (d.ppg == 0) {return padding;}
                     if (isPPG) {return xscalePPG(d.ppg);}
                     else { return xscalePPM(d.ppm); }
@@ -180,86 +237,10 @@ function render() {
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
         
-    })
-
-    dispatch.on("year", function() { //clickevent
-        svg_scatterplot.selectAll("circle")
-            .data(data_scatter                
-                .filter(function(d){ return d.season == season_filter; })
-                .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
-            .attr("r", r)
-            .attr("fill", "rgba(128, 0, 128, 0.5)")
-            .attr("cx", function(d, i){
-                if (d.ppg == 0) {return padding;}
-                if (isPPG) {return xscalePPG(d.ppg);}
-                else { return xscalePPM(d.ppm); }
-            })
-            .attr("cy", function(d) {
-                return hscale(d.salary/10000);
-            })
-            .on("mouseover", mouseover )
-            .on("mousemove", mousemove )
-            .on("mouseleave", mouseleave )
-        
-    })
-
-    //changes circles when changing to PPG
-    d3.select("#ppg")
-      .on("click", function() { //clickevent
-            isPPG = true;
-            svg_scatterplot.selectAll("circle")
-                .data(data_scatter                
-                    .filter(function(d){ return d.season == season_filter; })
-                    .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
-                    .attr("r", r)
-                    .attr("fill", "rgba(128, 0, 128, 0.5)")
-                    .attr("cx", function(d, i){
-                    //console.log(xscale("xscale ppg: " + d.ppg));
-                        if (d.ppg == 0) {return padding;}
-                        return xscalePPG(d.ppg);
-                    })
-                    .attr("cy", function(d) {
-                        return hscale(d.salary/10000);
-                    })
-                    .on("mouseover", mouseover )
-                    .on("mousemove", mousemove )
-                    .on("mouseleave", mouseleave )
-
             d3.select("#xaxis").remove()
             svg_scatterplot.append("g")
                 .attr("id", "xaxis")
                 .attr("transform","translate(0," + (h-padding) + ")")
-                .call(xaxisPPG);
-        
-    })
-
-    //changes circles when changing to PPM
-    d3.select("#ppm")
-      .on("click", function() { //clickevent
-            isPPG = false;
-            svg_scatterplot.selectAll("circle")
-                .data(data_scatter                
-                    .filter(function(d){ return d.season == season_filter; })
-                    .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
-                    .attr("r", r)
-                    .attr("fill", "rgba(128, 0, 128, 0.5)")
-                    .attr("cx", function(d, i){
-                    //console.log(xscale("xscale ppg: " + d.ppg));
-                        if (d.ppg == 0) {return padding;}
-                        return xscalePPM(d.ppm);
-                    })
-                    .attr("cy", function(d) {
-                        return hscale(d.salary/10000);
-                    })
-                    .on("mouseover", mouseover )
-                    .on("mousemove", mousemove )
-                    .on("mouseleave", mouseleave )
-        
-            d3.select("#xaxis").remove()
-            svg_scatterplot.append("g")
-                .attr("id", "xaxis")
-                .attr("transform","translate(0," + (h-padding) + ")")
-                .call(xaxisPPM);
-
-    })
+                .call(axis);
+    }
 }

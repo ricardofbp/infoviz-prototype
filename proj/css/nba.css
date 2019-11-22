@@ -89,3 +89,14 @@
 #scatterplot {
   padding-left: 50px;
 }
+
+#header {
+  background-color: red;
+  text-align: center;
+  color: white;
+}
+
+#dashboard {
+   background-image: url(basketball-wood.jpg); 
+
+}
