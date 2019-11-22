@@ -5,10 +5,11 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 };
 var data_radar;
 var new_data;
 
+
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
 	data_radar = d;
-	gen_viz(d);
+	gen_viz();
 	
 });
 
@@ -104,11 +105,11 @@ const format = d3.format('.2f');         			 	//Formatting
 const angleSlice = Math.PI * 2 / total;		            //The width in radians of each "slice"
 
 
-function gen_viz(data) {
+function gen_viz() {
 ////////////////////////////////////////////
 ///////////// Create the svg container /////
 ////////////////////////////////////////////
-	console.log(data);
+	console.log(data_radar);
 
 	const parent = d3.select(".radarChart");
 
@@ -244,7 +245,7 @@ function gen_viz(data) {
 	////////////////////////////////////////////////////////
 	/////////////////Filter the data////////////////////////
 	////////////////////////////////////////////////////////
-	new_data = transformData(data.
+	new_data = transformData(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
 			filter(function(d){ return d.Team == team_filter;}));
 	////////////////////////////////////////////////////////
@@ -258,7 +259,7 @@ function gen_viz(data) {
 		.append("path")
 		.attr("class", "radarArea")
 			.attr("d", d => radarLine(d.axes))
-			.style("fill", (d,i) => color(i))
+			.style("fill", (d,i) => teamColor(d.Team, 1))
 			.style("fill-opacity", 0.35) //opacity area
 			.on('mouseover', function(d, i) {
 				//Dim all blobs
@@ -282,7 +283,7 @@ function gen_viz(data) {
 		.attr("class", "radarStroke")
 		.attr("d", function(d,i) { return radarLine(d.axes); })
 		.style("stroke-width", outline_width + "px")
-		.style("stroke", (d,i) => color(i))
+		.style("stroke", (d,i) => teamColor(d.Team, 2))
 		.style("fill", "none")
 		.style("filter" , "url(#glow)");
 
@@ -348,7 +349,7 @@ function gen_viz(data) {
 
 	  	console.log(team_filter);
 	  	console.log(season_filter);
-	  	new_data = transformData(data.
+	  	new_data = transformData(data_radar.
 		filter(function(d){ return d.Season == season_filter;}).
 		filter(function(d){ return d.Team == team_filter;}));
 	

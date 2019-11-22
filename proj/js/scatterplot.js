@@ -1,9 +1,7 @@
 var data_scatter;
 
-var team_filter = "Atlanta Hawks";
-var season_filter = 2000;
-
 var isPPG = true;
+var circleRemoveFlag = "flag1"
 
 var svg_scatterplot;
 
@@ -86,14 +84,15 @@ function render() {
 
     //appends both initial axis (salary and PPG)
     svg_scatterplot.append("g")
-        .attr("id", "xaxis")
+        .attr("id", "xaxisPPG")
         .attr("transform","translate(0," + (h-padding) + ")")
-        .style("opacity", 0)
+        .style("opacity", 1)
         .call(xaxisPPG);
 
     svg_scatterplot.append("g")
-        .attr("id", "xaxis")
+        .attr("id", "xaxisPPM")
         .attr("transform","translate(0," + (h-padding) + ")")
+        .style("opacity", 0)
         .call(xaxisPPM);
 
     svg_scatterplot.append("g")
@@ -106,11 +105,10 @@ function render() {
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
-        .style("color", "white")
-        .style("background-color", "black")
-        .style("border", "solid")
+        .style("color", "black")
+        .style("background-color", "#f6f6f6")
+        .style("border", "1px solid #ddd")
         .style("border-width", "1px")
-        .style("border-radius", "5px")
         .style("padding", "10px")
 
 
@@ -136,25 +134,15 @@ function render() {
             .style("opacity", 0)
     }
 
-    function teamColor(teamName, type) {
-        for (let i = 0; i < teamColors.length; i++) {
-            console.log(teamColors[i].team + " - " + teamName);
-            if (teamColors[i].team == teamName) { 
-                //console.log(item.color);
-                if (type == 1) return teamColors[i].color1; 
-                if (type == 2) return teamColors[i].color2; 
-            }
-        }
-        //console.log("f teamcolo");
-        return "#000000";
-    }
-
     //appends the circles
     svg_scatterplot.selectAll("circle")
         .data(data_scatter                
             .filter(function(d){ return d.season == season_filter; })
             .filter(function(d){ return d.team == team_filter; }))
         .enter().append("circle")
+        .attr("class", function(d) {
+            return circleRemoveFlag;
+        })
         .attr("r", r)
         .attr("fill", function(d){
             return teamColor(d.team, 1);
@@ -177,9 +165,8 @@ function render() {
 
 
     //changes circles when selecting a team
-    d3.selectAll(".team")
-        .on("click", function() { 
-            changeCircles();        
+    dispatch.on("team", function() { 
+        changeCircles();        
     })
 
     //change circles when year slider changes
@@ -189,33 +176,36 @@ function render() {
 
     //changes circles when changing to PPG
     d3.select("#ppg")
-      .on("click", function() { //clickevent
+      .on("click", function() { 
             isPPG = true;
             changeCircles();
+            console.log("isppm");
+            //works on console, doesnt work here...
+            d3.select("#axisPPG").style("opacity", 0);
+            d3.select("#axisPPM").style("opacity", 1);
         
     })
 
     //changes circles when changing to PPM
     d3.select("#ppm")
-      .on("click", function() { //clickevent
+      .on("click", function() { 
             isPPG = false;
             changeCircles();
+            console.log("isppg");
+            d3.select("#axisPPG").style("opacity", 1);
+            d3.select("#axisPPM").style("opacity", 0);
 
     })
 
     function changeCircles() {
-        var axis;
-
-        if (isPPG) {
-            axis = xaxisPPG; 
-        } else {
-            axis = xaxisPPM;
-        }
-
         svg_scatterplot.selectAll("circle")
             .data(data_scatter                
-                .filter(function(d){ return d.season == season_filter; })
-                .filter(function(d){ return d.team == team_filter; })).transition().duration(1000)
+                    .filter(function(d){ return d.season == season_filter; })
+                    .filter(function(d){ return d.team == team_filter; })).
+                transition().duration(1000)
+                .attr("class", function(d) {
+                    return circleRemoveFlag;
+                })
                 .attr("r", r)
                 .attr("fill", function(d){
                     return teamColor(d.team, 1);
@@ -225,7 +215,6 @@ function render() {
                 })
                 .attr("stroke-width", borderWidth)
                 .attr("cx", function(d, i){
-                //console.log(xscale("xscale ppg: " + d.ppg));
                     if (d.ppg == 0) {return padding;}
                     if (isPPG) {return xscalePPG(d.ppg);}
                     else { return xscalePPM(d.ppm); }
@@ -236,11 +225,20 @@ function render() {
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
-        
-            d3.select("#xaxis").remove()
+            
+            /* code to remove extra circles, not working
+            var toRemove;
+            if (circleRemoveFlag == "flag1") toRemove = "flag2";
+            else toRemove = "flag1";
+            svg_scatterplot.selectAll("." + toRemove).remove()
+            */
+
+            /*
+            d3.select("#xaxis")
             svg_scatterplot.append("g")
                 .attr("id", "xaxis")
                 .attr("transform","translate(0," + (h-padding) + ")")
                 .call(axis);
+                */
     }
 }

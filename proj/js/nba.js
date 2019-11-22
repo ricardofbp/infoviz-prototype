@@ -34,9 +34,25 @@ var teamColors =
   {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837"}
 ]
 
+var team_filter = "Atlanta Hawks";
+var old_team_filter;
+var season_filter = 2000;
+
+var dispatch = d3.dispatch("year", "team");
+
 var slider;
 
-var dispatch = d3.dispatch("year");
+function teamColor(teamName, type) {
+    for (let i = 0; i < teamColors.length; i++) {
+        if (teamColors[i].team == teamName) { 
+            //console.log(item.color);
+            if (type == 1) return teamColors[i].color1; 
+            if (type == 2) return teamColors[i].color2; 
+        }
+    }
+    //black is returned if something bad happens
+    return "#000000";
+}
 
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
@@ -69,9 +85,7 @@ function start_slider(){
 
   slider.on('slideStart', function(value){
       original_value = document.getElementById("year").value;
-     //dispatch.call("year");
-
-    });
+  });
 
   slider.on('slideStop', function(value){
       var new_val = document.getElementById("year").value;
@@ -83,6 +97,13 @@ function start_slider(){
 }
 
 function changeIdioms(e){
- document.getElementById("myInput").value = e.innerText
- team_filter = e.innerText;
+  document.getElementById("myInput").value = e.innerText;
+
+  old_team_filter = team_filter;
+  team_filter = e.innerText;  
+
+  if (circleRemoveFlag == "flag1") circleRemoveFlag = "flag2";
+  else circleRemoveFlag = "flag1";
+
+  dispatch.call("team");
 }
