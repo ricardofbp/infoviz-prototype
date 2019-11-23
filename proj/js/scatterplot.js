@@ -135,6 +135,10 @@ function render() {
             .style("opacity", 0)
     }
 
+    svg_scatterplot
+      .call( d3.brushX()                     // Add the brush feature using the d3.brush function
+        .extent( [ [0,100], [400,300] ] ));
+
     //appends the circles
     svg_scatterplot.selectAll("circle")
         .data(data_scatter                
