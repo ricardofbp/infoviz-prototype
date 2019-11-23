@@ -39,14 +39,26 @@ body:after {
   background-color:darkslategrey;
 }
 
-/* Dropdown Button */
-.dropbtn {
+/* Dropdown Button Of Team*/
+.dropbtn_team {
   position: relative;
   background-color: #373434;
   color: white;
   padding: 10px;
   width: 140px;
   font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown Button Of Player 1*/
+.dropbtn_player1{
+  position: relative;
+  background-color: #373434;
+  color: white;
+  padding: 10px;
+  width: 140px;
+  font-size: 14px;
   border: none;
   cursor: pointer;
 }
@@ -59,9 +71,22 @@ body:after {
 }
 
 /* The search field */
-#myInput {
+#teamInput {
   box-sizing: border-box;
   width: 211px;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 16px 12px 17px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-family: inherit;
+}
+
+.playerInput {
+  box-sizing: border-box;
+  width: 137px;
   background-image: url('searchicon.png');
   background-position: 14px 12px;
   background-repeat: no-repeat;
@@ -80,21 +105,41 @@ body:after {
   position: relative;
 }
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
+/* Dropdown Content (Hidden by Default) for Team dropdown */
+.dropdown-content-team {
   display: none;
   position: absolute;
   background-color: #f6f6f6;
   min-width: 230px;
-  width: 230px;
+  width: 113px;
   max-height: 250px;
   overflow: auto;
   border: 1px solid #ddd;
   z-index: 1;
 }
 
-/* Links inside the dropdown */
-.dropdown-content a {
+.dropdown-content-player {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  /*min-width: 230px;*/
+  width: 140px;
+  max-height: 250px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+/* Links inside the dropdown of the team */
+.dropdown-content-team a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Links inside the dropdown of the players */
+.dropdown-content-player a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
@@ -102,7 +147,7 @@ body:after {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content-team a:hover {background-color: #f1f1f1}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
@@ -118,7 +163,9 @@ body:after {
 
 #radar{
   font-family: inherit;
-  margin-left: 150px;
+  margin-left: 240px;
+  text-align: center;
+  width: 650px;
 }
 
 #scatterplot {
@@ -133,4 +180,9 @@ body:after {
   background-color: #373434;
   text-align: center;
   color: white;
+}
+
+#player_buttons{
+  display: flex;
+  justify-content: space-between;
 }

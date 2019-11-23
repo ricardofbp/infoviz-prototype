@@ -4,6 +4,10 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 };
 
 var data_radar;
 var new_data;
+var blobWrapper;
+var blobCircleWrapper;
+var radarLine;
+var tooltip;
 
 
 d3.csv("../dataset/radarchart_dataset.csv")
@@ -31,7 +35,7 @@ function transformData(data){
 		d.axes = axes;
 		data_final.push(d);
 	}
-	data_radar = data_final;
+	//data_radar = data_final;
 	return data_final;
 }
 
@@ -109,8 +113,6 @@ function gen_viz() {
 ////////////////////////////////////////////
 ///////////// Create the svg container /////
 ////////////////////////////////////////////
-	console.log(data_radar);
-
 	const parent = d3.select(".radarChart");
 
 	var svg = parent.append("svg")
@@ -214,8 +216,8 @@ function gen_viz() {
 	axis.append("line")
 		.attr("x1", 0)
 		.attr("y1", 0)
-		.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.1) * cos(angleSlice * i - HALF_PI))
-		.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.1) * sin(angleSlice * i - HALF_PI))
+		.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.01) * cos(angleSlice * i - HALF_PI))
+		.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.01) * sin(angleSlice * i - HALF_PI))
 		.attr("class", "line")
 		.style("stroke", "white")
 		.style("stroke-width", "2px");
@@ -237,7 +239,7 @@ function gen_viz() {
 	///////////// Draw the radar chart blobs ////////////////
 	/////////////////////////////////////////////////////////
 
-	const radarLine = d3.radialLine()
+	radarLine = d3.radialLine()
 		.curve(d3.curveLinearClosed)
 		.radius((d, i) => (eval(allAxis[i] + "Scale")(d.value)))
 		.angle((d,i) => i * angleSlice);
@@ -245,12 +247,14 @@ function gen_viz() {
 	////////////////////////////////////////////////////////
 	/////////////////Filter the data////////////////////////
 	////////////////////////////////////////////////////////
+	
 	new_data = transformData(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
-			filter(function(d){ return d.Team == team_filter;}));
+			filter(function(d){ return d.Team == team_filter;})/*.
+			filter(function(d){ return d.Player == player1_filter})*/);
 	////////////////////////////////////////////////////////
 
-	const blobWrapper = g.selectAll(".radarWrapper")
+	blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
 		.enter().append("g")
 		.attr("class", "radarWrapper");
@@ -304,7 +308,7 @@ function gen_viz() {
 	//////// Append invisible circles for tooltip ///////////
 	/////////////////////////////////////////////////////////
 
-	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
+	blobCircleWrapper = g.selectAll(".radarCircleWrapper")
 		.data(new_data)
 		.enter().append("g")
 		.attr("class", "radarCircleWrapper");
@@ -332,7 +336,7 @@ function gen_viz() {
 				.style('display', 'none').text('');
 		});
 
-	const tooltip = g.append("text")
+	tooltip = g.append("text")
 	.attr("class", "tooltip")
 	.attr('x', 0)
 	.attr('y', 0)
@@ -344,97 +348,106 @@ function gen_viz() {
 	//////////////////////////////////////////////////
 	/////////////// ON CLICK /////////////////////////
 	//////////////////////////////////////////////////
-	dispatch.on("team.radar", function(){
-	//d3.selectAll("#ppm").on("click", function(){
+	dispatch_radar.on("team", function(){
+		changeRadar();
+	});
 
-	  	console.log(team_filter);
-	  	console.log(season_filter);
-	  	new_data = transformData(data_radar.
-		filter(function(d){ return d.Season == season_filter;}).
-		filter(function(d){ return d.Team == team_filter;}));
-	
-		const blobWrapper = g.selectAll(".radarWrapper")
+	function changeRadar(){
+		new_data = transformData(data_radar.
+			filter(function(d){ return d.Season == season_filter;}).
+			filter(function(d){ return d.Team == team_filter;})/*.
+			filter(function(d){ return d.Player == player1_filter;})*/);
+
+		blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
-		.enter().append("g")
+		//.transition().duration(1000)
 		.attr("class", "radarWrapper");
 
-	blobWrapper
-		.append("path")
-		.attr("class", "radarArea")
-			.attr("d", d => radarLine(d.axes))
-			.style("fill", (d,i) => color(i))
-			.style("fill-opacity", 0.35) //opacity area
-			.on('mouseover', function(d, i) {
-				//Dim all blobs
-				parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.1);
-				//Bring back the hovered over blob
-				d3.select(this)
+		blobWrapper
+			.append("path")
+			.attr("class", "radarArea")
+				.attr("d", d => radarLine(d.axes))
+				.style("fill", (d,i) => color(i))
+				.style("fill-opacity", 0.35) //opacity area
+				.on('mouseover', function(d, i) {
+					//Dim all blobs
+					parent.selectAll(".radarArea")
+						.transition().duration(200)
+						.style("fill-opacity", 0.1);
+					//Bring back the hovered over blob
+					d3.select(this)
 					.transition().duration(200)
 					.style("fill-opacity", 0.7);
-			})
-			.on('mouseout', () => {
-				//Bring back all blobs
-				parent.selectAll(".radarArea")
+				})
+				.on('mouseout', () => {
+					//Bring back all blobs
+					parent.selectAll(".radarArea")
 					.transition().duration(200)
 					.style("fill-opacity", 0.35); //opacity area
+				});
+		//Create the outlines
+		blobWrapper.append("path")
+			.attr("class", "radarStroke")
+			.attr("d", function(d,i) { return radarLine(d.axes); })
+			.style("stroke-width", outline_width + "px")
+			.style("stroke", (d,i) => color(i))
+			.style("fill", "none")
+			.style("filter" , "url(#glow)");
+	
+		//Append the outline circles
+		blobWrapper.selectAll(".radarCircle")
+			.data(d => d.axes)
+			.enter()
+			.append("circle")
+			.attr("class", "radarCircle")
+			.attr("r", outline_dots_radius)
+			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
+			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
+			.style("fill", (d) => color(d.id))
+			.style("fill-opacity", 0.8);
+	
+	
+		/////////////////////////////////////////////////////////
+		//////// Append invisible circles for tooltip ///////////
+		/////////////////////////////////////////////////////////
+	
+		blobCircleWrapper = g.selectAll(".radarCircleWrapper")
+			.data(new_data)
+			.enter().append("g")
+			.attr("class", "radarCircleWrapper");
+	
+		//Append a set of invisible circles on top for the mouseover pop-up
+		blobCircleWrapper.selectAll(".radarInvisibleCircle")
+			.data(d => d.axes)
+			.enter().append("circle")
+			.attr("class", "radarInvisibleCircle")
+			.attr("r", outline_dots_radius * 1.5)
+			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice*i - HALF_PI))
+			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice*i - HALF_PI))
+			.style("fill", "none")
+			.style("pointer-events", "all")
+			.on("mouseover", function(d,i) {
+				tooltip
+					.attr('x', this.cx.baseVal.value - 10)
+					.attr('y', this.cy.baseVal.value - 10)
+					.transition()
+					.style('display', 'block')
+					.text(format(d.value) + allAxis_units[i]);
+			})
+			.on("mouseout", function(){
+				tooltip.transition()
+					.style('display', 'none').text('');
 			});
 
-	//Create the outlines
-	blobWrapper.append("path")
-		.attr("class", "radarStroke")
-		.attr("d", function(d,i) { return radarLine(d.axes); })
-		.style("stroke-width", outline_width + "px")
-		.style("stroke", (d,i) => color(i))
-		.style("fill", "none")
-		.style("filter" , "url(#glow)");
+		tooltip = g.append("text")
+		.attr("class", "tooltip")
+		.attr('x', 0)
+		.attr('y', 0)
+		.style("font-size", "12px")
+		.style('display', 'none')
+		.attr("text-anchor", "middle")
+		.attr("dy", "0.35em");
+		
+	}
 
-	//Append the outline circles
-	blobWrapper.selectAll(".radarCircle")
-		.data(d => d.axes)
-		.enter()
-		.append("circle")
-		.attr("class", "radarCircle")
-		.attr("r", outline_dots_radius)
-		.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
-		.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
-		.style("fill", (d) => color(d.id))
-		.style("fill-opacity", 0.8);
-
-
-	/////////////////////////////////////////////////////////
-	//////// Append invisible circles for tooltip ///////////
-	/////////////////////////////////////////////////////////
-
-	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
-		.data(new_data)
-		.enter().append("g")
-		.attr("class", "radarCircleWrapper");
-
-	//Append a set of invisible circles on top for the mouseover pop-up
-	blobCircleWrapper.selectAll(".radarInvisibleCircle")
-		.data(d => d.axes)
-		.enter().append("circle")
-		.attr("class", "radarInvisibleCircle")
-		.attr("r", outline_dots_radius * 1.5)
-		.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice*i - HALF_PI))
-		.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice*i - HALF_PI))
-		.style("fill", "none")
-		.style("pointer-events", "all")
-		.on("mouseover", function(d,i) {
-			tooltip
-				.attr('x', this.cx.baseVal.value - 10)
-				.attr('y', this.cy.baseVal.value - 10)
-				.transition()
-				.style('display', 'block')
-				.text(format(d.value) + allAxis_units[i]);
-		})
-		.on("mouseout", function(){
-			tooltip.transition()
-				.style('display', 'none').text('');
-		});
-
-	  })
-	console.log("before select all team");	
 }

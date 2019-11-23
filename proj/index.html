@@ -24,9 +24,9 @@
     <div id = "dashboard" >
       <div id ="selectors">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn">Select a team</button>
-            <div id="myDropdown" class="dropdown-content">
-              <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+            <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
+            <div id="team_dropdown" class="dropdown-content-team">
+              <input type="text" placeholder="Search.." id="teamInput" onkeyup='filterFunction_team()'>
               <a href="#atlanta_hawks" class ="team" onclick="changeIdioms(this)">Atlanta Hawks</a>
               <a href="#boston_celtics" class ="team" onclick="changeIdioms(this)">Boston Celtics</a>
               <a href="#brooklyn_nets" class ="team" onclick="changeIdioms(this)">Brooklyn Nets</a>
@@ -79,6 +79,20 @@
             <span class="scatter-btn" id="ppm"> PPM </span>
           </div>
           <div id = "radar">
+            <div id = "player_buttons">
+              <div class="dropdown">
+                <button onclick="player1_dropdown()" class="dropbtn_player1">Select a player</button>
+                <div id="player1_dropdown" class="dropdown-content-player">
+                  <input type="text" placeholder="Search.." id = "playerInput1" class="playerInput" onkeyup="filterFunction_player()">
+                </div>
+              </div>
+              <div class="dropdown">
+                <button onclick="player2_dropdown()" class="dropbtn_player1">Select a player</button>
+                <div id="player1_dropdown" class="dropdown-content-player">
+                  <input type="text" placeholder="Search.." class="playerInput" onkeyup="filterFunction()">
+                </div>
+              </div>
+            </div>
             <div class="radarChart"></div>
           </div>
         </div>

@@ -34,11 +34,13 @@ var teamColors =
   {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837"}
 ]
 
-var team_filter = "Atlanta Hawks";
+var team_filter = "Boston Celtics";
 var old_team_filter;
 var season_filter = 2000;
+var player1_filter;
 
-var dispatch = d3.dispatch("year", "team");
+var dispatch_scatter = d3.dispatch("year", "team");   //two functions can be called when dispatch is called
+var dispatch_radar = d3.dispatch("year", "team");
 
 var slider;
 
@@ -54,15 +56,20 @@ function teamColor(teamName, type) {
     return "#000000";
 }
 
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
+function team_dropdown() {
+  document.getElementById("team_dropdown").classList.toggle("show");
 }
 
-function filterFunction() {
+function player1_dropdown(){
+  console.log(new_data);
+  document.getElementById("player1_dropdown").classList.toggle("show");
+}
+
+function filterFunction_team() {
   var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
+  input = document.getElementById("teamInput");
   filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
+  div = document.getElementById("team_dropdown");
   a = div.getElementsByTagName("a");
   for (i = 0; i < a.length; i++) {
     txtValue = a[i].textContent || a[i].innerText;
@@ -73,6 +80,22 @@ function filterFunction() {
     }
   }
 }
+
+function filterFunction_player() {
+	var input, filter, ul, li, a, i;
+	input = document.getElementById("playerInput1");
+	filter = input.value.toUpperCase();
+	div = document.getElementById("player1_dropdown");
+	a = div.getElementsByTagName("a");
+	for (i = 0; i < a.length; i++) {
+	  txtValue = a[i].textContent || a[i].innerText;
+	  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+		a[i].style.display = "";
+	  } else {
+		a[i].style.display = "none";
+	  }
+	}
+  }
 
 var original_value = 2000;
 
@@ -92,12 +115,13 @@ function start_slider(){
       if(original_value != new_val){
         season_filter = new_val;
       }
-      dispatch.call("year");
+      dispatch_scatter.call("year");
     });
 }
 
 function changeIdioms(e){
-  document.getElementById("myInput").value = e.innerText;
+  console.log(e.innerText)
+  document.getElementById("teamInput").value = e.innerText;   //search input
 
   old_team_filter = team_filter;
   team_filter = e.innerText;  
@@ -105,5 +129,38 @@ function changeIdioms(e){
   if (circleRemoveFlag == "flag1") circleRemoveFlag = "flag2";
   else circleRemoveFlag = "flag1";
 
-  dispatch.call("team");
+
+  console.log("FILTER", team_filter)
+
+  dispatch_radar.call("team");
+  updatePlayerDropdown();
+  dispatch_scatter.call("team");
+
+}
+
+function updatePlayerDropdown(){
+	var element;
+	var linkTest;
+
+	//First remove if there are players already being shown
+	var drop = document.getElementById("player1_dropdown");
+	while(drop.childElementCount != 1){
+		drop.removeChild(drop.lastChild);
+	}
+	//update the players' list
+	for(var i = 0; i < new_data.length; i++){
+		console.log(new_data[i].Player);
+		element = document.createElement('a');
+		linkTest = document.createTextNode(new_data[i].Player);
+		element.appendChild(linkTest);
+		element.href = "#" + new_data[i].Player;
+		element.onclick = function(){changePlayer1(new_data[i].Player);};
+		console.log(element);
+		drop.appendChild(element);
+		
+  }
+}
+
+function changePlayer1(name){
+	player1_filter = name;
 }
