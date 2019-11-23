@@ -54,11 +54,11 @@ function render() {
 
     var xscalePPM = d3.scaleLinear()
         .domain([0, maxPPM])
-        .range([padding+20,w-padding]);
+        .range([padding+30,w-padding]);
 
     var xscalePPG = d3.scaleLinear()
         .domain([0, maxPPG])
-        .range([padding+20,w-padding]);
+        .range([padding+30,w-padding]);
 
     var hscale = d3.scaleLinear()
         .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
@@ -82,14 +82,24 @@ function render() {
     //appends both initial axis (salary and PPG)
     var xaxis = svg_scatterplot.append("g")
         .attr("id", "axisPPG")
-        .attr("transform","translate(20," + (h-padding) + ")")
+        .attr("transform","translate(30," + (h-padding) + ")")
         .call(xPPG);
 
     var yaxis = svg_scatterplot.append("g")
         .attr("id", "yaxis")
        // .style("padding-left", "100px")
-        .attr("transform", "translate(50,0)")
+        .attr("transform", "translate(60,0)")
         .call(ySalary);
+
+    var xlabel = svg_scatterplot.append("text")  
+        .style("font-family", "sans-serif")
+        .style("font-size", "12px")
+        .attr("transform", "rotate(-90)")
+        .attr("y", "0px")
+        .attr("x",0 - (h / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Salary (in 10000$)");
 
     //tooltip related
     var tooltip = d3.select("#scatterplot")
@@ -144,7 +154,7 @@ function render() {
         .attr("stroke-width", borderWidth)
         .attr("cx", function(d, i){
         //console.log(xscale("xscale ppg: " + d.ppg));
-            if (d.ppg == 0) {return padding+20;}
+            if (d.ppg == 0) {return padding+30;}
             return xscalePPG(d.ppg);
         })
         .attr("cy", function(d) {
@@ -156,18 +166,26 @@ function render() {
 
 
     //changes circles when selecting a team
-    dispatch.on("team.scatter", function() { 
+    dispatch_scatter.on("team", function() {
+        console.log("dispatch team scatter");
         changeCircles();        
     })
 
     //change circles when year slider changes
-    dispatch.on("year.scatter", function() { 
+    dispatch_scatter.on("year", function() { 
+        console.log("dispatch year scatter");
         changeCircles();        
     })
 
     //changes circles when changing to PPG
     d3.select("#ppg")
       .on("click", function() { 
+            d3.select("#ppg")
+            .style("background-color", "gray");
+
+            d3.select("#ppm")
+            .style("background-color", "#373434")
+
             console.log("isppmSTART");
             isPPG = true;
             xaxis.transition().duration(1000).call(xPPG);
@@ -181,6 +199,13 @@ function render() {
     //changes circles when changing to PPM
     d3.select("#ppm")
       .on("click", function() { 
+
+            d3.select("#ppm")
+            .style("background-color", "gray");
+
+            d3.select("#ppg")
+            .style("background-color", "#373434")
+
             console.log("isppg START");
             isPPG = false;
             xaxis.transition().duration(1000).call(xPPM);
@@ -209,7 +234,7 @@ function render() {
             })
             .attr("stroke-width", borderWidth)
             .attr("cx", function(d){
-                if (d.ppg == 0) {return padding+20;}
+                if (d.ppg == 0) {return padding+30;}
                 if (isPPG) {return xscalePPG(d.ppg);}
                 else { return xscalePPM(d.ppm); }
             })
