@@ -10,6 +10,7 @@ var blobCircleWrapper;
 var radarLine;
 var tooltip;
 
+var g;
 
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
@@ -122,7 +123,7 @@ function gen_viz() {
 			.attr("class", "radar");
 
 
-	let g = svg.append("g")
+	g = svg.append("g")
 			.attr("transform", "translate(" + (w/2 + margin.left) + "," + (h/2 + margin.top) + ")");
 
 	////////////////////////////////////////
@@ -379,7 +380,7 @@ function gen_viz() {
 			//.attr("class", "radarArea")
 				.attr("d", d => radarLine(d.axes))
 				.style("fill", (d,i) => teamColor(d.Team, 1))
-				.style("fill-opacity", 0.35) //opacity area
+				.style("fill-opacity", 0.4) //opacity area
 		//Create the outlines
 		g.selectAll(".radarStroke")//.append("path")
 		.data(new_data)
@@ -387,21 +388,24 @@ function gen_viz() {
 			//.attr("class", "radarStroke")
 			.attr("d", function(d,i) { return radarLine(d.axes); })
 			.style("stroke-width", outline_width + "px")
-			.style("stroke", (d,i) => teamColor(d.Team, 1))
+			.style("stroke", (d,i) => teamColor(d.Team, 2))
 			.style("fill", "none")
 			.style("filter" , "url(#glow)");
 	
 		//Append the outline circles
-		g.selectAll(".radarWrapper.radarCircle")
+		g.selectAll(".radarWrapper")
 			.data(new_data)
+			.selectAll(".radarCircle")
+			//.data(new_data)
+			.data(d => d.axes)
 			//.enter()
 			.transition().duration(1000)
 			//.append("circle")
-			//.attr("class", "radarCircle")
+			.attr("class", "radarCircle")
 			.attr("r", outline_dots_radius)
 			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
-			.style("fill", (d) => color(d.id))
+			.style("fill", (d) => teamColor(team_filter, 1))
 			.style("fill-opacity", 0.8);
 	
 		
