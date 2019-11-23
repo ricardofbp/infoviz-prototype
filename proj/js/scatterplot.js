@@ -106,8 +106,8 @@ function render() {
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
-        .style("color", "black")
-        .style("background-color", "#f6f6f6")
+        .style("color", "white")
+        .style("background-color", "#373434")
         .style("border", "1px solid #ddd")
         .style("border-width", "1px")
         .style("padding", "10px")
@@ -122,7 +122,7 @@ function render() {
 
     var mousemove = function(d) {
         tooltip
-        .html("Player: " + d.name + "<br>PPG: " + d.ppg + "<br>PPM: " + d.ppm + "<br>Salary: $" + d.salary)
+        .html("<b>Player:</b> " + d.name + "<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
         .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
         .style("top", (d3.mouse(this)[1]) + "px")
     }
