@@ -40,8 +40,8 @@ function render() {
     var h = 300;
 
     //circle options
-    var r = 3; //radius
-    var borderWidth = 1
+    var r = 3.2; //radius
+    var borderWidth = 1.5;
 
     var padding = 30;
 
@@ -50,15 +50,15 @@ function render() {
     svg_scatterplot = d3.select("#scatterplot")
         .append("svg")
         .attr("width", w)
-        .attr("height", h);
+        .attr("height", h)
 
     var xscalePPM = d3.scaleLinear()
         .domain([0, maxPPM])
-        .range([padding+30,w-padding]);
+        .range([padding+25,w-padding+25]);
 
     var xscalePPG = d3.scaleLinear()
         .domain([0, maxPPG])
-        .range([padding+30,w-padding]);
+        .range([padding+25,w-padding+25]);
 
     var hscale = d3.scaleLinear()
         .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
@@ -82,13 +82,13 @@ function render() {
     //appends both initial axis (salary and PPG)
     var xaxis = svg_scatterplot.append("g")
         .attr("id", "axisPPG")
-        .attr("transform","translate(30," + (h-padding) + ")")
+        .attr("transform","translate(25," + (h-padding) + ")")
         .call(xPPG);
 
     var yaxis = svg_scatterplot.append("g")
         .attr("id", "yaxis")
        // .style("padding-left", "100px")
-        .attr("transform", "translate(60,0)")
+        .attr("transform", "translate(55,0)")
         .call(ySalary);
 
     var xlabel = svg_scatterplot.append("text")  
@@ -154,7 +154,7 @@ function render() {
         .attr("stroke-width", borderWidth)
         .attr("cx", function(d, i){
         //console.log(xscale("xscale ppg: " + d.ppg));
-            if (d.ppg == 0) {return padding+30;}
+            if (d.ppg == 0) {return padding+25;}
             return xscalePPG(d.ppg);
         })
         .attr("cy", function(d) {
@@ -168,13 +168,13 @@ function render() {
     //changes circles when selecting a team
     dispatch_scatter.on("team", function() {
         console.log("dispatch team scatter");
-        changeCircles();        
+        changeCircles(true);        
     })
 
     //change circles when year slider changes
     dispatch_scatter.on("year", function() { 
         console.log("dispatch year scatter");
-        changeCircles();        
+        changeCircles(true);        
     })
 
     //changes circles when changing to PPG
@@ -189,10 +189,8 @@ function render() {
             console.log("isppmSTART");
             isPPG = true;
             xaxis.transition().duration(1000).call(xPPG);
-            //axisPPG.style("opacity", 1);
-            //axisPPM.style("opacity", 0);
             console.log("isppmEND");
-            changeCircles();
+            changeCircles(false);
         
     })
 
@@ -212,19 +210,24 @@ function render() {
            // axisPPG.style("opacity", 0);
             //axisPPM.style("opacity", 1);
             console.log("isppgEND");
-            changeCircles();
+            changeCircles(false);
 
     })
 
-    function changeCircles() {
+    function changeCircles(flag) {
+
+        //need for the hack to hide circles when team has fewer members
+        if (flag) {
+            svg_scatterplot.selectAll("circle").transition().duration(0)
+                .attr("opacity", 0)
+        }
+
         svg_scatterplot.selectAll("circle")
             .data(data_scatter                
                 .filter(function(d){ return d.season == season_filter; })
                 .filter(function(d){ return d.team == team_filter; }))
             .transition().duration(1000)
-            .attr("class", function(d) {
-                return circleRemoveFlag;
-            })
+            .attr("opacity", 1)
             .attr("r", r)
             .attr("fill", function(d){
                 return teamColor(d.team, 1);
@@ -234,22 +237,13 @@ function render() {
             })
             .attr("stroke-width", borderWidth)
             .attr("cx", function(d){
-                if (d.ppg == 0) {return padding+30;}
+                if (d.ppg == 0) {return padding+25;}
                 if (isPPG) {return xscalePPG(d.ppg);}
                 else { return xscalePPM(d.ppm); }
             })
             .attr("cy", function(d) {
                 return hscale(d.salary/10000);
             })
-            .on("mouseover", mouseover )
-            .on("mousemove", mousemove )
-            .on("mouseleave", mouseleave )
             
-            /* code to remove extra circles, not working
-            var toRemove;
-            if (circleRemoveFlag == "flag1") toRemove = "flag2";
-            else toRemove = "flag1";
-            svg_scatterplot.selectAll("." + toRemove).remove()
-            */
     }
 }

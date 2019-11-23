@@ -61,7 +61,7 @@ function team_dropdown() {
 }
 
 function player1_dropdown(){
-  console.log(new_data);
+  //console.log(new_data);
   document.getElementById("player1_dropdown").classList.toggle("show");
 }
 
@@ -120,15 +120,11 @@ function start_slider(){
 }
 
 function changeIdioms(e){
-  console.log(e.innerText)
+  //console.log(e.innerText)
   document.getElementById("teamInput").value = e.innerText;   //search input
 
   old_team_filter = team_filter;
   team_filter = e.innerText;  
-
-  if (circleRemoveFlag == "flag1") circleRemoveFlag = "flag2";
-  else circleRemoveFlag = "flag1";
-
 
   console.log("FILTER", team_filter)
 
@@ -149,7 +145,7 @@ function updatePlayerDropdown(){
 	}
 	//update the players' list
 	for(var i = 0; i < new_data.length; i++){
-		console.log(new_data[i].Player);
+		//console.log(new_data[i].Player);
 		element = document.createElement('a');
 		linkTest = document.createTextNode(new_data[i].Player);
 		element.appendChild(linkTest);
