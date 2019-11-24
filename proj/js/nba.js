@@ -40,7 +40,7 @@ var season_filter = 2000;
 var old_team_filter;
 
 var dispatch_scatter = d3.dispatch("year", "team");   //two functions can be called when dispatch is called
-var dispatch_radar = d3.dispatch("year", "team");
+var dispatch_radar = d3.dispatch("year", "team", "player");
 
 var slider;
 
@@ -162,5 +162,5 @@ function updatePlayerDropdown(){
 function changePlayer1(e){
   console.log("changePlayer1" + player1_filter);
 	player1_filter = e.innerHTML;
-  dispatch_radar.call("team");
+  dispatch_radar.call("player");
 }
