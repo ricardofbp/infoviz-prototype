@@ -42,6 +42,9 @@ body:after {
   background-color:darkslategrey;
 }
 
+#ppg {
+  background-color: gray;
+}
 /* Dropdown Button Of Team*/
 .dropbtn_team {
   position: relative;

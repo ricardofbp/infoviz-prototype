@@ -4,11 +4,13 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 };
 
 var data_radar;
 var new_data;
+var new_data_aux;
 var blobWrapper;
 var blobCircleWrapper;
 var radarLine;
 var tooltip;
 
+var g;
 
 //top values for scales
 var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
@@ -157,7 +159,7 @@ function gen_viz() {
 			.attr("class", "radar");
 
 
-	let g = svg.append("g")
+	g = svg.append("g")
 			.attr("transform", "translate(" + (w/2 + margin.left) + "," + (h/2 + margin.top) + ")");
 
 	////////////////////////////////////////
@@ -281,14 +283,20 @@ function getMaxSalary(){
 	////////////////////////////////////////////////////////
 	/////////////////Filter the data////////////////////////
 	////////////////////////////////////////////////////////
+	//maxSalary = d3.max(new_data, function(d){ return d.axes[0].value});
+	//console.log(maxSalary);
 	
-	new_data = getTeamAverage(data_radar.
-			filter(function(d){ return d.Season == season_filter;}).
-			filter(function(d){ return d.Team == team_filter;})/*.
-			filter(function(d){ return d.Player == player1_filter})*/);
+
+	new_data = transformData(data_radar
+			.filter(function(d){ return d.Season == season_filter;})
+			.filter(function(d){ return d.Team == team_filter;})
+			.filter(function(d){ return d.Player == player1_filter}));
 	////////////////////////////////////////////////////////
-	maxSalary = d3.max(new_data, function(d){ return d.axes[0].value});
-	console.log(maxSalary);
+
+	new_data_aux = transformData(data_radar.
+			filter(function(d){ return d.Season == season_filter;}).
+			filter(function(d){ return d.Team == team_filter;}));
+
 	blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
 		.enter().append("g")
@@ -388,60 +396,56 @@ function getMaxSalary(){
 	});
 
 	function changeRadar(){
-		new_data = getTeamAverage(data_radar.
+
+		new_data_aux = transformData(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
-			filter(function(d){ return d.Team == team_filter;})/*.
-			filter(function(d){ return d.Player == player1_filter;})*/);
+			filter(function(d){ return d.Team == team_filter;}));
+
+		new_data = transformData(data_radar
+			.filter(function(d){ return d.Season == season_filter;})
+			.filter(function(d){ return d.Team == team_filter;})
+			.filter(function(d){ return d.Player == player1_filter;}));
 
 		blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
-		//.transition().duration(1000)
-		.attr("class", "radarWrapper");
+		.transition().duration(1000)
+		//.attr("class", "radarWrapper");
 
-		blobWrapper
-			.append("path")
-			.attr("class", "radarArea")
+		g.selectAll(".radarArea")
+			.data(new_data)
+		.transition().duration(1000)
+			//.attr("class", "radarArea")
 				.attr("d", d => radarLine(d.axes))
-				.style("fill", (d,i) => color(i))
-				.style("fill-opacity", 0.35) //opacity area
-				.on('mouseover', function(d, i) {
-					//Dim all blobs
-					parent.selectAll(".radarArea")
-						.transition().duration(200)
-						.style("fill-opacity", 0.1);
-					//Bring back the hovered over blob
-					d3.select(this)
-					.transition().duration(200)
-					.style("fill-opacity", 0.7);
-				})
-				.on('mouseout', () => {
-					//Bring back all blobs
-					parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.35); //opacity area
-				});
+				.style("fill", (d,i) => teamColor(d.Team, 1))
+				.style("fill-opacity", 0.4) //opacity area
 		//Create the outlines
-		blobWrapper.append("path")
-			.attr("class", "radarStroke")
+		g.selectAll(".radarStroke")//.append("path")
+		.data(new_data)
+		.transition().duration(1000)
+			//.attr("class", "radarStroke")
 			.attr("d", function(d,i) { return radarLine(d.axes); })
 			.style("stroke-width", outline_width + "px")
-			.style("stroke", (d,i) => color(i))
+			.style("stroke", (d,i) => teamColor(d.Team, 2))
 			.style("fill", "none")
 			.style("filter" , "url(#glow)");
 	
 		//Append the outline circles
-		blobWrapper.selectAll(".radarCircle")
+		g.selectAll(".radarWrapper")
+			.data(new_data)
+			.selectAll(".radarCircle")
+			//.data(new_data)
 			.data(d => d.axes)
-			.enter()
-			.append("circle")
+			//.enter()
+			.transition().duration(1000)
+			//.append("circle")
 			.attr("class", "radarCircle")
 			.attr("r", outline_dots_radius)
 			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
-			.style("fill", (d) => color(d.id))
+			.style("fill", (d) => teamColor(team_filter, 1))
 			.style("fill-opacity", 0.8);
 	
-	
+		
 		/////////////////////////////////////////////////////////
 		//////// Append invisible circles for tooltip ///////////
 		/////////////////////////////////////////////////////////

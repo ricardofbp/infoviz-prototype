@@ -35,9 +35,9 @@ var teamColors =
 ]
 
 var team_filter = "Boston Celtics";
-var old_team_filter;
+var player1_filter = "Wayne Turner";
 var season_filter = 2000;
-var player1_filter;
+var old_team_filter;
 
 var dispatch_scatter = d3.dispatch("year", "team");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "team");
@@ -126,11 +126,12 @@ function changeIdioms(e){
   old_team_filter = team_filter;
   team_filter = e.innerText;  
 
+
   console.log("FILTER", team_filter)
 
-  dispatch_radar.call("team");
-  updatePlayerDropdown();
+  dispatch_radar.call("team");  
   dispatch_scatter.call("team");
+  updatePlayerDropdown();
 
 }
 
@@ -144,19 +145,22 @@ function updatePlayerDropdown(){
 		drop.removeChild(drop.lastChild);
 	}
 	//update the players' list
-	for(var i = 0; i < new_data.length; i++){
+	for(var i = 0; i < new_data_aux.length; i++){
 		//console.log(new_data[i].Player);
 		element = document.createElement('a');
-		linkTest = document.createTextNode(new_data[i].Player);
+		linkTest = document.createTextNode(new_data_aux[i].Player);
 		element.appendChild(linkTest);
-		element.href = "#" + new_data[i].Player;
-		element.onclick = function(){changePlayer1(new_data[i].Player);};
+		element.href = "#" + new_data_aux[i].Player;
+    //console.log(element.id);
+		element.onclick = function(){changePlayer1(this)};
 		console.log(element);
 		drop.appendChild(element);
 		
   }
 }
 
-function changePlayer1(name){
-	player1_filter = name;
+function changePlayer1(e){
+  console.log("changePlayer1" + player1_filter);
+	player1_filter = e.innerHTML;
+  dispatch_radar.call("team");
 }
