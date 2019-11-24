@@ -116,6 +116,9 @@ function start_slider(){
         season_filter = new_val;
       }
       dispatch_scatter.call("year");
+      dispatch_radar.call("year");
+      updatePlayerDropdown();
+
     });
 }
 

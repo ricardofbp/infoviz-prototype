@@ -1,6 +1,5 @@
 var margin = { top: 50, right: 80, bottom: 50, left: 80 };
 
-//var data2;
 
 var data_radar;
 var new_data;
@@ -17,7 +16,7 @@ var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
 
 //bottom values for scales 
 var minSalary, minHeight, minWeight, minPPG, minPPM;
-
+var SalaryScale, WeightScale, HeightScale, PPGScale, PPMScale;
 
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
@@ -26,6 +25,10 @@ d3.csv("../dataset/radarchart_dataset.csv")
 	gen_viz();
 	
 });
+
+////////////////////////////////////////////////////
+///////// Functions for updating Scales ////////////
+////////////////////////////////////////////////////
 
 function updateMax(vals){
 	maxSalary = vals[0] + vals[0]/10;
@@ -51,7 +54,6 @@ function findMinMax(data){   //receives data already filtered by year
 		var n_data = data.filter(function(d){ return d.Team == team;});
 		if(n_data.length > 0){
 			var avg_data_team = getTeamAverage(n_data);
-			console.log(avg_data_team);
 			for (let i = 0; i < 5; i++) {
 				if(avg_data_team[0].axes[i].value > final_vals_max[i]){
 					final_vals_max[i] = avg_data_team[0].axes[i].value;
@@ -66,6 +68,7 @@ function findMinMax(data){   //receives data already filtered by year
 	updateMin(final_vals_min);
 	console.log(final_vals_min, final_vals_max)
 }
+/////////////////////////////////////////////////////////////////////////
 
 function getTeamAverage(data){
 	data_final = [];
@@ -93,7 +96,6 @@ function getTeamAverage(data){
 
 	d.axes = axes;
 	data_final.push(d);
-	console.log(data_final);
 	return data_final;
 }
 //can be done in the d3.csv conversor
@@ -114,7 +116,6 @@ function transformData(data){
 		d.axes = axes;
 		data_final.push(d);
 	}
-	//data_radar = data_final;
 	return data_final;
 }
 
@@ -150,29 +151,7 @@ const outline_dots_radius = 4;
 
 var w = 250;
 var h = 250;
-/*
-data2 = [
-			{ name: 'Kobe Bryant',
-					axes: [
-						{axis: 'Salary', value: 30453805},
-						{axis: 'PPG', value: 22.5},
-						{axis: 'Height', value: 198.12},
-						{axis: 'Weight', value: 90.8},
-						{axis: 'PPM', value: 0.58835},
-					]
-			},
-			{ name: 'Miguel',
-					axes: [
-						{axis: 'Salary', value: 2000000},
-						{axis: 'PPG', value: 21.5},
-						{axis: 'Height', value: 130.12},
-						{axis: 'Weight', value: 60},
-						{axis: 'PPM', value: 0.68},
-					]
 
-			}
-			];
-*/
 const max = Math.max;
 const sin = Math.sin;
 const cos = Math.cos;
@@ -189,7 +168,16 @@ const angleSlice = Math.PI * 2 / total;		            //The width in radians of e
 
 
 function gen_viz() {
-	//determine right away max and min values for scales by filtering the data
+	////////////////////////////////////////////////////////
+	/////////////////Filter the data////////////////////////
+	////////////////////////////////////////////////////////	
+	new_data_aux = getTeamAverage(data_radar.
+		filter(function(d){ return d.Season == season_filter;}).
+		filter(function(d){ return d.Team == team_filter;}));
+
+	findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));
+	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
+	/////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////
@@ -236,36 +224,31 @@ function gen_viz() {
 	//Scales
 
 	//Scale for salary
-	maxSalary = 30453805
-	var SalaryScale = d3.scaleLinear()
+	SalaryScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minSalary, maxSalary]);
 
 
 	//Scale for height
-	maxHeight = 228.6;
-	var HeightScale = d3.scaleLinear()
+	HeightScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minHeight, maxHeight]);
 
 
 	//Scale for weight
-	maxWeight = 163.44;
-	var WeightScale = d3.scaleLinear()
+	WeightScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minWeight, maxWeight]);
 
 
 	//Scale for the PPM
-	maxPPM = 1.5;
-	var PPMScale = d3.scaleLinear()
+	PPMScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minPPM, maxPPM]);
 
 
 	//Scale for PPG
-	maxPPG = 29.75;
-	var PPGScale = d3.scaleLinear()
+	PPGScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minPPG, maxPPG]);
 
@@ -293,8 +276,8 @@ function gen_viz() {
 	axis.append("line")
 		.attr("x1", 0)
 		.attr("y1", 0)
-		.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.01) * cos(angleSlice * i - HALF_PI))
-		.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.01) * sin(angleSlice * i - HALF_PI))
+		.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * cos(angleSlice * i - HALF_PI))
+		.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * sin(angleSlice * i - HALF_PI))
 		.attr("class", "line")
 		.style("stroke", "white")
 		.style("stroke-width", "2px");
@@ -306,8 +289,8 @@ function gen_viz() {
 			.style("font-size", "11px")
 			.attr("text-anchor", "middle")
 			.attr("dy", "0.35em")
-			.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.2) * cos(angleSlice * i - HALF_PI))
-			.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.2) * sin(angleSlice * i - HALF_PI))
+			.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
+			.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
 			.text(d => d)
 			.call(wrap, 60);
 
@@ -321,26 +304,11 @@ function gen_viz() {
 		.radius((d, i) => (eval(allAxis[i] + "Scale")(d.value)))
 		.angle((d,i) => i * angleSlice);
 
-	////////////////////////////////////////////////////////
-	/////////////////Filter the data////////////////////////
-	////////////////////////////////////////////////////////
-	//maxSalary = d3.max(new_data, function(d){ return d.axes[0].value});
-	//console.log(maxSalary);
-	
 
-	/*new_data = transformData(data_radar
-			.filter(function(d){ return d.Season == season_filter;})
-			.filter(function(d){ return d.Team == team_filter;})
-			.filter(function(d){ return d.Player == player1_filter}));
-	////////////////////////////////////////////////////////
-	findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));
-
-	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
 	new_data_aux = getTeamAverage(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
 			filter(function(d){ return d.Team == team_filter;}));
 	
-	console.log(d3.max(new_data_aux, function(d){return d.axes[0]}));
 	blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data_aux)
 		.enter().append("g")
@@ -441,6 +409,10 @@ function gen_viz() {
 
 	dispatch_radar.on("team", function() {
 		changeRadar("team");
+	});
+
+	dispatch_radar.on("year", function(){
+		changeRadar("team");
 	})
 
 	function changeRadar(option){
@@ -454,6 +426,8 @@ function gen_viz() {
 				.filter(function(d){ return d.Season == season_filter;})
 				.filter(function(d){ return d.Team == team_filter;}));
 
+			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
+
 		}
 
 		if (option == "player") {
@@ -462,6 +436,70 @@ function gen_viz() {
 					.filter(function(d){ return d.Team == team_filter;})
 					.filter(function(d){ return d.Player == player1_filter;}));
 		}
+
+		//////////////////////////////////////////////////////////////
+		///////////////////// Update the Axis ////////////////////////
+		//////////////////////////////////////////////////////////////
+		SalaryScale = d3.scaleLinear()
+		.range([0, radius])
+		.domain([minSalary, maxSalary]);
+
+
+		//Scale for height
+		HeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minHeight, maxHeight]);
+
+
+		//Scale for weight
+		WeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minWeight, maxWeight]);
+
+
+		//Scale for the PPM
+		PPMScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPM, maxPPM]);
+
+
+		//Scale for PPG
+		PPGScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPG, maxPPG]);
+
+		axis = axisGrid.selectAll(".axis")
+			.data(allAxis)
+			.enter()
+			.append("g")
+			.attr("class", "axis");
+		console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM)
+
+		axis = axisGrid.selectAll(".axis")
+		.data(allAxis)
+		.enter()
+		.append("g")
+		.attr("class", "axis");
+
+		//Draw the scales lines
+		axis.append("line")
+			.attr("x1", 0)
+			.attr("y1", 0)
+			.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * cos(angleSlice * i - HALF_PI))
+			.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * sin(angleSlice * i - HALF_PI))
+			.attr("class", "line")
+			.style("stroke", "white")
+			.style("stroke-width", "2px");
+
+		axis.append("text")
+			.attr("class", "legend")
+			.style("font-size", "11px")
+			.attr("text-anchor", "middle")
+			.attr("dy", "0.35em")
+			.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
+			.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
+			.text(d => d)
+			.call(wrap, 60);
 
 		blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
