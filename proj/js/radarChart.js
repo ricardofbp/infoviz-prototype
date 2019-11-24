@@ -15,6 +15,9 @@ var g;
 //top values for scales
 var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
 
+//bottom values for scales 
+var minSalary, minHeight, minWeight, minPPG, minPPM;
+
 
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
@@ -23,6 +26,46 @@ d3.csv("../dataset/radarchart_dataset.csv")
 	gen_viz();
 	
 });
+
+function updateMax(vals){
+	maxSalary = vals[0] + vals[0]/10;
+	maxPPG = vals[1] + vals[1]/10;
+	maxHeight = vals[2] + vals[2]/10;
+	maxWeight = vals[3] + vals[3]/10;
+	maxPPM = vals[4] + vals[4]/10;
+}
+
+function updateMin(vals){               
+	minSalary = vals[0] - vals[0]/10;
+	minPPG = vals[1] - vals[1]/10;
+	minHeight = vals[2] - vals[2]/10;
+	minWeight = vals[3] - vals[3]/10;
+	minPPM = vals[4] - vals[4]/10;
+}
+
+function findMinMax(data){   //receives data already filtered by year
+	final_vals_max = [0, 0, 0, 0, 0];
+	final_vals_min = [2968886.5, 8.354, 200.357, 98.857, 0.36511];
+	for (let i = 0; i < teamColors.length; i++) {
+		var team = teamColors[i].team;
+		var n_data = data.filter(function(d){ return d.Team == team;});
+		if(n_data.length > 0){
+			var avg_data_team = getTeamAverage(n_data);
+			console.log(avg_data_team);
+			for (let i = 0; i < 5; i++) {
+				if(avg_data_team[0].axes[i].value > final_vals_max[i]){
+					final_vals_max[i] = avg_data_team[0].axes[i].value;
+				}
+				if(avg_data_team[0].axes[i].value < final_vals_min[i]){
+					final_vals_min[i] = avg_data_team[0].axes[i].value;
+				}
+			}
+		}
+	}
+	updateMax(final_vals_max);
+	updateMin(final_vals_min);
+	console.log(final_vals_min, final_vals_max)
+}
 
 function getTeamAverage(data){
 	data_final = [];
@@ -148,6 +191,9 @@ const angleSlice = Math.PI * 2 / total;		            //The width in radians of e
 
 
 function gen_viz() {
+	//determine right away max and min values for scales by filtering the data
+
+
 ////////////////////////////////////////////
 ///////////// Create the svg container /////
 ////////////////////////////////////////////
@@ -190,43 +236,40 @@ function gen_viz() {
 	////////////////////////////////////////
 
 	//Scales
-function getMaxSalary(){
-	console.log(maxSalary);
-	return maxSalary;
-}
+
 	//Scale for salary
 	maxSalary = 30453805
 	var SalaryScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, maxSalary]);
+		.domain([minSalary, maxSalary]);
 
 
 	//Scale for height
 	maxHeight = 228.6;
 	var HeightScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, maxHeight]);
+		.domain([minHeight, maxHeight]);
 
 
 	//Scale for weight
 	maxWeight = 163.44;
 	var WeightScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, maxWeight]);
+		.domain([minWeight, maxWeight]);
 
 
 	//Scale for the PPM
 	maxPPM = 1.5;
 	var PPMScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, maxPPM]);
+		.domain([minPPM, maxPPM]);
 
 
 	//Scale for PPG
 	maxPPG = 29.75;
 	var PPGScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, maxPPG]);
+		.domain([minPPG, maxPPG]);
 
 
 	/*
@@ -247,7 +290,7 @@ function getMaxSalary(){
 		.enter()
 		.append("g")
 		.attr("class", "axis");
-
+	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM)
 	//Draw the scales lines
 	axis.append("line")
 		.attr("x1", 0)
@@ -287,18 +330,21 @@ function getMaxSalary(){
 	//console.log(maxSalary);
 	
 
-	new_data = transformData(data_radar
+	/*new_data = transformData(data_radar
 			.filter(function(d){ return d.Season == season_filter;})
 			.filter(function(d){ return d.Team == team_filter;})
 			.filter(function(d){ return d.Player == player1_filter}));
 	////////////////////////////////////////////////////////
+	findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));
 
-	new_data_aux = transformData(data_radar.
+	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
+	new_data_aux = getTeamAverage(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
 			filter(function(d){ return d.Team == team_filter;}));
-
+	
+	console.log(d3.max(new_data_aux, function(d){return d.axes[0]}));
 	blobWrapper = g.selectAll(".radarWrapper")
-		.data(new_data)
+		.data(new_data_aux)
 		.enter().append("g")
 		.attr("class", "radarWrapper");
 
@@ -352,7 +398,7 @@ function getMaxSalary(){
 	/////////////////////////////////////////////////////////
 
 	blobCircleWrapper = g.selectAll(".radarCircleWrapper")
-		.data(new_data)
+		.data(new_data_aux)
 		.enter().append("g")
 		.attr("class", "radarCircleWrapper");
 
