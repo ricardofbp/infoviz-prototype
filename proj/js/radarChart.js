@@ -48,25 +48,85 @@ function updateMin(vals){
 
 function findMinMax(data){   //receives data already filtered by year
 	final_vals_max = [0, 0, 0, 0, 0];
-	final_vals_min = [2968886.5, 8.354, 200.357, 98.857, 0.36511];
+	final_vals_min = getTeamMinExample(data);
+	//final_vals_min = [2968886.5, 8.354, 200.357, 98.857, 0.36511]; //first team Atlanta Hawks
 	for (let i = 0; i < teamColors.length; i++) {
 		var team = teamColors[i].team;
 		var n_data = data.filter(function(d){ return d.Team == team;});
 		if(n_data.length > 0){
 			var avg_data_team = getTeamAverage(n_data);
-			for (let i = 0; i < 5; i++) {
-				if(avg_data_team[0].axes[i].value > final_vals_max[i]){
-					final_vals_max[i] = avg_data_team[0].axes[i].value;
+			for (let e = 0; e < 5; e++) {
+				if(avg_data_team[0].axes[e].value > final_vals_max[e]){
+					final_vals_max[e] = avg_data_team[0].axes[e].value;
 				}
-				if(avg_data_team[0].axes[i].value < final_vals_min[i]){
-					final_vals_min[i] = avg_data_team[0].axes[i].value;
+				if(avg_data_team[0].axes[e].value < final_vals_min[e]){
+					final_vals_min[e] = avg_data_team[0].axes[e].value;
 				}
 			}
 		}
 	}
 	updateMax(final_vals_max);
 	updateMin(final_vals_min);
-	console.log(final_vals_min, final_vals_max)
+}
+
+function getTeamMinExample(data){
+	var n_data = data.filter(function(d){ return d.Team == "Atlanta Hawks";});
+	var avg_data_team = getTeamAverage(n_data);
+	return [avg_data_team[0].axes[0].value, avg_data_team[0].axes[1].value, avg_data_team[0].axes[2].value, 
+					avg_data_team[0].axes[3].value, avg_data_team[0].axes[4].value];
+}
+
+function getPlayerMinExample(data){
+	return [parseFloat(data[0].Salary), parseFloat(data[0].PPG), parseFloat(data[0].Height), parseFloat(data[0].Weight), parseFloat(data[0].PPM)]; //first example to initiate the array
+}
+
+function findMinMax_players(data){
+	final_vals_max = [0, 0, 0, 0, 0];
+	final_vals_min = getPlayerMinExample(data);
+	for (let e = 0; e < data.length; e++){
+		if(parseFloat(data[e].Salary) > final_vals_max[0]){
+			final_vals_max[0] = parseFloat(data[e].Salary);
+		}
+		if(parseFloat(data[e].PPG) > final_vals_max[1]){
+			final_vals_max[1] = parseFloat(data[e].PPG);
+		}
+
+		if(parseFloat(data[e].Height) > final_vals_max[2]){
+			final_vals_max[2] = parseFloat(data[e].Height);
+		}
+
+		if(parseFloat(data[e].Weight) > final_vals_max[3]){
+			final_vals_max[3] = parseFloat(data[e].Weight);
+		}
+
+		if(parseFloat(data[e].PPM) > final_vals_max[4]){
+			final_vals_max[4] = parseFloat(data[e].PPM);
+		}
+
+		if(parseFloat(data[e].Salary) < final_vals_min[0]){
+			final_vals_min[0] = parseFloat(data[e].Salary);
+		}
+		if(parseFloat(data[e].PPG) < final_vals_min[1]){
+			final_vals_min[1] = parseFloat(data[e].PPG);
+		}
+
+		if(parseFloat(data[e].Height) < final_vals_min[2]){
+			final_vals_min[2] = parseFloat(data[e].Height);
+		}
+
+		if(parseFloat(data[e].Weight) < final_vals_min[3]){
+			final_vals_min[3] = parseFloat(data[e].Weight);
+		}
+
+		if(parseFloat(data[e].PPM) < final_vals_min[4]){
+			final_vals_min[4] = parseFloat(data[e].PPM);
+		}
+
+	}
+	updateMax(final_vals_max);
+	updateMin(final_vals_min);
+	console.log(final_vals_min);
+	console.log(final_vals_max);
 }
 /////////////////////////////////////////////////////////////////////////
 
@@ -435,6 +495,8 @@ function gen_viz() {
 					.filter(function(d){ return d.Season == season_filter;})
 					.filter(function(d){ return d.Team == team_filter;})
 					.filter(function(d){ return d.Player == player1_filter;}));
+
+			findMinMax_players(data_radar.filter(function(d){ return d.Season == season_filter}));
 		}
 
 		//////////////////////////////////////////////////////////////
