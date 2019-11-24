@@ -23,7 +23,7 @@ d3.csv("../dataset/all_player_stats.csv", function(d) {
 
 function render() {
   // Add X axis
-
+  var scatterplot;
     var maxPPG = 0
     var maxPPM = 0;
 
@@ -47,10 +47,10 @@ function render() {
 
     var bar_w = Math.floor((w-padding*2)/data_scatter.length)-1;
 
-    svg_scatterplot = d3.select("#scatterplot")
+    scatterplot = d3.select("#scatterplot")
         .append("svg")
         .attr("width", w)
-        .attr("height", h)
+        .attr("height", h);
 
     var xscalePPM = d3.scaleLinear()
         .domain([0, maxPPM])
@@ -80,42 +80,67 @@ function render() {
         .range([padding+bar_w/2,w-padding-bar_w/2]))
 
     //appends both initial axis (salary and PPG)
-    var xaxis = svg_scatterplot.append("g")
+    var xaxis = scatterplot.append("g")
         .attr("id", "axisPPG")
         .attr("transform","translate(25," + (h-padding) + ")")
         .call(xPPG);
 
-    var yaxis = svg_scatterplot.append("g")
+    var yaxis = scatterplot.append("g")
         .attr("id", "yaxis")
        // .style("padding-left", "100px")
         .attr("transform", "translate(55,0)")
         .call(ySalary);
 
-    var xlabel = svg_scatterplot.append("text")  
+    var ylabel = scatterplot.append("text")  
+        .attr("id", "ylabel")
         .style("font-family", "sans-serif")
         .style("font-size", "12px")
         .attr("transform", "rotate(-90)")
-        .attr("y", "0px")
-        .attr("x",0 - (h / 2))
+        .attr("y", 0)
+        .attr("x", -h/2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Salary (in 10000$)");
 
+    var clip = scatterplot.append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", w )
+        .attr("height", h )
+        .attr("x", padding+25)
+        .attr("y", 0);
+
+    svg_scatterplot = scatterplot.append("g")
+        .attr("clip-path", "url(#clip)");
+
     //tooltip related
     var tooltip = d3.select("#scatterplot")
         .append("div")
+        .attr("id", "tooltip_s")
+        //.style("z-index", 2)
         .style("opacity", 0)
         .attr("class", "tooltip")
         .style("color", "white")
         .style("background-color", "#373434")
         .style("border", "1px solid #ddd")
         .style("border-width", "1px")
-        .style("padding", "10px")
+        .style("padding", "10px");
 
+    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+      .extent( [ [padding+25, 0], [w,h-padding] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      .on("end", zoom) // Each time the brush selection changes, trigger the 'updateChart' function
+      //.style("z-index", 1)
+      ;
+
+    svg_scatterplot
+        .append("g")
+        .attr("class", "brush")
+        .call(brush);
 
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     var mouseover = function(d) {
+        console.log("mouseover tooltip");
         tooltip
         .style("opacity", 1)
     }
@@ -123,21 +148,18 @@ function render() {
     var mousemove = function(d) {
         tooltip
         .html("<b>Player:</b> " + d.name + "<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
-        .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.mouse(this)[1]) + "px")
+        .style("left", (d3.mouse(this)[0]+75) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (d3.mouse(this)[1]+30) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
     var mouseleave = function(d) {
+        console.log("mouseleave tooltip")
         tooltip
             .transition()
             .duration(200)
             .style("opacity", 0)
     }
-
-    svg_scatterplot
-      .call( d3.brushX()                     // Add the brush feature using the d3.brush function
-        .extent( [ [0,100], [400,300] ] ));
 
     //appends the circles
     svg_scatterplot.selectAll("circle")
@@ -183,7 +205,10 @@ function render() {
 
     //changes circles when changing to PPG
     d3.select("#ppg")
-      .on("click", function() { 
+        .on("click", function() {
+            isPPG = true; 
+            resetAxis();
+
             d3.select("#ppg")
             .style("background-color", "gray");
 
@@ -191,8 +216,12 @@ function render() {
             .style("background-color", "#373434")
 
             console.log("isppmSTART");
-            isPPG = true;
-            xaxis.transition().duration(1000).call(xPPG);
+            
+            xaxis
+            .transition().duration(1000)
+            .attr("transform","translate(25," + (h-padding) + ")")
+            .call(xPPG);
+
             console.log("isppmEND");
             changeCircles(false);
         
@@ -200,7 +229,9 @@ function render() {
 
     //changes circles when changing to PPM
     d3.select("#ppm")
-      .on("click", function() { 
+        .on("click", function() { 
+            isPPG = false;
+            resetAxis();
 
             d3.select("#ppm")
             .style("background-color", "gray");
@@ -209,14 +240,21 @@ function render() {
             .style("background-color", "#373434")
 
             console.log("isppg START");
-            isPPG = false;
-            xaxis.transition().duration(1000).call(xPPM);
-           // axisPPG.style("opacity", 0);
-            //axisPPM.style("opacity", 1);
+            
+            xaxis
+            .transition().duration(1000)
+            .attr("transform","translate(25," + (h-padding) + ")")
+            .call(xPPM);
+
             console.log("isppgEND");
             changeCircles(false);
 
     })
+
+
+    ////////////////////////////////////////////////////////
+    //                    FUNCTIONS                       //
+    ////////////////////////////////////////////////////////
 
     function changeCircles(flag) {
 
@@ -248,6 +286,79 @@ function render() {
             .attr("cy", function(d) {
                 return hscale(d.salary/10000);
             })
+            .style("z-index", 3);
             
     }
+
+    //zoom related stuff
+    
+    var idleTimeout;
+
+    function idled() { idleTimeout = null; }
+
+    // A function that update the chart for given boundaries
+    function zoom() {
+        var x;
+        var max;
+        var axis;
+        var tickFormat; 
+
+        if (isPPG) { 
+            x = xscalePPG;
+            max = maxPPG;
+            axis = xPPG;
+            tickFormat = ".1f";
+        } else {
+            x = xscalePPM;
+            max = maxPPM;
+            axis = xPPM;
+            tickFormat = ".2f";
+        } 
+
+        extent = d3.event.selection;
+
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if(!extent){
+            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+
+            x
+            .domain([0, max])
+            .range([padding+25,w-padding+25]);
+        } else {
+            x
+            .domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+            .range([padding+25,w-padding+25]);
+            d3.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+         }
+        // Update axis and circle position
+        xaxis
+
+            .transition().duration(1000)
+            .attr("transform","translate(0," + (h-padding) + ")")
+            .call(d3.axisBottom(x)
+                .ticks(10, tickFormat));
+
+        changeCircles(false);
+    }
+
+    function resetAxis() {
+        xscalePPM = d3.scaleLinear()
+            .domain([0, maxPPM])
+            .range([padding+25,w-padding+25]);
+
+        xscalePPG = d3.scaleLinear()
+            .domain([0, maxPPG])
+            .range([padding+25,w-padding+25]);
+
+        xPPG = d3.axisBottom()
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPG])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+
+        xPPM = d3.axisBottom()
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPM])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+    }
+
 }
