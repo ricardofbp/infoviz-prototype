@@ -33,8 +33,6 @@ function getTeamAverage(data){
 	var weight = 0;
 	var ppm = 0;
 	var d = {}
-	d.Season = data[0].Season;  //any player
-	d.Team = data[0].Team;
 
 	for (var i = data.length - 1; i >= 0; i--) {
 		salary += parseFloat(data[i].Salary);
@@ -391,20 +389,33 @@ function getMaxSalary(){
 	//////////////////////////////////////////////////
 	/////////////// ON CLICK /////////////////////////
 	//////////////////////////////////////////////////
-	dispatch_radar.on("team", function(){
-		changeRadar();
+	dispatch_radar.on("player", function(){
+		changeRadar("player");
 	});
 
-	function changeRadar(){
+	dispatch_radar.on("team", function() {
+		changeRadar("team");
+	})
 
-		new_data_aux = transformData(data_radar.
-			filter(function(d){ return d.Season == season_filter;}).
-			filter(function(d){ return d.Team == team_filter;}));
+	function changeRadar(option){
 
-		new_data = transformData(data_radar
-			.filter(function(d){ return d.Season == season_filter;})
-			.filter(function(d){ return d.Team == team_filter;})
-			.filter(function(d){ return d.Player == player1_filter;}));
+		if (option == "team") {
+			new_data_aux = transformData(data_radar
+				.filter(function(d){ return d.Season == season_filter;})
+				.filter(function(d){ return d.Team == team_filter;}));
+
+			new_data = getTeamAverage(data_radar
+				.filter(function(d){ return d.Season == season_filter;})
+				.filter(function(d){ return d.Team == team_filter;}));
+
+		}
+
+		if (option == "player") {
+				new_data = transformData(data_radar
+					.filter(function(d){ return d.Season == season_filter;})
+					.filter(function(d){ return d.Team == team_filter;})
+					.filter(function(d){ return d.Player == player1_filter;}));
+		}
 
 		blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
