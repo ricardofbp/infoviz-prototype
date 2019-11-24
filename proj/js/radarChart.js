@@ -10,13 +10,49 @@ var radarLine;
 var tooltip;
 
 
+//top values for scales
+var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
+
+
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
 	data_radar = d;
+	console.log()
 	gen_viz();
 	
 });
 
+function getTeamAverage(data){
+	data_final = [];
+
+	var salary = 0;
+	var ppg = 0;
+	var height = 0;
+	var weight = 0;
+	var ppm = 0;
+	var d = {}
+	d.Season = data[0].Season;  //any player
+	d.Team = data[0].Team;
+
+	for (var i = data.length - 1; i >= 0; i--) {
+		salary += parseFloat(data[i].Salary);
+		ppg += parseFloat(data[i].PPG);
+		height+= parseFloat(data[i].Height);
+		weight += parseFloat(data[i].Weight);
+		ppm += parseFloat(data[i].PPM);
+	}
+	var axes = [];
+	axes.push({axis: "Salary", value: salary/data.length});
+	axes.push({axis: "PPG", value: ppg/data.length});
+	axes.push({axis: "Height", value: height/data.length});
+	axes.push({axis: "Weight", value: weight/data.length});
+	axes.push({axis: "PPM", value: ppm/data.length});
+
+	d.axes = axes;
+	data_final.push(d);
+	console.log(data_final);
+	return data_final;
+}
 //can be done in the d3.csv conversor
 function transformData(data){
 	var data_final = []
@@ -152,46 +188,44 @@ function gen_viz() {
 	////////////////////////////////////////
 
 	//Scales
-
+function getMaxSalary(){
+	console.log(maxSalary);
+	return maxSalary;
+}
 	//Scale for salary
-	const SalaryScale = d3.scaleLinear()
+	maxSalary = 30453805
+	var SalaryScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, 30453805]);
+		.domain([0, maxSalary]);
 
-	const maxSalary = 30453805
 
 	//Scale for height
-	const HeightScale = d3.scaleLinear()
+	maxHeight = 228.6;
+	var HeightScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, 228.6]);
+		.domain([0, maxHeight]);
 
-	const maxHeight = 228.6;
 
 	//Scale for weight
-	const WeightScale = d3.scaleLinear()
+	maxWeight = 163.44;
+	var WeightScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, 163.44]);
+		.domain([0, maxWeight]);
 
-	const maxWeight = 163.44;
 
 	//Scale for the PPM
-	const PPMScale = d3.scaleLinear()
+	maxPPM = 1.5;
+	var PPMScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, 1.5]);
+		.domain([0, maxPPM]);
 
-	const maxPPM = 1.5;
 
 	//Scale for PPG
-	const PPGScale = d3.scaleLinear()
+	maxPPG = 29.75;
+	var PPGScale = d3.scaleLinear()
 		.range([0, radius])
-		.domain([0, 29.75]);
+		.domain([0, maxPPG]);
 
-	const maxPPG = 29.75;
-
-	const maxValue = 60;
-	const rScale = d3.scaleLinear()
-		.range([0, radius])
-		.domain([0, maxValue]);
 
 	/*
 	axisGrid.selectAll(".axisLabel")
@@ -248,12 +282,13 @@ function gen_viz() {
 	/////////////////Filter the data////////////////////////
 	////////////////////////////////////////////////////////
 	
-	new_data = transformData(data_radar.
+	new_data = getTeamAverage(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
 			filter(function(d){ return d.Team == team_filter;})/*.
 			filter(function(d){ return d.Player == player1_filter})*/);
 	////////////////////////////////////////////////////////
-
+	maxSalary = d3.max(new_data, function(d){ return d.axes[0].value});
+	console.log(maxSalary);
 	blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
 		.enter().append("g")
@@ -353,7 +388,7 @@ function gen_viz() {
 	});
 
 	function changeRadar(){
-		new_data = transformData(data_radar.
+		new_data = getTeamAverage(data_radar.
 			filter(function(d){ return d.Season == season_filter;}).
 			filter(function(d){ return d.Team == team_filter;})/*.
 			filter(function(d){ return d.Player == player1_filter;})*/);
