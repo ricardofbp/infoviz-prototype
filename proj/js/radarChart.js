@@ -339,18 +339,6 @@ function gen_viz() {
 		.range([0, radius])
 		.domain([minPPG, maxPPG]);
 
-		/*
-	axisGrid.selectAll(".axisLabel")
-		   .data(allAxis)
-		   .enter().append("text")
-		   .attr("class", "axisLabel")
-		   .attr("x", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *0.99) * cos(angleSlice * i - HALF_PI))
-		   .attr("y", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *0.96) * sin(angleSlice * i - HALF_PI))
-		   .attr("dy", "0.4em")
-		   .style("font-size", "10px")
-		   .attr("fill", "#737373")
-		   .text(d => d);
-		*/
 	var axis = axisGrid.selectAll(".axis")
 		.data(allAxis)
 		.enter()
@@ -494,14 +482,6 @@ function gen_viz() {
 				.style('display', 'none').text('');
 		});*/
 
-	/*const tooltip = g.append("text")
-	.attr("class", "tooltip")
-	.attr('x', 0)
-	.attr('y', 0)
-	.style("font-size", "12px")
-	.style('display', 'none')
-	.attr("text-anchor", "middle")
-	.attr("dy", "0.35em");*/
 
 	//////////////////////////////////////////////////
 	/////////////// ON CLICK /////////////////////////
