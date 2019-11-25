@@ -244,7 +244,7 @@ var changeTooltip = function(d){
 	console.log("aiaiaiai", v)
 	console.log(d3.mouse(this))
 	tooltip
-	.html("<b>" + d.axis + ":</b> " + v)
+	.html("<b>" + d.axis + ":</b> " + v + "<br><b>MinValue:</b> " + eval("min" + d.axis).toFixed(1) + "<br><b>MaxValue:</b> " + eval("max" + d.axis).toFixed(1))
 	.style("position", "relative")
 	.style("width", "130px")
 	.style("left", (d3.mouse(this)[0] +120) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
