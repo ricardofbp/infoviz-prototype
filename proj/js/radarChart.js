@@ -219,12 +219,15 @@ var closeTooltip = function(d) {
 
 var changeTooltip = function(d){
 	var v;
+	var decimals;
 	console.log(d);
 	if(d.axis == "Height"){
 		v = parseFloat(d.value).toFixed(0) + " cm";
+		decimals = 0;
 
 	} if(d.axis == "Weight"){
-		v = parseFloat(d.value).toFixed(1) + " kg"; 
+		v = parseFloat(d.value).toFixed(1) + " kg";
+		decimals = 0;
 	}
 
 	if(d.axis == "Salary"){
@@ -235,20 +238,27 @@ var changeTooltip = function(d){
 		else{
 			v = parseFloat(d.value/1000).toFixed(2) + 'K'
 		}
-		v += " €"
+		v += " $"
+		decimals = 0;
 	}
 
-	if(d.axis == "PPM" || d.axis == "PPG"){
+	if(d.axis == "PPM"){
+		v = parseFloat(d.value).toFixed(2) + " points";
+		decimals = 2;
+	}
+	if(d.axis == "PPG"){
 		v = parseFloat(d.value).toFixed(1) + " points";
+		decimals = 1;
 	}
 	console.log("aiaiaiai", v)
 	console.log(d3.mouse(this))
 	tooltip
-	.html("<b>" + d.axis + ":</b> " + v + "<br><b>MinValue:</b> " + eval("min" + d.axis).toFixed(1) + "<br><b>MaxValue:</b> " + eval("max" + d.axis).toFixed(1))
+	.html("<b>" + d.axis + ":</b> " + v + "<br><b>MinValue:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>MaxValue:</b> " + eval("max" + d.axis).toFixed(decimals))
 	.style("position", "relative")
 	.style("width", "130px")
 	.style("left", (d3.mouse(this)[0] +120) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
 	.style("top", (d3.mouse(this)[1]-220) + "px")
+	.style("font-family", "sans-serif");
 }
 
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
@@ -264,7 +274,7 @@ const cos = Math.cos;
 const HALF_PI = Math.PI / 2;
 
 const allAxis = ["Salary", "PPG", "Height", "Weight", "PPM"]; 	//Names of each axis
-const allAxis_units = ['$', '', 'cm', 'kg', ''];
+const allAxis_units = ['($)', '', '(cm)', '(kg)', ''];
 const total = allAxis.length; 				            //The number of different axes
 
 const radius = Math.min(w/2, h/2);                      //Radius of the outermost circle
@@ -383,7 +393,7 @@ function gen_viz() {
 			.attr("dy", "0.35em")
 			.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
 			.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
-			.text(d => d)
+			.text((d, i) => d + allAxis_units[i])
 			.call(wrap, 60);
 
 

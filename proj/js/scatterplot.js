@@ -124,7 +124,8 @@ function render() {
         .style("background-color", "#373434")
         .style("border", "1px solid #ddd")
         .style("border-width", "1px")
-        .style("padding", "10px");
+        .style("padding", "10px")
+        .style("font-family", "sans-serif");
 
     var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
       .extent( [ [padding+25, 0], [w,h-padding] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
