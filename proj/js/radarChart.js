@@ -218,14 +218,33 @@ var closeTooltip = function(d) {
 }
 
 var changeTooltip = function(d){
-	var v = d.value;
-	console.log("aiaiaiai", v)
-	if(typeof d.value == 'string'){
-		v = parseFloat(d.value);
+	var v;
+	console.log(d);
+	if(d.axis == "Height"){
+		v = parseFloat(d.value).toFixed(0) + " cm";
+
+	} if(d.axis == "Weight"){
+		v = parseFloat(d.value).toFixed(1) + " kg"; 
 	}
+
+	if(d.axis == "Salary"){
+		console.log("entrei aqui")
+		if(parseFloat(d.value) >= 1000000){
+			v = (parseFloat(d.value)/1000000).toFixed(2) + 'M';
+		}
+		else{
+			v = parseFloat(d.value/1000).toFixed(2) + 'K'
+		}
+		v += " €"
+	}
+
+	if(d.axis == "PPM" || d.axis == "PPG"){
+		v = parseFloat(d.value).toFixed(1) + " points";
+	}
+	console.log("aiaiaiai", v)
 	console.log(d3.mouse(this))
 	tooltip
-	.html("<b>" + d.axis + ":</b> " + v.toFixed(3))
+	.html("<b>" + d.axis + ":</b> " + v)
 	.style("position", "relative")
 	.style("width", "130px")
 	.style("left", (d3.mouse(this)[0] +120) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
