@@ -7,9 +7,9 @@ var new_data_aux;
 var blobWrapper;
 var blobCircleWrapper;
 var radarLine;
-var tooltip;
 
 var g;
+var tooltip;
 
 //top values for scales
 var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
@@ -21,7 +21,6 @@ var SalaryScale, WeightScale, HeightScale, PPGScale, PPMScale;
 d3.csv("../dataset/radarchart_dataset.csv")
 .then(function(d){
 	data_radar = d;
-	console.log()
 	gen_viz();
 	
 });
@@ -205,6 +204,34 @@ const wrap = (text, width) => {
 	});
 }//wrap
 
+var showTooltip = function(d){
+	console.log(d);
+	tooltip
+	.style("opacity", 1);
+}
+
+var closeTooltip = function(d) {
+	tooltip
+	.transition()
+	.duration(200)
+	.style("opacity", 0)
+}
+
+var changeTooltip = function(d){
+	var v = d.value;
+	console.log("aiaiaiai", v)
+	if(typeof d.value == 'string'){
+		v = parseFloat(d.value);
+	}
+	console.log(d3.mouse(this))
+	tooltip
+	.html("<b>" + d.axis + ":</b> " + v.toFixed(3))
+	.style("position", "relative")
+	.style("width", "130px")
+	.style("left", (d3.mouse(this)[0] +120) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	.style("top", (d3.mouse(this)[1]-220) + "px")
+}
+
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
 const outline_width = 2;
 const outline_dots_radius = 4;
@@ -253,7 +280,7 @@ function gen_viz() {
 
 	g = svg.append("g")
 			.attr("transform", "translate(" + (w/2 + margin.left) + "," + (h/2 + margin.top) + ")");
-
+	
 	////////////////////////////////////////
 	///// Circular grid ////////////////////
 	////////////////////////////////////////
@@ -312,20 +339,18 @@ function gen_viz() {
 		.range([0, radius])
 		.domain([minPPG, maxPPG]);
 
-
-	/*
+		/*
 	axisGrid.selectAll(".axisLabel")
 		   .data(allAxis)
 		   .enter().append("text")
 		   .attr("class", "axisLabel")
-		   .attr("x", (d, i) => cos(angleSlice * i - HALF_PI))
-		   .attr("y", (d, i) => - radius)
+		   .attr("x", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *0.99) * cos(angleSlice * i - HALF_PI))
+		   .attr("y", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *0.96) * sin(angleSlice * i - HALF_PI))
 		   .attr("dy", "0.4em")
 		   .style("font-size", "10px")
 		   .attr("fill", "#737373")
-		   .text(d => "aiai");
-	*/
-
+		   .text(d => d);
+		*/
 	var axis = axisGrid.selectAll(".axis")
 		.data(allAxis)
 		.enter()
@@ -364,10 +389,6 @@ function gen_viz() {
 		.radius((d, i) => (eval(allAxis[i] + "Scale")(d.value)))
 		.angle((d,i) => i * angleSlice);
 
-
-	new_data_aux = getTeamAverage(data_radar.
-			filter(function(d){ return d.Season == season_filter;}).
-			filter(function(d){ return d.Team == team_filter;}));
 	
 	blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data_aux)
@@ -405,6 +426,20 @@ function gen_viz() {
 		.style("stroke", (d,i) => teamColor(d.Team, 2))
 		.style("fill", "none")
 		.style("filter" , "url(#glow)");
+	
+
+	//tooltip related
+	tooltip = d3.select("#radarChart")
+	.append("div")
+	.attr("id", "tooltip_s")
+	//.style("z-index", 2)
+	.style("opacity", 0)
+	.attr("class", "tooltip")
+	.style("color", "white")
+	.style("background-color", "#373434")
+	.style("border", "1px solid #ddd")
+	.style("border-width", "1px")
+	.style("padding", "10px");
 
 	//Append the outline circles
 	blobWrapper.selectAll(".radarCircle")
@@ -416,14 +451,21 @@ function gen_viz() {
 		.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
 		.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 		.style("fill", (d) => color(d.id))
-		.style("fill-opacity", 0.8);
+		.style("fill-opacity", 0.8)
+		.on('mouseover', showTooltip )
+		.on('mousemove', changeTooltip )
+		.on("mouseleave", closeTooltip)
+		/*.on("mouseout", function(){
+			tooltip.transition()
+				.style('display', 'none').text('');
+		});*/;
 
 
 	/////////////////////////////////////////////////////////
 	//////// Append invisible circles for tooltip ///////////
 	/////////////////////////////////////////////////////////
 
-	blobCircleWrapper = g.selectAll(".radarCircleWrapper")
+	/*blobCircleWrapper = g.selectAll(".radarCircleWrapper")
 		.data(new_data_aux)
 		.enter().append("g")
 		.attr("class", "radarCircleWrapper");
@@ -439,6 +481,7 @@ function gen_viz() {
 		.style("fill", "none")
 		.style("pointer-events", "all")
 		.on("mouseover", function(d,i) {
+			console.log("auauau")
 			tooltip
 				.attr('x', this.cx.baseVal.value - 10)
 				.attr('y', this.cy.baseVal.value - 10)
@@ -449,16 +492,16 @@ function gen_viz() {
 		.on("mouseout", function(){
 			tooltip.transition()
 				.style('display', 'none').text('');
-		});
+		});*/
 
-	tooltip = g.append("text")
+	/*const tooltip = g.append("text")
 	.attr("class", "tooltip")
 	.attr('x', 0)
 	.attr('y', 0)
 	.style("font-size", "12px")
 	.style('display', 'none')
 	.attr("text-anchor", "middle")
-	.attr("dy", "0.35em");
+	.attr("dy", "0.35em");*/
 
 	//////////////////////////////////////////////////
 	/////////////// ON CLICK /////////////////////////
@@ -566,15 +609,16 @@ function gen_viz() {
 		blobWrapper = g.selectAll(".radarWrapper")
 		.data(new_data)
 		.transition().duration(1000)
-		//.attr("class", "radarWrapper");
+		.attr("class", "radarWrapper");
 
 		g.selectAll(".radarArea")
-			.data(new_data)
+		.data(new_data)
 		.transition().duration(1000)
-			//.attr("class", "radarArea")
+			  .attr("class", "radarArea")
 				.attr("d", d => radarLine(d.axes))
 				.style("fill", (d,i) => teamColor(d.Team, 1))
 				.style("fill-opacity", 0.4) //opacity area
+		
 		//Create the outlines
 		g.selectAll(".radarStroke")//.append("path")
 		.data(new_data)
@@ -600,7 +644,10 @@ function gen_viz() {
 			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 			.style("fill", (d) => teamColor(team_filter, 1))
-			.style("fill-opacity", 0.8);
+			.style("fill-opacity", 0.8)
+			/*.on("mouseover", showTooltip )
+			.on("mousemove", changeTooltip )
+			.on("mouseleave", closeTooltip)*/;
 	
 		
 		/////////////////////////////////////////////////////////
@@ -615,7 +662,7 @@ function gen_viz() {
 		//Append a set of invisible circles on top for the mouseover pop-up
 		blobCircleWrapper.selectAll(".radarInvisibleCircle")
 			.data(d => d.axes)
-			.enter().append("circle")
+			//.enter().append("circle")
 			.attr("class", "radarInvisibleCircle")
 			.attr("r", outline_dots_radius * 1.5)
 			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice*i - HALF_PI))
@@ -624,6 +671,7 @@ function gen_viz() {
 			.style("pointer-events", "all")
 			.on("mouseover", function(d,i) {
 				tooltip
+				console.log("aiaiai")
 					.attr('x', this.cx.baseVal.value - 10)
 					.attr('y', this.cy.baseVal.value - 10)
 					.transition()
@@ -635,7 +683,7 @@ function gen_viz() {
 					.style('display', 'none').text('');
 			});
 
-		tooltip = g.append("text")
+		const tooltip = g.append("text")
 		.attr("class", "tooltip")
 		.attr('x', 0)
 		.attr('y', 0)
