@@ -319,7 +319,7 @@ function gen_viz() {
 			.attr("class", "gridCircle")
 			.attr("r", d => radius / 3 * d)     //levels
 			.style("fill", "#CDCDCD")
-			.style("stroke", "#CDCDCD")
+			.style("stroke", " #6a6a6a ")
 			.style("fill-opacity", 0.1)
 			.style("filter" , "url(#glow)");
 
@@ -371,8 +371,8 @@ function gen_viz() {
 		.attr("x2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * cos(angleSlice * i - HALF_PI))
 		.attr("y2", (d, i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) *1.001) * sin(angleSlice * i - HALF_PI))
 		.attr("class", "line")
-		.style("stroke", "white")
-		.style("stroke-width", "2px");
+		.style("stroke", " #000000")
+		.style("stroke-width", "1px");
 
 	console.log("axis");
 
