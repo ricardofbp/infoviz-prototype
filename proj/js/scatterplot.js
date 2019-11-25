@@ -148,8 +148,8 @@ function render() {
     var mousemove = function(d) {
         tooltip
         .html("<b>Player:</b> " + d.name + "<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
-        .style("left", (d3.mouse(this)[0]+75) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.mouse(this)[1]+30) + "px")
+        .style("left", (d3.mouse(this)[0] + 480) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+    .style("top", (d3.mouse(this)[1]) + 330 + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
