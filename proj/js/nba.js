@@ -135,6 +135,7 @@ function changeIdioms(e){
   dispatch_radar.call("team");  
   dispatch_scatter.call("team");
   updatePlayerDropdown();
+  team_dropdown();
 
 }
 
@@ -166,4 +167,6 @@ function changePlayer1(e){
   console.log("changePlayer1" + player1_filter);
 	player1_filter = e.innerHTML;
   dispatch_radar.call("player");
+  player1_dropdown();
+  
 }
