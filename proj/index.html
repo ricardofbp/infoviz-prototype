@@ -9,12 +9,11 @@
    <!--
    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js" charset="utf-8"></script>
-   <script type = "text/javascript" src = "js/d3.js"></script>
-   -->
 <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+   -->
+   <script type = "text/javascript" src = "js/d3.js"></script>
    <script type = "text/javascript" src = "js/jquery.min.js"></script>
    <script type = "text/javascript" src = "js/bootstrap-slider.js"></script>
-   <script type = "text/javascript" src = "js/nba.js"></script>
    <script type = "text/javascript" src = "js/scatterplot.js"></script>
    <script type = "text/javascript" src = "js/radarChart.js"></script>
 
@@ -28,8 +27,8 @@
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
               <input type="text" placeholder="Search.." id="teamInput" onkeyup='filterFunction_team()'>
-              <a href="#atlanta_hawks" class ="team" onclick="changeIdioms(this)">Atlanta Hawks</a>
-              <a href="#boston_celtics" class ="team" onclick="changeIdioms(this)">Boston Celtics</a>
+              <a href="#atlanta_hawks" id="Atlanta Hawks" class ="team" onclick="changeIdioms(this)">Atlanta Hawks</a>
+              <a href="#boston_celtics" id="Boston Celtics" class ="team" onclick="changeIdioms(this)">Boston Celtics</a>
               <a href="#brooklyn_nets" class ="team" onclick="changeIdioms(this)">Brooklyn Nets</a>
               <a href="#charlotte_hornet" class ="team" onclick="changeIdioms(this)">Charlotte Hornets</a>
               <a href="#chicago_bulls" class ="team" onclick="changeIdioms(this)">Chicago Bulls</a>
@@ -67,14 +66,16 @@
       <div class = "Idioms" style=" flex-flow: row wrap;">
         <div class = "top-container" style = "display: inline-flex;">
           <div id = "parallelcoords">
-          
+          <!--
           <img src="placeholder_parallel.png" alt="" />
-        
+        -->
           </div>
         </div>
         <div class = "bottom-container" style = "display: inline-flex;">
           <div id = "map">
+            <!--
             <img src="placeholder_map.png" alt="" />
+          -->
           </div>
           <div id = "all_scatterplot">
             <div id="scatterplot"></div>
@@ -106,8 +107,7 @@
           </div>
         </div>
     </div>
-
-
   </body>
 
+  <script type = "text/javascript" src = "js/nba.js"></script>
 </html>

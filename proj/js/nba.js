@@ -34,10 +34,14 @@ var teamColors =
   {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837"}
 ]
 
-var team_filter = "Boston Celtics";
+var team_filter = "Atlanta Hawks"; 
+var team_filter2 = "Boston Celtics";
+var selectedTeamItemLst = [document.getElementById(team_filter), document.getElementById(team_filter2)];
+selectedTeamItemLst[0].style.backgroundColor = "gray";
+selectedTeamItemLst[1].style.backgroundColor = "gray";
+
 var player1_filter = "Wayne Turner";
 var season_filter = 2000;
-var old_team_filter;
 
 var dispatch_scatter = d3.dispatch("year", "team");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "team", "player");
@@ -122,16 +126,50 @@ function start_slider(){
     });
 }
 
-function changeIdioms(e){
+function changeIdioms(e) {
+  console.log("innerText: " + e.innerText + " | team_filter: " + team_filter + " | team_filter2: " + team_filter2);
+  if (team_filter == e.innerText) {
+    console.log("filter 1");
+    if (team_filter2 == null) return; //do nothing, can't have it empty
+    team_filter = null;
+    selectedTeamItemLst[0].style.backgroundColor = "#f6f6f6";
+    console.log("filter 1,2");
+
+    dispatch_radar.call("team");  
+    dispatch_scatter.call("team");
+    updatePlayerDropdown();
+    team_dropdown();
+    return;
+  }
+  if (team_filter2 == e.innerText) {
+    if (team_filter == null) return; //do nothing, can't have it empty
+    team_filter2 = null;
+    selectedTeamItemLst[1].style.backgroundColor = "#f6f6f6";
+    
+    dispatch_radar.call("team");  
+    dispatch_scatter.call("team");
+    updatePlayerDropdown();
+    team_dropdown();
+    return;
+  }
+  else {
+    console.log("ELSE");
+    if (team_filter == null) {
+      team_filter = e.innerText;
+      selectedTeamItemLst[0] = e;
+      selectedTeamItemLst[0].style.backgroundColor = "gray";
+    }
+    else if (team_filter2 == null) {
+      team_filter2 = e.innerText;
+      selectedTeamItemLst[1] = e;
+      selectedTeamItemLst[1].style.backgroundColor = "gray";
+    }
+    
+  }
   //console.log(e.innerText)
-  document.getElementById("teamInput").value = e.innerText;   //search input
+  //document.getElementById("teamInput").value = e.innerText;   //search input
 
-  old_team_filter = team_filter;
-  team_filter = e.innerText;  
-
-
-  console.log("FILTER", team_filter)
-
+  console.log("FILTER");
   dispatch_radar.call("team");  
   dispatch_scatter.call("team");
   updatePlayerDropdown();
@@ -154,10 +192,11 @@ function updatePlayerDropdown(){
 		element = document.createElement('a');
 		linkTest = document.createTextNode(new_data_aux[i].Player);
 		element.appendChild(linkTest);
+    element.id = "p-" + new_data_aux[i].Team;
 		element.href = "#" + new_data_aux[i].Player;
     //console.log(element.id);
 		element.onclick = function(){changePlayer1(this)};
-		console.log(element);
+		//console.log(element);
 		drop.appendChild(element);
 		
   }
