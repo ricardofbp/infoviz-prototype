@@ -1,9 +1,7 @@
 var data_scatter;
+var svg_scatterplot;
 
 var isPPG = true;
-var circleRemoveFlag = "flag1"
-
-var svg_scatterplot;
 
 d3.csv("../dataset/all_player_stats.csv", function(d) {
   return {
@@ -106,7 +104,7 @@ function render() {
         .attr("id", "clip")
         .append("rect")
         .attr("width", w )
-        .attr("height", h )
+        .attr("height", h-padding )
         .attr("x", padding+25)
         .attr("y", 0);
 
@@ -127,12 +125,10 @@ function render() {
         .style("padding", "10px")
         .style("font-family", "sans-serif");
 
-    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+    var brush = d3.brush()                 // Add the brush feature using the d3.brush function
       .extent( [ [padding+25, 0], [w,h-padding] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-      .on("end", zoom) // Each time the brush selection changes, trigger the 'updateChart' function
-      //.style("z-index", 1)
-      ;
-
+      .on("end", zoom); // Each time the brush selection changes, trigger the 'updateChart' function
+      
     svg_scatterplot
         .append("g")
         .attr("class", "brush")
@@ -162,75 +158,6 @@ function render() {
             .style("opacity", 0)
     }
 
-    //appends the circles
-    svg_scatterplot.selectAll("circle.team_filter")
-        .data(data_scatter                
-            .filter(function(d){ return d.season == season_filter; })
-            .filter(function(d){ return d.team == team_filter; }))
-        .enter().append("circle")
-        .attr("class", function(d) {
-            return "team_filter";
-        })
-        .attr("r", r)
-        .attr("fill", function(d){
-            return teamColor(d.team, 1);
-        })
-        .attr("stroke", function(d){
-            return teamColor(d.team, 2);
-        })
-        .attr("stroke-width", borderWidth)
-        .attr("cx", function(d, i){
-        //console.log(xscale("xscale ppg: " + d.ppg));
-            if (d.ppg == 0) {return padding+25;}
-            return xscalePPG(d.ppg);
-        })
-        .attr("cy", function(d) {
-            return hscale(d.salary/10000);
-        })
-        .on("mouseover", mouseover )
-        .on("mousemove", mousemove )
-        .on("mouseleave", mouseleave )
-
-    svg_scatterplot.selectAll("circle.team_filter2")
-        .data(data_scatter                
-            .filter(function(d){ return d.season == season_filter; })
-            .filter(function(d){ return d.team == team_filter2; }))
-        .enter().append("circle")
-        .attr("class", function(d) {
-            return "team_filter2";
-        })
-        .attr("r", r)
-        .attr("fill", function(d){
-            return teamColor(d.team, 1);
-        })
-        .attr("stroke", function(d){
-            return teamColor(d.team, 2);
-        })
-        .attr("stroke-width", borderWidth)
-        .attr("cx", function(d, i){
-        //console.log(xscale("xscale ppg: " + d.ppg));
-            if (d.ppg == 0) {return padding+25;}
-            return xscalePPG(d.ppg);
-        })
-        .attr("cy", function(d) {
-            return hscale(d.salary/10000);
-        })
-        .on("mouseover", mouseover )
-        .on("mousemove", mousemove )
-        .on("mouseleave", mouseleave )
-
-    //changes circles when selecting a team
-    dispatch_scatter.on("team", function() {
-        console.log("dispatch team scatter");
-        changeCircles(true);        
-    })
-
-    //change circles when year slider changes
-    dispatch_scatter.on("year", function() { 
-        console.log("dispatch year scatter");
-        changeCircles(true);        
-    })
-
     //changes circles when changing to PPG
     d3.select("#ppg")
         .on("click", function() {
@@ -238,10 +165,10 @@ function render() {
             resetAxis();
 
             d3.select("#ppg")
-            .style("background-color", "gray");
+                .style("background-color", "gray");
 
             d3.select("#ppm")
-            .style("background-color", "#373434")
+                .style("background-color", "#373434")
 
             console.log("isppmSTART");
             
@@ -251,7 +178,7 @@ function render() {
             .call(xPPG);
 
             console.log("isppmEND");
-            changeCircles(false);
+            updateCircles();
         
     })
 
@@ -275,100 +202,149 @@ function render() {
             .call(xPPM);
 
             console.log("isppgEND");
-            changeCircles(false);
+            updateCircles();
 
     })
 
 
     ////////////////////////////////////////////////////////
+    //                    DISPATCH                       //
+    ////////////////////////////////////////////////////////
+
+
+    dispatch_scatter.on("removeTeam", function(team) {
+        console.log("[INFO] Removing scatter circles of " + team);
+        removeCircles(team);
+    });
+
+    dispatch_scatter.on("addTeam", function(team) {
+        console.log("[INFO] Adding scatter circles of " + team);
+        addCircles(team);        
+    });
+
+    dispatch_scatter.on("year", function() { 
+        console.log("dispatch year scatter");
+        updateCircles();        
+    });
+
+
+    ////////////////////////////////////////////////////////
     //                    FUNCTIONS                       //
     ////////////////////////////////////////////////////////
-    function changeCircleGroup(group) {
-        svg_scatterplot.selectAll("group")
-            .data(data_scatter                
-                .filter(function(d){ return d.season == season_filter; })
-                .filter(function(d){ return d.team == team_filter; }))
+
+    function removeCircles(team) {
+         svg_scatterplot.selectAll("circle." + team.replace(/\s+/g, ''))
             .transition().duration(1000)
-            .attr("opacity", 1)
-            .attr("r", r)
-            .attr("fill", function(d){
-                return teamColor(d.team, 1);
-            })
-            .attr("stroke", function(d){
-                return teamColor(d.team, 2);
-            })
-            .attr("stroke-width", borderWidth)
-            .attr("cx", function(d){
-                if (d.ppg == 0) {return padding+25;}
-                if (isPPG) {return xscalePPG(d.ppg);}
-                else { return xscalePPM(d.ppm); }
-            })
-            .attr("cy", function(d) {
-                return hscale(d.salary/10000);
-            })
+                .style("opacity", 0)
+            .remove()
     }
-    function changeCircles(flag) {
 
-        //need for the hack to hide circles when team has fewer members
-        if (flag) {
-                svg_scatterplot.selectAll("circle.team_filter").transition().duration(1000)
-                    .attr("opacity", 0)
-                svg_scatterplot.selectAll("circle.team_filter2").transition().duration(1000)
-                    .attr("opacity", 0)
+    function addCircles(team) {
+        //appends the circles
+        var tag = team.replace(/\s+/g, ''); 
+        svg_scatterplot.selectAll("circle." + tag)
+            .data(data_scatter                
+                .filter(function(d){ return d.season == season_filter; })
+                .filter(function(d){ return d.team == team; }))
+            .enter().append("circle")
+                .style("opacity", 0)
+                .attr("class", function(d) {
+                    return tag;
+                })
+                .attr("r", r)
+                .attr("fill", function(d){
+                    return teamColor(d.team, 1);
+                })
+                .attr("stroke", function(d){
+                    return teamColor(d.team, 2);
+                })
+                .attr("stroke-width", borderWidth)
+                .attr("cx", function(d, i){
+                    if (d.ppg == 0) {return padding+25;}
+                    return xscalePPG(d.ppg);
+                })
+                .attr("cy", function(d) {
+                    return hscale(d.salary/10000);
+                })
+                .on("mouseover", mouseover )
+                .on("mousemove", mousemove )
+                .on("mouseleave", mouseleave )
+            .transition().duration(1000).call( function(selection) {
+                selection.style("opacity", 1);
+            })
             
+    }
+
+    function updateCircles() {
+        for (let i = 0; i < teamFilters.length; i++) {
+            var tag = teamFilters[i].replace(/\s+/g, ''); 
+
+            var elements = svg_scatterplot.selectAll("circle." + tag)
+
+            elements
+            .data(data_scatter                
+                .filter(function(d){ return d.season == season_filter; })
+                .filter(function(d){ return d.team == teamFilters[i]; }))
+            .transition().duration(1000)
+            .attr("opacity", 1)
+            //.attr("r", r)
+            .attr("fill", function(d){
+                return teamColor(d.team, 1);
+            })
+            .attr("stroke", function(d){
+                return teamColor(d.team, 2);
+            })
+            //.attr("stroke-width", borderWidth)
+            .attr("cx", function(d){
+                if (d.ppg == 0) {return padding+25;}
+                if (isPPG) {return xscalePPG(d.ppg);}
+                else { return xscalePPM(d.ppm); }
+            })
+            .attr("cy", function(d) {
+                return hscale(d.salary/10000);
+            })
+
+            //add new circles if less circles previously
+            addCircles(teamFilters[i]);
+
+            //remove "leftover" circles
+            elements
+            .data(data_scatter                
+                .filter(function(d){ return d.season == season_filter; })
+                .filter(function(d){ return d.team == teamFilters[i]; }))
+            .exit()
+                .transition().duration(1000)
+                .style("opacity", 0)
+                .remove()
         }
-        if (team_filter == null)
-                svg_scatterplot.selectAll("circle.team_filter").transition().duration(0)
-                    .attr("opacity", 0);
-        if (team_filter2 == null)
-            svg_scatterplot.selectAll("circle.team_filter2").transition().duration(0)
-                .attr("opacity", 0);
+    }
 
-        svg_scatterplot.selectAll("circle.team_filter")
-            .data(data_scatter                
-                .filter(function(d){ return d.season == season_filter; })
-                .filter(function(d){ return d.team == team_filter; }))
-            .transition().duration(1000)
-            .attr("opacity", 1)
-            .attr("r", r)
-            .attr("fill", function(d){
-                return teamColor(d.team, 1);
-            })
-            .attr("stroke", function(d){
-                return teamColor(d.team, 2);
-            })
-            .attr("stroke-width", borderWidth)
-            .attr("cx", function(d){
-                if (d.ppg == 0) {return padding+25;}
-                if (isPPG) {return xscalePPG(d.ppg);}
-                else { return xscalePPM(d.ppm); }
-            })
-            .attr("cy", function(d) {
-                return hscale(d.salary/10000);
-            })
+    function resetAxis() {
+        xscalePPM = d3.scaleLinear()
+            .domain([0, maxPPM])
+            .range([padding+25,w-padding+25]);
 
-        svg_scatterplot.selectAll("circle.team_filter2")
-            .data(data_scatter                
-                .filter(function(d){ return d.season == season_filter; })
-                .filter(function(d){ return d.team == team_filter2; }))
-            .transition().duration(1000)
-            .attr("opacity", 1)
-            .attr("r", r)
-            .attr("fill", function(d){
-                return teamColor(d.team, 1);
-            })
-            .attr("stroke", function(d){
-                return teamColor(d.team, 2);
-            })
-            .attr("stroke-width", borderWidth)
-            .attr("cx", function(d){
-                if (d.ppg == 0) {return padding+25;}
-                if (isPPG) {return xscalePPG(d.ppg);}
-                else { return xscalePPM(d.ppm); }
-            })
-            .attr("cy", function(d) {
-                return hscale(d.salary/10000);
-            })
+        xscalePPG = d3.scaleLinear()
+            .domain([0, maxPPG])
+            .range([padding+25,w-padding+25]);
+
+        xPPG = d3.axisBottom()
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPG])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+
+        xPPM = d3.axisBottom()
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPM])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+
+        hscale = d3.scaleLinear()
+        .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
+        .range([h-padding,padding]);
+
+        ySalary = d3.axisLeft()
+          .scale(hscale);
+
     }
 
     //zoom related stuff
@@ -405,41 +381,34 @@ function render() {
             x
             .domain([0, max])
             .range([padding+25,w-padding+25]);
+
+            hscale
+            .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
+            .range([h-padding,padding]);
         } else {
             x
-            .domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+            .domain([extent[0][0], extent[1][0]].map(x.invert, x))
             .range([padding+25,w-padding+25]);
+
+            hscale
+            .domain([extent[1][1], extent[0][1]].map(hscale.invert, hscale));
+
             d3.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
          }
         // Update axis and circle position
         xaxis
-
             .transition().duration(1000)
             .attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisBottom(x)
                 .ticks(10, tickFormat));
 
-        changeCircles(false);
-    }
+        yaxis
+            .transition().duration(1000)
+            //.attr("transform","translate(0," + (h-padding) + ")")
+            .call(d3.axisLeft(hscale));
+                //.ticks(10, tickFormat));
 
-    function resetAxis() {
-        xscalePPM = d3.scaleLinear()
-            .domain([0, maxPPM])
-            .range([padding+25,w-padding+25]);
-
-        xscalePPG = d3.scaleLinear()
-            .domain([0, maxPPG])
-            .range([padding+25,w-padding+25]);
-
-        xPPG = d3.axisBottom()
-            .scale(d3.scaleLinear()
-            .domain([0, maxPPG])
-            .range([padding+bar_w/2,w-padding-bar_w/2]))
-
-        xPPM = d3.axisBottom()
-            .scale(d3.scaleLinear()
-            .domain([0, maxPPM])
-            .range([padding+bar_w/2,w-padding-bar_w/2]))
+        updateCircles();
     }
 
 }

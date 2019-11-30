@@ -35,18 +35,24 @@ var teamColors =
 ]
 
 var team_filter = "Atlanta Hawks"; 
-var team_filter2 = "Boston Celtics";
-var selectedTeamItemLst = [document.getElementById(team_filter), document.getElementById(team_filter2)];
-selectedTeamItemLst[0].style.backgroundColor = "gray";
-selectedTeamItemLst[1].style.backgroundColor = "gray";
-
 var player1_filter = "Wayne Turner";
+
+var teamFilters = [];
+var playerFilters = [];
 var season_filter = 2000;
 
-var dispatch_scatter = d3.dispatch("year", "team");   //two functions can be called when dispatch is called
-var dispatch_radar = d3.dispatch("year", "team", "player");
+var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam");   //two functions can be called when dispatch is called
+var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam");
 
 var slider;
+
+function init() {
+
+  //teamFilters.push("Atlanta Hawks");
+  //document.getElementById("Atlanta Hawks").style.backgroundColor = "gray";
+  //dispatch_scatter.call("addTeam", this, teamFilters[0]);
+
+}
 
 function teamColor(teamName, type) {
     for (let i = 0; i < teamColors.length; i++) {
@@ -119,13 +125,38 @@ function start_slider(){
       if(original_value != new_val){
         season_filter = new_val;
       }
-      dispatch_scatter.call("year");
       dispatch_radar.call("year");
+      dispatch_scatter.call("year");
       updatePlayerDropdown();
 
     });
 }
 
+function changeTeam(e) {
+ //if (teamFilters.length == 1) { return; } //meaning, we show at least 1 team
+
+  for (let i = 0; i < teamFilters.length; i++) {
+    console.log("[INFO] changeTeam for " + i);
+    if (teamFilters[i] == e.innerText) { //clicked team is selected
+      dispatch_radar.call("removeTeam", this, teamFilters[i]);
+      dispatch_scatter.call("removeTeam", this, teamFilters[i]);
+      console.log("[INFO] changeTeam deselect");
+      teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
+      e.style.backgroundColor = "#f6f6f6"
+      team_dropdown();
+      return;
+    }
+  }
+
+  console.log("[INFO] changeTeam select");
+  teamFilters.push(e.innerText);
+  dispatch_radar.call("addTeam", this, e.innerText);
+  dispatch_scatter.call("addTeam", this, e.innerText);
+  e.style.backgroundColor = "gray";
+  team_dropdown();
+
+}
+/*
 function changeIdioms(e) {
   console.log("innerText: " + e.innerText + " | team_filter: " + team_filter + " | team_filter2: " + team_filter2);
   if (team_filter == e.innerText) {
@@ -176,6 +207,7 @@ function changeIdioms(e) {
   team_dropdown();
 
 }
+*/
 
 function updatePlayerDropdown(){
 	var element;

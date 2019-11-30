@@ -14,12 +14,12 @@
    <script type = "text/javascript" src = "js/d3.js"></script>
    <script type = "text/javascript" src = "js/jquery.min.js"></script>
    <script type = "text/javascript" src = "js/bootstrap-slider.js"></script>
-   <script type = "text/javascript" src = "js/scatterplot.js"></script>
    <script type = "text/javascript" src = "js/radarChart.js"></script>
+   <script type = "text/javascript" src = "js/scatterplot.js"></script>
 
   </head>
 
-  <body onload="start_slider()">
+  <body onload="start_slider();init()">
     <h1 id= "header">Become an NBA champion!</h1>
     <div id = "dashboard" >
       <div id ="selectors">
@@ -27,36 +27,36 @@
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
               <input type="text" placeholder="Search.." id="teamInput" onkeyup='filterFunction_team()'>
-              <a href="#atlanta_hawks" id="Atlanta Hawks" class ="team" onclick="changeIdioms(this)">Atlanta Hawks</a>
-              <a href="#boston_celtics" id="Boston Celtics" class ="team" onclick="changeIdioms(this)">Boston Celtics</a>
-              <a href="#brooklyn_nets" class ="team" onclick="changeIdioms(this)">Brooklyn Nets</a>
-              <a href="#charlotte_hornet" class ="team" onclick="changeIdioms(this)">Charlotte Hornets</a>
-              <a href="#chicago_bulls" class ="team" onclick="changeIdioms(this)">Chicago Bulls</a>
-              <a href="#cleveland_cavaliers" class ="team" onclick="changeIdioms(this)">Cleveland Cavaliers</a>
-              <a href="#dallas_mavericks" class ="team" onclick="changeIdioms(this)">Dallas Mavericks</a>
-              <a href="#denver_nuggets" class ="team" onclick="changeIdioms(this)">Denver Nuggets</a>
-              <a href="#detroit_pistons" class ="team" onclick="changeIdioms(this)">Detroit Pistons</a>
-              <a href="#gsw"  class ="team" onclick="changeIdioms(this)">Golden State Warriors</a>
-              <a href="#houston_rockets" class ="team" onclick="changeIdioms(this)">Houston Rockets</a>
-              <a href="#indiana_pacers" class ="team" onclick="changeIdioms(this)">Indiana Pacers</a>
-              <a href="#la_clippers" class ="team" onclick="changeIdioms(this)">Los Angeles Clippers</a>
-              <a href="#la_lakers" class ="team" onclick="changeIdioms(this)">Los Angeles Lakers</a>
-              <a href="#memphis_grizzlies" class ="team" onclick="changeIdioms(this)">Memphis Grizzlies</a>
-              <a href="#miami_heat" class ="team" onclick="changeIdioms(this)">Miami Heat</a>
-              <a href="#milwaukee_bucks" class ="team" onclick="changeIdioms(this)">Milwaukee Bucks</a>
-              <a href="#minnesota_timberwolves" class ="team" onclick="changeIdioms(this)">Minnesota Timberwolves</a>
-              <a href="#no_pelicans" class ="team" onclick="changeIdioms(this)">New Orleans Pelicans</a>
-              <a href="#ny_knicks" class ="team" onclick="changeIdioms(this)">New York Knicks</a>
-              <a href="#okc_thunder" class ="team" onclick="changeIdioms(this)">Oklahoma City Thunder</a>
-              <a href="#orlando_magic" class ="team" onclick="changeIdioms(this)">Orlando Magic</a>
-              <a href="#76ers" class ="team" onclick="changeIdioms(this)">Philadelphia 76ers</a>
-              <a href="#phoenix_suns" class ="team" onclick="changeIdioms(this)">Phoenix Suns</a>
-              <a href="#pt_blazers" class ="team" onclick="changeIdioms(this)">Portland Trail Blazers</a>
-              <a href="#sacramento_kings" class ="team" onclick="changeIdioms(this)">Sacramento Kings</a>
-              <a href="#san_antonio_spurs" class ="team" onclick="changeIdioms(this)">San Antonio Spurs</a>
-              <a href="#toronto_raptors" class ="team" onclick="changeIdioms(this)">Toronto Raptors</a>
-              <a href="#utah_jazz" class ="team" onclick="changeIdioms(this)">Utah Jazz</a>
-              <a href="#washington_wizards" class ="team" onclick="changeIdioms(this)">Washington Wizards</a>
+              <a href="#atlanta_hawks" id="Atlanta Hawks" class ="team" onclick="changeTeam(this)">Atlanta Hawks</a>
+              <a href="#boston_celtics" id="Boston Celtics" class ="team" onclick="changeTeam(this)">Boston Celtics</a>
+              <a href="#brooklyn_nets" class ="team" onclick="changeTeam(this)">Brooklyn Nets</a>
+              <a href="#charlotte_hornet" class ="team" onclick="changeTeam(this)">Charlotte Hornets</a>
+              <a href="#chicago_bulls" class ="team" onclick="changeTeam(this)">Chicago Bulls</a>
+              <a href="#cleveland_cavaliers" class ="team" onclick="changeTeam(this)">Cleveland Cavaliers</a>
+              <a href="#dallas_mavericks" class ="team" onclick="changeTeam(this)">Dallas Mavericks</a>
+              <a href="#denver_nuggets" class ="team" onclick="changeTeam(this)">Denver Nuggets</a>
+              <a href="#detroit_pistons" class ="team" onclick="changeTeam(this)">Detroit Pistons</a>
+              <a href="#gsw"  class ="team" onclick="changeTeam(this)">Golden State Warriors</a>
+              <a href="#houston_rockets" class ="team" onclick="changeTeam(this)">Houston Rockets</a>
+              <a href="#indiana_pacers" class ="team" onclick="changeTeam(this)">Indiana Pacers</a>
+              <a href="#la_clippers" class ="team" onclick="changeTeam(this)">Los Angeles Clippers</a>
+              <a href="#la_lakers" class ="team" onclick="changeTeam(this)">Los Angeles Lakers</a>
+              <a href="#memphis_grizzlies" class ="team" onclick="changeTeam(this)">Memphis Grizzlies</a>
+              <a href="#miami_heat" class ="team" onclick="changeTeam(this)">Miami Heat</a>
+              <a href="#milwaukee_bucks" class ="team" onclick="changeTeam(this)">Milwaukee Bucks</a>
+              <a href="#minnesota_timberwolves" class ="team" onclick="changeTeam(this)">Minnesota Timberwolves</a>
+              <a href="#no_pelicans" class ="team" onclick="changeTeam(this)">New Orleans Pelicans</a>
+              <a href="#ny_knicks" class ="team" onclick="changeTeam(this)">New York Knicks</a>
+              <a href="#okc_thunder" class ="team" onclick="changeTeam(this)">Oklahoma City Thunder</a>
+              <a href="#orlando_magic" class ="team" onclick="changeTeam(this)">Orlando Magic</a>
+              <a href="#76ers" class ="team" onclick="changeTeam(this)">Philadelphia 76ers</a>
+              <a href="#phoenix_suns" class ="team" onclick="changeTeam(this)">Phoenix Suns</a>
+              <a href="#pt_blazers" class ="team" onclick="changeTeam(this)">Portland Trail Blazers</a>
+              <a href="#sacramento_kings" class ="team" onclick="changeTeam(this)">Sacramento Kings</a>
+              <a href="#san_antonio_spurs" class ="team" onclick="changeTeam(this)">San Antonio Spurs</a>
+              <a href="#toronto_raptors" class ="team" onclick="changeTeam(this)">Toronto Raptors</a>
+              <a href="#utah_jazz" class ="team" onclick="changeTeam(this)">Utah Jazz</a>
+              <a href="#washington_wizards" class ="team" onclick="changeTeam(this)">Washington Wizards</a>
             </div>
           </div>
           <div id="year" >
