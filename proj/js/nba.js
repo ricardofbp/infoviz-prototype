@@ -41,7 +41,7 @@ var teamFilters = [];
 var playerFilters = [];
 var season_filter = 2000;
 
-var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam");   //two functions can be called when dispatch is called
+var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
 
 var slider;

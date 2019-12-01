@@ -232,7 +232,6 @@ var closeTooltip = function(d) {
 var changeTooltip = function(d){
 	var v;
 	var decimals;
-	console.log(d);
 	if(d.axis == "Height"){
 		v = parseFloat(d.value).toFixed(0) + " cm";
 		decimals = 0;
@@ -262,8 +261,6 @@ var changeTooltip = function(d){
 		v = parseFloat(d.value).toFixed(1) + " points";
 		decimals = 1;
 	}
-	console.log("aiaiaiai", v)
-	console.log(d3.mouse(this))
 	tooltip
 	.html("<b>" + d.axis + ":</b> " + v + "<br><b>MinValue:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>MaxValue:</b> " + eval("max" + d.axis).toFixed(decimals))
 	.style("position", "relative")
@@ -548,7 +545,7 @@ function gen_viz() {
 					.filter(function(d){ return d.Team == playerTeam;})
 					.filter(function(d){ return d.Player == player;})))
 			.enter().append("g")
-			.attr("class", "radarWrapper " + tag + " playerBlob " + teamTag);
+			.attr("class", "radarWrapper " + tag + " playerBlob " + teamTag)
 
 		blob
 		.append("path")
@@ -556,7 +553,12 @@ function gen_viz() {
 			.attr("d", d => radarLine(d.axes))
 			.style("fill", teamColor(playerTeam, 1))
 			.style("fill-opacity", 0.35) //opacity area
+			.on("click",  () => {
+				removeBlob(player);
+				dispatch_scatter.call("deAmpPlayer", this, player);
+			})
 			.on('mouseover', function(d, i) {
+				dispatch_scatter.call("ampPlayer", this, player);
 				//Dim all blobs
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
@@ -566,8 +568,9 @@ function gen_viz() {
 					.transition().duration(200)
 					.style("fill-opacity", 0.7);
 			})
-			.on('mouseout', () => {
+			.on('mouseleave', () => {
 				//Bring back all blobs
+				dispatch_scatter.call("deAmpPlayer", this, player);
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
 					.style("fill-opacity", 0.35); //opacity area
@@ -583,7 +586,20 @@ function gen_viz() {
 			.style("stroke-width", outline_width + "px")
 			.style("stroke", (d,i) => teamColor(playerTeam, 1))
 			.style("fill", "none")
-			.style("filter" , "url(#glow)");
+			.style("filter" , "url(#glow)")
+			.on("click",  () => {
+				removeBlob(player);
+				dispatch_scatter.call("deAmpPlayer", this, player);
+			})
+			.on('mouseover', () => {
+				console.log("OVER PATH");
+				dispatch_scatter.call("ampPlayer", this, player);
+			})
+			.on('mouseleave', () => {
+				//Bring back all blobs
+				console.log("LEAVE PATH");
+				dispatch_scatter.call("deAmpPlayer", this, player);
+			});
 		
 		//Append the outline circles
 		blob.selectAll(".radarCircle." + tag)
@@ -596,9 +612,19 @@ function gen_viz() {
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 			.style("fill", (d) => teamColor(playerTeam, 1))
 			.style("fill-opacity", 0.8)
-			.on('mouseover', showTooltip )
+			.on("click",  () => {
+				removeBlob(player);
+				dispatch_scatter.call("deAmpPlayer", this, player);
+			})
+			.on('mouseover', (d) => {
+				showTooltip(d);
+				dispatch_scatter.call("ampPlayer", this, player);
+			})
 			.on('mousemove', changeTooltip )
-			.on("mouseleave", closeTooltip);
+			.on("mouseleave", (d) => {
+				closeTooltip(d);
+				dispatch_scatter.call("deAmpPlayer", this, player);
+			});
 	}
 	
 	function addBlob(team) {

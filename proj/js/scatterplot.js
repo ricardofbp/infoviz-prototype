@@ -139,6 +139,7 @@ function render() {
     // A function that change this tooltip when the user hover a point.
     // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
     var mouseover = function(d) {
+        amplifyCircle(d.name);
         console.log("mouseover tooltip");
         tooltip
         .style("opacity", 1)
@@ -153,6 +154,7 @@ function render() {
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
     var mouseleave = function(d) {
+        deAmplifyCircle(d.name);
         console.log("mouseleave tooltip")
         tooltip
             .transition()
@@ -231,10 +233,34 @@ function render() {
         updateCircles();        
     });
 
+    dispatch_scatter.on("ampPlayer", function(player) {
+        amplifyCircle(player);
+    });
+
+    dispatch_scatter.on("deAmpPlayer", function(player) {
+        deAmplifyCircle(player);
+    })
+
 
     ////////////////////////////////////////////////////////
     //                    FUNCTIONS                       //
     ////////////////////////////////////////////////////////
+
+    function amplifyCircle(player) {
+        console.log("[INFO] Amping player " + player);
+        svg_scatterplot.selectAll("circle." + player.replace(/\s+/g, ''))
+            .transition().duration(200)
+            .attr("r", r + 5)
+            .attr("stroke-width", borderWidth + 1);
+    }
+
+    function deAmplifyCircle(player) {
+        console.log("[INFO] DeAmping player " + player);
+        svg_scatterplot.selectAll("circle." + player.replace(/\s+/g, ''))
+            .transition().duration(200)
+            .attr("r", r)
+            .attr("stroke-width", borderWidth);
+    }
 
     function removeCircles(team) {
          svg_scatterplot.selectAll("circle." + team.replace(/\s+/g, ''))
@@ -297,14 +323,14 @@ function render() {
                 .filter(function(d){ return d.team == teamFilters[i]; }))
             .transition().duration(1000)
             .attr("opacity", 1)
-            //.attr("r", r)
+            .attr("r", r)
             .attr("fill", function(d){
                 return teamColor(d.team, 1);
             })
             .attr("stroke", function(d){
                 return teamColor(d.team, 2);
             })
-            //.attr("stroke-width", borderWidth)
+            .attr("stroke-width", borderWidth)
             .attr("cx", function(d){
                 if (d.ppg == 0) {return padding+25;}
                 if (isPPG) {return xscalePPG(d.ppg);}
