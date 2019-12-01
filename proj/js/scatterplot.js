@@ -100,6 +100,19 @@ function render() {
         .style("text-anchor", "middle")
         .text("Salary (in 10000$)");
 
+    var tooltip = d3.select("#scatterplot")
+        .append("div")
+        .attr("id", "tooltip_s")
+        .style("z-index", 1)
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("color", "white")
+        .style("background-color", "#373434")
+        .style("border", "1px solid #ddd")
+        .style("border-width", "1px")
+        .style("padding", "10px")
+        .style("font-family", "sans-serif");
+
     var clip = scatterplot.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -112,18 +125,7 @@ function render() {
         .attr("clip-path", "url(#clip)");
 
     //tooltip related
-    var tooltip = d3.select("#scatterplot")
-        .append("div")
-        .attr("id", "tooltip_s")
-        //.style("z-index", 2)
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("color", "white")
-        .style("background-color", "#373434")
-        .style("border", "1px solid #ddd")
-        .style("border-width", "1px")
-        .style("padding", "10px")
-        .style("font-family", "sans-serif");
+    
 
     var brush = d3.brush()                 // Add the brush feature using the d3.brush function
       .extent( [ [padding+25, 0], [w,h-padding] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
@@ -145,8 +147,8 @@ function render() {
     var mousemove = function(d) {
         tooltip
         .html("<b>Player:</b> " + d.name + "<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
-        .style("left", (d3.mouse(this)[0] + 480) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    .style("top", (d3.mouse(this)[1]) + 330 + "px")
+        .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+        .style("top", (d3.event.pageY - 110) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -154,8 +156,10 @@ function render() {
         console.log("mouseleave tooltip")
         tooltip
             .transition()
-            .duration(200)
+            .duration(0)
             .style("opacity", 0)
+            .style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", 1000 + "px")
     }
 
     //changes circles when changing to PPG

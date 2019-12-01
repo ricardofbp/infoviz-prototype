@@ -1,9 +1,9 @@
 * { /* very bad, goes through ALL elements*/
   font-family: sans-serif;
+  user-select: none; /* Standard */
 }
 
 body {
-    position:fixed;
     top:0;
     bottom:0;
     left:0;
@@ -44,6 +44,7 @@ body:after {
   border: none;
   cursor: pointer;
   transform: translate(16em, 0);
+  z-index: 2;
 }
 
 .scatter-btn:hover, .scatter-btn:focus {
