@@ -469,7 +469,7 @@ function gen_viz() {
 		showTeamBlobs();
 
 		for (let i = 0; i < playerFilters.length; i++) {
-			remvoveBlob(playerFilters[i]);
+			removeBlob(playerFilters[i]);
 		}
 
 		playerFilters = [];
@@ -482,7 +482,7 @@ function gen_viz() {
 		showTeamBlobs();
 
 		for (let i = 0; i < playerFilters.length; i++) {
-			remvoveBlob(playerFilters[i]);	
+			removeBlob(playerFilters[i]);	
 		}
 
 		playerFilters = [];
@@ -491,12 +491,13 @@ function gen_viz() {
 
 	dispatch_radar.on("removeTeam", function(team) {
 		console.log("[INFO] dispatch removeTeam radar");
-		remvoveBlob(team);
+		removeBlob("playerBlob." + team);
+		removeBlob(team);
 	});
 
-	function remvoveBlob(playerOrTeam) {
+	function removeBlob(playerOrTeam) {
 		var tag = playerOrTeam.replace(/\s+/g, ''); 
-
+		console.log("[INFO] removeblob tag: " + tag);
 		g.select(".radarWrapper." + tag)
 			.remove()
 	}
@@ -534,14 +535,16 @@ function gen_viz() {
 		var color = d3.interpolateSinebow(Math.random());
 
 		var tag = player.replace(/\s+/g, ''); 
+		var teamTag = playerTeam.replace(/\s+/g, ''); 
+
 		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam + " " + tag);
-		var blob = g.selectAll("radarWrapper." + tag + ".playerBlob")
+		var blob = g.selectAll(".radarWrapper." + tag + ".playerBlob." + teamTag)
 			.data(transformData(data_radar
 					.filter(function(d){ return d.Season == season_filter;})
 					.filter(function(d){ return d.Team == playerTeam;})
 					.filter(function(d){ return d.Player == player;})))
 			.enter().append("g")
-			.attr("class", "radarWrapper " + tag + " playerBlob");
+			.attr("class", "radarWrapper " + tag + " playerBlob " + teamTag);
 
 		blob
 		.append("path")
