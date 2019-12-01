@@ -437,16 +437,56 @@ function gen_viz() {
 	/////////////// ON CLICK /////////////////////////
 	//////////////////////////////////////////////////
 
+	function hideTeamBlobs() {
+		for (let i = 0; i < teamFilters.length; i++) {
+			var tag = teamFilters[i].replace(/\s+/g, ''); 
+			g.select(".radarWrapper." + tag + "")
+			.style("opacity", 0);
+		}
+		
+	}
+
+	function showTeamBlobs() {
+		for (let i = 0; i < teamFilters.length; i++) {
+			var tag = teamFilters[i].replace(/\s+/g, ''); 
+			g.select(".radarWrapper." + tag)
+			.style("opacity", 1);
+		}
+	}
 	//must be this order because, for some reason, it doesnt work otherwise
+
+	dispatch_radar.on("addPlayer", function(player, playerTeam) {
+		isShowingTeam = false;
+		
+		hideTeamBlobs()
+		addPlayerBlob(player, playerTeam);
+	});
 
 	dispatch_radar.on("year", function(){
 		console.log("[INFO] dispatch year " + season_filter + " radar");
+		isShowingTeam = true;
+
+		showTeamBlobs();
+
+		for (let i = 0; i < playerFilters.length; i++) {
+			remvoveBlob(playerFilters[i]);
+		}
+
+		playerFilters = [];
 		changeRadar("team");
 	});
 
 	dispatch_radar.on("addTeam", function(team) {
 		console.log("[INFO] dispatch addTeam radar");
-		addBlob(team);
+
+		showTeamBlobs();
+
+		for (let i = 0; i < playerFilters.length; i++) {
+			remvoveBlob(playerFilters[i]);	
+		}
+
+		playerFilters = [];
+		addBlob(team, null, null);
 	});
 
 	dispatch_radar.on("removeTeam", function(team) {
@@ -454,25 +494,115 @@ function gen_viz() {
 		remvoveBlob(team);
 	});
 
-	dispatch_radar.on("player", function(){
-		changeRadar("player");
-	});
+	function remvoveBlob(playerOrTeam) {
+		var tag = playerOrTeam.replace(/\s+/g, ''); 
 
-	dispatch_radar.on("team", function() {
-		changeRadar("team");
-	});
+		g.select(".radarWrapper." + tag)
+			.remove()
+	}
 
+
+
+	function addPlayerBlob(player, playerTeam) { //BEWARE: DOES IT NEED TEAM IN CLASS?
+
+		findMinMax_players(data_radar.filter(function(d){ return d.Season == season_filter}));
+
+		SalaryScale = d3.scaleLinear()
+		.range([0, radius])
+		.domain([minSalary, maxSalary]);
+
+		//Scale for height
+		HeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minHeight, maxHeight]);
+
+		//Scale for weight
+		WeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minWeight, maxWeight]);
+
+		//Scale for the PPM
+		PPMScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPM, maxPPM]);
+
+		//Scale for PPG
+		PPGScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPG, maxPPG]);
+
+		var color = d3.interpolateSinebow(Math.random());
+
+		var tag = player.replace(/\s+/g, ''); 
+		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam + " " + tag);
+		var blob = g.selectAll("radarWrapper." + tag + ".playerBlob")
+			.data(transformData(data_radar
+					.filter(function(d){ return d.Season == season_filter;})
+					.filter(function(d){ return d.Team == playerTeam;})
+					.filter(function(d){ return d.Player == player;})))
+			.enter().append("g")
+			.attr("class", "radarWrapper " + tag + " playerBlob");
+
+		blob
+		.append("path")
+		.attr("class", "radarArea " + tag)
+			.attr("d", d => radarLine(d.axes))
+			.style("fill", teamColor(playerTeam, 1))
+			.style("fill-opacity", 0.35) //opacity area
+			.on('mouseover', function(d, i) {
+				//Dim all blobs
+				parent.selectAll(".radarArea")
+					.transition().duration(200)
+					.style("fill-opacity", 0.1);
+				//Bring back the hovered over blob
+				d3.select(this)
+					.transition().duration(200)
+					.style("fill-opacity", 0.7);
+			})
+			.on('mouseout', () => {
+				//Bring back all blobs
+				parent.selectAll(".radarArea")
+					.transition().duration(200)
+					.style("fill-opacity", 0.35); //opacity area
+			})
+			.transition().duration(1000).call( function(selection) {
+                selection.style("opacity", 1);
+            })
+
+		//Create the outlines
+		blob.append("path")
+			.attr("class", "radarStroke " + tag)
+			.attr("d", function(d,i) { return radarLine(d.axes); })
+			.style("stroke-width", outline_width + "px")
+			.style("stroke", (d,i) => teamColor(playerTeam, 1))
+			.style("fill", "none")
+			.style("filter" , "url(#glow)");
+		
+		//Append the outline circles
+		blob.selectAll(".radarCircle." + tag)
+			.data(d => d.axes)
+			.enter()
+			.append("circle")
+			.attr("class", "radarCircle " + tag)
+			.attr("r", outline_dots_radius)
+			.attr("cx", (d,i) => eval(allAxis[i] + "Scale")(d.value) * cos(angleSlice * i - HALF_PI))
+			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
+			.style("fill", (d) => teamColor(playerTeam, 1))
+			.style("fill-opacity", 0.8)
+			.on('mouseover', showTooltip )
+			.on('mousemove', changeTooltip )
+			.on("mouseleave", closeTooltip);
+	}
 	
 	function addBlob(team) {
 		var tag = team.replace(/\s+/g, ''); 
 
-		var blob = g.selectAll("radarWrapper." + tag)
+		var blob = g.selectAll("radarWrapper." + tag + ".teamBlob")
 			.data(getTeamAverage(data_radar
 				.filter(function(d){ return d.Season == season_filter;})
 				.filter(function(d){ return d.Team == team;})))
 			.enter().append("g")
-			.attr("class", "radarWrapper " + tag)
-
+			.attr("class", "radarWrapper " + tag + " teamBlob")
 
 		blob
 		.append("path")
@@ -525,17 +655,14 @@ function gen_viz() {
 			.on("mouseleave", closeTooltip);
 	}
 
-
-	function remvoveBlob(team) {
-		var tag = team.replace(/\s+/g, ''); 
-
-		g.select(".radarWrapper." + tag)
-			.remove()
-	}
-
-	function changeRadar(option){
+	function changeRadar(option){ //only needed for teams? players dont "change" with transitions
 		console.log("[INFO] Update radar");
+		var filter;
 		if (option == "team") {
+
+			filter = teamFilters;
+			//TODO remove all player blobs
+
 			new_data_aux = transformData(data_radar
 				.filter(function(d){ return d.Season == season_filter;})
 				.filter(function(d){ return d.Team == team_filter;}));
@@ -543,8 +670,11 @@ function gen_viz() {
 			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
 
 		}
-		/*
+	
 		if (option == "player") {
+			filter = [];
+			//TODO remove all team blobs
+
 				new_data = transformData(data_radar
 					.filter(function(d){ return d.Season == season_filter;})
 					.filter(function(d){ return d.Team == team_filter;})
@@ -552,7 +682,6 @@ function gen_viz() {
 
 			findMinMax_players(data_radar.filter(function(d){ return d.Season == season_filter}));
 		}
-		*/
 
 		//////////////////////////////////////////////////////////////
 		///////////////////// Update the Axis ////////////////////////

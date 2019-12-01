@@ -42,7 +42,7 @@ var playerFilters = [];
 var season_filter = 2000;
 
 var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam");   //two functions can be called when dispatch is called
-var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam");
+var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
 
 var slider;
 
@@ -131,6 +131,27 @@ function start_slider(){
 
     });
 }
+
+//to be used in scatter
+//will need to be changed to "match" the changeTeam, as we have a dropdown for players
+function changePlayers(playerName, playerTeam) {
+  console.log("[INFO] changePlayers " + playerName + " " + playerTeam);
+  for (let i = 0; i < playerFilters.length; i++) {
+    if (playerFilters[i] == playerName) {
+      dispatch_radar.call("removePlayer", this, playerFilters[i], playerTeam);
+      teamFilters.splice(i,1);
+      //TODO change dropdown
+      return;
+    }
+  }
+
+  console.log("[INFO] changePlayers adding");
+  playerFilters.push(playerName);
+  dispatch_radar.call("addPlayer", this, playerName, playerTeam);
+
+}
+
+
 
 function changeTeam(e) {
  //if (teamFilters.length == 1) { return; } //meaning, we show at least 1 team

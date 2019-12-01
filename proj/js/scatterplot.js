@@ -242,6 +242,7 @@ function render() {
     function addCircles(team) {
         //appends the circles
         var tag = team.replace(/\s+/g, ''); 
+
         svg_scatterplot.selectAll("circle." + tag)
             .data(data_scatter                
                 .filter(function(d){ return d.season == season_filter; })
@@ -249,7 +250,8 @@ function render() {
             .enter().append("circle")
                 .style("opacity", 0)
                 .attr("class", function(d) {
-                    return tag;
+                    return tag + " " +
+                     d.name.replace(/\s+/g, '');
                 })
                 .attr("r", r)
                 .attr("fill", function(d){
@@ -265,6 +267,10 @@ function render() {
                 })
                 .attr("cy", function(d) {
                     return hscale(d.salary/10000);
+                })
+                .on("click", function(d) {
+                    console.log("[INFO] onClick circle scatter");
+                    changePlayers(d.name, d.team);
                 })
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
