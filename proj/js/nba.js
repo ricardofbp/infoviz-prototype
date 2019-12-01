@@ -48,10 +48,13 @@ var slider;
 
 function init() {
 
-  //teamFilters.push("Atlanta Hawks");
-  //document.getElementById("Atlanta Hawks").style.backgroundColor = "gray";
-  //dispatch_scatter.call("addTeam", this, teamFilters[0]);
-
+  console.log("[INFO] INIT EVERYTHING");
+  teamFilters.push("Atlanta Hawks");
+  dispatch_radar.call("addTeam", this, "Atlanta Hawks");
+  dispatch_scatter.call("addTeam", this, "Atlanta Hawks");
+  dispatch_radar.call("year");
+  dispatch_scatter.call("year");
+  document.getElementById("Atlanta Hawks").style.backgroundColor = "gray";
 }
 
 function teamColor(teamName, type) {
@@ -138,8 +141,9 @@ function changePlayers(playerName, playerTeam) {
   console.log("[INFO] changePlayers " + playerName + " " + playerTeam);
   for (let i = 0; i < playerFilters.length; i++) {
     if (playerFilters[i] == playerName) {
+      console.log("[INFO] changePlayers removing" + playerName + " " + playerTeam);
       dispatch_radar.call("removePlayer", this, playerFilters[i], playerTeam);
-      teamFilters.splice(i,1);
+      playerFilters.splice(i,1);
       //TODO change dropdown
       return;
     }
@@ -155,7 +159,7 @@ function changePlayers(playerName, playerTeam) {
 
 function changeTeam(e) {
  //if (teamFilters.length == 1) { return; } //meaning, we show at least 1 team
-
+    team_dropdown();
   for (let i = 0; i < teamFilters.length; i++) {
     console.log("[INFO] changeTeam for " + i);
     if (teamFilters[i] == e.innerText) { //clicked team is selected
@@ -174,7 +178,7 @@ function changeTeam(e) {
   dispatch_radar.call("addTeam", this, e.innerText);
   dispatch_scatter.call("addTeam", this, e.innerText);
   e.style.backgroundColor = "gray";
-  team_dropdown();
+
 
 }
 /*

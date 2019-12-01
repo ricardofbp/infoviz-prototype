@@ -106,7 +106,7 @@ function render() {
         .attr("width", w )
         .attr("height", h-padding )
         .attr("x", padding+25)
-        .attr("y", 0);
+        .attr("y", +5);
 
     svg_scatterplot = scatterplot.append("g")
         .attr("clip-path", "url(#clip)");

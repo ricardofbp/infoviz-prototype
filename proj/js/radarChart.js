@@ -462,6 +462,12 @@ function gen_viz() {
 		addPlayerBlob(player, playerTeam);
 	});
 
+	dispatch_radar.on("removePlayer", function(player, team) {
+		console.log("[INFO] dispatch removePlayer radar");
+		removeBlob(player + ".playerBlob." + team);
+
+	});
+
 	dispatch_radar.on("year", function(){
 		console.log("[INFO] dispatch year " + season_filter + " radar");
 		isShowingTeam = true;
