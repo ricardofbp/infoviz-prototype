@@ -322,6 +322,10 @@ function render() {
                 .filter(function(d){ return d.season == season_filter; })
                 .filter(function(d){ return d.team == teamFilters[i]; }))
             .transition().duration(1000)
+            .attr("class", function(d) {
+                    return tag + " " +
+                     d.name.replace(/\s+/g, '');
+            })
             .attr("opacity", 1)
             .attr("r", r)
             .attr("fill", function(d){

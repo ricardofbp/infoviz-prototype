@@ -9,7 +9,7 @@ var blobCircleWrapper;
 var radarLine;
 
 var g;
-var tooltip;
+
 
 //top values for scales
 var maxSalary, maxHeight, maxWeight, maxPPG, maxPPM;
@@ -216,59 +216,7 @@ const wrap = (text, width) => {
 	});
 }//wrap
 
-var showTooltip = function(d){
-	console.log(d);
-	tooltip
-	.style("opacity", 1);
-}
 
-var closeTooltip = function(d) {
-	tooltip
-	.transition()
-	.duration(200)
-	.style("opacity", 0)
-}
-
-var changeTooltip = function(d){
-	var v;
-	var decimals;
-	if(d.axis == "Height"){
-		v = parseFloat(d.value).toFixed(0) + " cm";
-		decimals = 0;
-
-	} if(d.axis == "Weight"){
-		v = parseFloat(d.value).toFixed(1) + " kg";
-		decimals = 0;
-	}
-
-	if(d.axis == "Salary"){
-		console.log("entrei aqui")
-		if(parseFloat(d.value) >= 1000000){
-			v = (parseFloat(d.value)/1000000).toFixed(2) + 'M';
-		}
-		else{
-			v = parseFloat(d.value/1000).toFixed(2) + 'K'
-		}
-		v += " $"
-		decimals = 0;
-	}
-
-	if(d.axis == "PPM"){
-		v = parseFloat(d.value).toFixed(2) + " points";
-		decimals = 2;
-	}
-	if(d.axis == "PPG"){
-		v = parseFloat(d.value).toFixed(1) + " points";
-		decimals = 1;
-	}
-	tooltip
-	.html("<b>" + d.axis + ":</b> " + v + "<br><b>MinValue:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>MaxValue:</b> " + eval("max" + d.axis).toFixed(decimals))
-	.style("position", "relative")
-	.style("width", "130px")
-	.style("left", (d3.mouse(this)[0] +120) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	.style("top", (d3.mouse(this)[1]-220) + "px")
-	.style("font-family", "sans-serif");
-}
 
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
 const outline_width = 2;
@@ -293,6 +241,78 @@ const angleSlice = Math.PI * 2 / total;		            //The width in radians of e
 
 
 function gen_viz() {
+
+	var tooltip;
+
+	var showTooltip = function(d){
+		console.log(d);
+		tooltip
+		.style("opacity", 1);
+	}
+
+	var closeTooltip = function(d) {
+		tooltip
+		.transition()
+		.duration(200)
+		.style("opacity", 0)
+	   // .style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	    //.style("top", 1000 + "px")	
+	    .style("z-index", -1);
+	}
+
+	var changeTooltipBlob = function(d, name) {
+		var name;
+
+		tooltip
+		.style("z-index", 1)
+		.html("<b>" + name + "</b>")
+		.style("position", "relative")
+		.style("width", "180px")
+	        .style("left", (d3.event.pageX - 350) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", (d3.event.pageY - 500) + "px")
+		.style("font-family", "sans-serif");
+	}
+
+	var changeTooltipCircle = function(d, name){
+		var v;
+		var decimals;
+
+		if(d.axis == "Height"){
+			v = parseFloat(d.value).toFixed(0) + " cm";
+			decimals = 0;
+
+		} if(d.axis == "Weight"){
+			v = parseFloat(d.value).toFixed(1) + " kg";
+			decimals = 0;
+
+		} if(d.axis == "Salary"){
+			if(parseFloat(d.value) >= 1000000){
+				v = (parseFloat(d.value)/1000000).toFixed(2) + 'M';
+			}
+			else{
+				v = parseFloat(d.value/1000).toFixed(2) + 'K'
+			}
+			v += " $"
+
+			decimals = 0;
+		} if(d.axis == "PPM"){
+			v = parseFloat(d.value).toFixed(2) + " points";
+			decimals = 2;
+
+		} if(d.axis == "PPG"){
+			v = parseFloat(d.value).toFixed(1) + " points";
+			decimals = 1;
+		}
+
+		tooltip
+		.style("z-index", 1)
+		.html("<b>" + name + "</b><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
+		.style("position", "relative")
+		.style("width", "180px")
+	        .style("left", (d3.event.pageX - 350) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", (d3.event.pageY - 600) + "px")
+		.style("font-family", "sans-serif");
+	}
 	////////////////////////////////////////////////////////
 	/////////////////Filter the data////////////////////////
 	////////////////////////////////////////////////////////	
@@ -302,12 +322,11 @@ function gen_viz() {
 
 	findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));
 	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
-	/////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////
-///////////// Create the svg container /////
-////////////////////////////////////////////
+	////////////////////////////////////////////
+	///////////// Create the svg container /////
+	////////////////////////////////////////////
 	const parent = d3.select(".radarChart");
 
 	var svg = parent.append("svg")
@@ -382,7 +401,9 @@ function gen_viz() {
 		.enter()
 		.append("g")
 		.attr("class", "axis");
-	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM)
+
+	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
+
 	//Draw the scales lines
 	axis.append("line")
 		.attr("x1", 0)
@@ -396,27 +417,27 @@ function gen_viz() {
 	console.log("axis");
 
 	axis.append("text")
-			.attr("class", "legend")
-			.style("font-size", "11px")
-			.attr("text-anchor", "middle")
-			.attr("dy", "0.35em")
-			.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
-			.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
-			.text((d, i) => d + allAxis_units[i])
-			.call(wrap, 60);
+		.attr("class", "legend")
+		.style("font-size", "11px")
+		.attr("text-anchor", "middle")
+		.attr("dy", "0.35em")
+		.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
+		.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
+		.text((d, i) => d + allAxis_units[i])
+		.call(wrap, 60);
 
 	//tooltip related
 	tooltip = d3.select("#radarChart")
-	.append("div")
-	.attr("id", "tooltip_s")
-	//.style("z-index", 2)
-	.style("opacity", 0)
-	.attr("class", "tooltip")
-	.style("color", "white")
-	.style("background-color", "#373434")
-	.style("border", "1px solid #ddd")
-	.style("border-width", "1px")
-	.style("padding", "10px");
+		.append("div")
+		.attr("id", "tooltip_r")
+		//.style("z-index", 2)
+		.style("opacity", 0)
+		.attr("class", "tooltip")
+		.style("color", "white")
+		.style("background-color", "#373434")
+		.style("border", "1px solid #ddd")
+		.style("border-width", "1px")
+		.style("padding", "10px");
 
 	/////////////////////////////////////////////////////////
 	///////////// Draw the radar chart blobs ////////////////
@@ -427,20 +448,12 @@ function gen_viz() {
 		.radius((d, i) => (eval(allAxis[i] + "Scale")(d.value)))
 		.angle((d,i) => i * angleSlice);
 
-	
-
-
-	//////////////////////////////////////////////////
-	/////////////// ON CLICK /////////////////////////
-	//////////////////////////////////////////////////
-
 	function hideTeamBlobs() {
 		for (let i = 0; i < teamFilters.length; i++) {
 			var tag = teamFilters[i].replace(/\s+/g, ''); 
 			g.select(".radarWrapper." + tag + "")
 			.style("opacity", 0);
-		}
-		
+		}	
 	}
 
 	function showTeamBlobs() {
@@ -558,6 +571,7 @@ function gen_viz() {
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', function(d, i) {
+				showTooltip(d);
 				dispatch_scatter.call("ampPlayer", this, player);
 				//Dim all blobs
 				parent.selectAll(".radarArea")
@@ -568,8 +582,12 @@ function gen_viz() {
 					.transition().duration(200)
 					.style("fill-opacity", 0.7);
 			})
-			.on('mouseleave', () => {
+			.on('mousemove',  (d) => {
+				changeTooltipBlob(d, player); 
+			})
+			.on('mouseleave', (d) => {
 				//Bring back all blobs
+				closeTooltip(d);
 				dispatch_scatter.call("deAmpPlayer", this, player);
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
@@ -614,13 +632,15 @@ function gen_viz() {
 			.style("fill-opacity", 0.8)
 			.on("click",  () => {
 				removeBlob(player);
-				dispatch_scatter.call("deAmpPlayer", this, player);
+				dispatch_scatter.call("deAmpPlayer", this, players);
 			})
 			.on('mouseover', (d) => {
-				showTooltip(d);
+				showTooltip(d, player);
 				dispatch_scatter.call("ampPlayer", this, player);
 			})
-			.on('mousemove', changeTooltip )
+			.on('mousemove', (d) => {
+				changeTooltipCircle(d, player);
+			})
 			.on("mouseleave", (d) => {
 				closeTooltip(d);
 				dispatch_scatter.call("deAmpPlayer", this, player);
@@ -644,6 +664,7 @@ function gen_viz() {
 			.style("fill", (d,i) => teamColor(team, 1))
 			.style("fill-opacity", 0.35) //opacity area
 			.on('mouseover', function(d, i) {
+				showTooltip();
 				//Dim all blobs
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
@@ -653,8 +674,12 @@ function gen_viz() {
 					.transition().duration(200)
 					.style("fill-opacity", 0.7);
 			})
+			.on('mousemove',  (d) => {
+				changeTooltipBlob(d, team); 
+			})
 			.on('mouseout', () => {
 				//Bring back all blobs
+				closeTooltip();
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
 					.style("fill-opacity", 0.35); //opacity area
@@ -684,7 +709,9 @@ function gen_viz() {
 			.style("fill", (d) => teamColor(team, 1))
 			.style("fill-opacity", 0.8)
 			.on('mouseover', showTooltip )
-			.on('mousemove', changeTooltip )
+			.on('mousemove',  (d) => {
+				changeTooltipCircle(d, team); 
+			})
 			.on("mouseleave", closeTooltip);
 	}
 
