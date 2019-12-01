@@ -453,8 +453,8 @@ function gen_viz() {
 			.style("opacity", 1);
 		}
 	}
-	//must be this order because, for some reason, it doesnt work otherwise
 
+	//must be this order because, for some reason, it doesnt work otherwise
 	dispatch_radar.on("addPlayer", function(player, playerTeam) {
 		isShowingTeam = false;
 		
@@ -507,8 +507,6 @@ function gen_viz() {
 		g.select(".radarWrapper." + tag)
 			.remove()
 	}
-
-
 
 	function addPlayerBlob(player, playerTeam) { //BEWARE: DOES IT NEED TEAM IN CLASS?
 
@@ -669,32 +667,17 @@ function gen_viz() {
 		var filter;
 		if (option == "team") {
 
-			filter = teamFilters;
-			//TODO remove all player blobs
-
 			new_data_aux = transformData(data_radar
 				.filter(function(d){ return d.Season == season_filter;})
 				.filter(function(d){ return d.Team == team_filter;}));
 
 			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
-
 		}
 	
-		if (option == "player") {
-			filter = [];
-			//TODO remove all team blobs
-
-				new_data = transformData(data_radar
-					.filter(function(d){ return d.Season == season_filter;})
-					.filter(function(d){ return d.Team == team_filter;})
-					.filter(function(d){ return d.Player == player1_filter;}));
-
-			findMinMax_players(data_radar.filter(function(d){ return d.Season == season_filter}));
-		}
-
 		//////////////////////////////////////////////////////////////
 		///////////////////// Update the Axis ////////////////////////
 		//////////////////////////////////////////////////////////////
+
 		SalaryScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minSalary, maxSalary]);
