@@ -43,7 +43,6 @@ body:after {
   font-size: 10px;
   border: none;
   cursor: pointer;
-  transform: translate(16em, 0);
   z-index: 2;
 }
 
@@ -177,14 +176,18 @@ body:after {
 }
 
 #radar{
+  padding-top: 10px;
   font-family: inherit;
   text-align: center;
 }
 
-#scatterplot {
+#all_scatterplot {
+  padding-top: 10px;
+  text-align: center;
   font-family: inherit;
   padding-left: 50px;
 }
+
 
 #header {
   font-family: inherit;
