@@ -244,7 +244,8 @@ function gen_viz() {
 
 	var tooltip;
 
-	var showTooltip = function(d){
+	var showTooltip = function(d, type){
+		if (type == "team" && !isShowingTeam) {return;}
 		console.log(d);
 		tooltip
 		.style("opacity", 1);
@@ -479,6 +480,7 @@ function gen_viz() {
 	});
 
 	dispatch_radar.on("year", function(){
+		isShowingTeam = true;
 		console.log("[INFO] dispatch year " + season_filter + " radar");
 		isShowingTeam = true;
 
@@ -493,6 +495,7 @@ function gen_viz() {
 	});
 
 	dispatch_radar.on("addTeam", function(team) {
+		isShowingTeam = true;
 		console.log("[INFO] dispatch addTeam radar");
 
 		showTeamBlobs();
@@ -571,7 +574,7 @@ function gen_viz() {
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', function(d, i) {
-				showTooltip(d);
+				showTooltip(d, "player");
 				dispatch_scatter.call("ampPlayer", this, player);
 				//Dim all blobs
 				parent.selectAll(".radarArea")
@@ -664,7 +667,7 @@ function gen_viz() {
 			.style("fill", (d,i) => teamColor(team, 1))
 			.style("fill-opacity", 0.35) //opacity area
 			.on('mouseover', function(d, i) {
-				showTooltip();
+				showTooltip(d, "team");
 				//Dim all blobs
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
