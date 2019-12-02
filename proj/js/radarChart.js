@@ -269,8 +269,10 @@ function gen_viz() {
 		.html("<b>" + name + "</b>")
 		.style("position", "relative")
 		.style("width", "180px")
-	        .style("left", (d3.event.pageX - 350) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        .style("top", (d3.event.pageY - 500) + "px")
+			.style("left", (d3.mouse[this][0]) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", (d3.mouse[this][1]) + "px")
+	        //.style("left", (d3.event.pageX - 350*2.2) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        //.style("top", (d3.event.pageY - 500*1.7) + "px")
 		.style("font-family", "sans-serif");
 	}
 
@@ -307,11 +309,11 @@ function gen_viz() {
 
 		tooltip
 		.style("z-index", 1)
-		.html("<b>" + name + "</b><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
+		.html("<b>" + name + "</b><br><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
 		.style("position", "relative")
 		.style("width", "180px")
-	        .style("left", (d3.event.pageX - 350) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        .style("top", (d3.event.pageY - 600) + "px")
+	        .style("left", (d3.event.pageX - 350*2.2) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", (d3.event.pageY - 600*1.6) + "px")
 		.style("font-family", "sans-serif");
 	}
 	////////////////////////////////////////////////////////
@@ -574,7 +576,7 @@ function gen_viz() {
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', function(d, i) {
-				showTooltip(d, "player");
+				//showTooltip(d, "player");
 				dispatch_scatter.call("ampPlayer", this, player);
 				//Dim all blobs
 				parent.selectAll(".radarArea")
@@ -586,11 +588,11 @@ function gen_viz() {
 					.style("fill-opacity", 0.7);
 			})
 			.on('mousemove',  (d) => {
-				changeTooltipBlob(d, player); 
+				//changeTooltipBlob(d, player); 
 			})
 			.on('mouseleave', (d) => {
 				//Bring back all blobs
-				closeTooltip(d);
+				//closeTooltip(d);
 				dispatch_scatter.call("deAmpPlayer", this, player);
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
@@ -667,7 +669,7 @@ function gen_viz() {
 			.style("fill", (d,i) => teamColor(team, 1))
 			.style("fill-opacity", 0.35) //opacity area
 			.on('mouseover', function(d, i) {
-				showTooltip(d, "team");
+				//showTooltip(d, "team");
 				//Dim all blobs
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
@@ -678,11 +680,11 @@ function gen_viz() {
 					.style("fill-opacity", 0.7);
 			})
 			.on('mousemove',  (d) => {
-				changeTooltipBlob(d, team); 
+				//changeTooltipBlob(d, team); 
 			})
 			.on('mouseout', () => {
 				//Bring back all blobs
-				closeTooltip();
+				//closeTooltip();
 				parent.selectAll(".radarArea")
 					.transition().duration(200)
 					.style("fill-opacity", 0.35); //opacity area
