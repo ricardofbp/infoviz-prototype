@@ -98,7 +98,7 @@ function render() {
         .attr("x", -h/2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Salary (in 10000$)");
+        .text("Salary (in 10k $)");
 
     var tooltip = d3.select("#scatterplot")
         .append("div")
