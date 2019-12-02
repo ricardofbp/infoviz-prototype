@@ -139,6 +139,7 @@ function start_slider(){
 //will need to be changed to "match" the changeTeam, as we have a dropdown for players
 function changePlayers(playerName, playerTeam) {
   console.log("[INFO] changePlayers " + playerName + " " + playerTeam);
+  document.getElementById("radarchart-title").innerText = "Player Attributes";
   for (let i = 0; i < playerFilters.length; i++) {
     if (playerFilters[i] == playerName) {
       console.log("[INFO] changePlayers removing" + playerName + " " + playerTeam);
@@ -162,6 +163,7 @@ function changeTeam(e) {
     team_dropdown();
   for (let i = 0; i < teamFilters.length; i++) {
     console.log("[INFO] changeTeam for " + i);
+    document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
     if (teamFilters[i] == e.innerText) { //clicked team is selected
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);

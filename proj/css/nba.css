@@ -175,7 +175,13 @@ body:after {
   margin: 20 10 10 10;
 }
 
+.titles{
+  font-size: 20px;
+  font-weight: bold;
+}
+
 #radar{
+  margin-left: 170px;
   padding-top: 10px;
   font-family: inherit;
   text-align: center;
