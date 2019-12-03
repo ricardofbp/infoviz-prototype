@@ -312,7 +312,7 @@ function gen_viz() {
 		.html("<b>" + name + "</b><br><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
 		.style("position", "relative")
 		.style("width", "180px")
-	        .style("left", (d3.event.pageX - 350*2.2) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("left", (d3.event.pageX - 350*2.6) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
 	        .style("top", (d3.event.pageY - 600*1.6) + "px")
 		.style("font-family", "sans-serif");
 	}
@@ -359,10 +359,10 @@ function gen_viz() {
 			.append("circle")
 			.attr("class", "gridCircle")
 			.attr("r", d => radius / 3 * d)     //levels
-			.style("fill", "#CDCDCD")
-			.style("stroke", " #6a6a6a ")
-			.style("fill-opacity", 0.1)
-			.style("filter" , "url(#glow)");
+			//.style("fill", "#CDCDCD")
+			.style("stroke", " #000000")
+			.style("fill-opacity", 0)
+			//.style("filter" , "url(#glow)");
 
 	////////////////////////////////////////
 	//// Draw the axes /////////////////////
@@ -573,6 +573,7 @@ function gen_viz() {
 			.style("fill-opacity", 0.35) //opacity area
 			.on("click",  () => {
 				removeBlob(player);
+				changePlayers(player, playerTeam);
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', function(d, i) {

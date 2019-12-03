@@ -38,8 +38,8 @@ function render() {
     var h = 300;
 
     //circle options
-    var r = 3.2; //radius
-    var borderWidth = 1.5;
+    var r = 3.9; //radius
+    var borderWidth = 2.3;
 
     var padding = 30;
 
