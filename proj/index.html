@@ -63,16 +63,9 @@
           </div>
 
       </div>
-      <div class = "Idioms" style=" flex-flow: row wrap;">
+      <div class = "idioms" style=" flex-flow: row wrap;">
         <div class = "top-container" style = "display: inline-flex;">
-          <div id = "parallelcoords">
-        
-          <img src="placeholder_parallel.png" alt="" />
-        
-          </div>
-        </div>
-        <div class = "bottom-container" style = "display: flex;">
-          <div id = "map">
+          <div id = "all_map">
             <div id = "map-title" class="titles">Where do teams draft players</div>
             <div id = "USMap"></div>
           </div>
@@ -84,7 +77,13 @@
               <div class="scatter-btn" id="ppm"> PPM </div>
             </div>
           </div>
-          <div id = "radar">
+        </div>
+        <div class = "bottom-container" style = "display: flex;">
+          <div id = "all_parallelcoords">
+            <div id= "parallelcoords-title" class="titles">Team statistics</div>
+            <div id = "parallelcoords"></div>
+          </div>
+          <div id = "all_radar">
             <div id = "radarchart-title" class="titles">Teams Average Attributes</div>
             <div id = "radarChart" class="radarChart" style="position: relative;">
               <!--
@@ -111,6 +110,7 @@
 
   <script type = "text/javascript" src = "js/nba.js"></script>
   <script type = "text/javascript" src = "js/map.js"></script>
+  <script type = "text/javascript" src = "js/parallel.js"></script>
    <script type = "text/javascript" src = "js/scatterplot.js"></script>
    <script type = "text/javascript" src = "js/radarChart.js"></script>
 </html>

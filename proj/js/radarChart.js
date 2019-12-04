@@ -701,7 +701,7 @@ function gen_viz() {
 			.attr("class", "radarStroke " + tag)
 			.attr("d", function(d,i) { return radarLine(d.axes); })
 			.style("stroke-width", outline_width + "px")
-			.style("stroke", (d,i) => teamColor(team, 2))
+			.style("stroke", (d,i) => teamColor(team, 1))
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)");
 		

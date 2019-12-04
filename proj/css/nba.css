@@ -168,12 +168,13 @@ body:after {
   font-family: inherit;
 }
 
-.Idioms{
+.idioms{
   display: flex;
   margin: 20 10 10 10;
 }
 
 .titles{
+  text-align: center;
   font-size: 20px;
 }
 
@@ -187,7 +188,7 @@ body:after {
   height: 50%;
 }
 
-#radar{
+#all_radar{
   margin-left: 5%;
   padding-top: 10px;
   font-family: inherit;
