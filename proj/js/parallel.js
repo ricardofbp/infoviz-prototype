@@ -1,18 +1,14 @@
 var data_parallel;
 
 // Parse the Data
-d3.csv("../dataset/parallel_dataset.csv", function(d) {
-  return {
-
-  };
-}).then(function(d) {
+d3.csv("../dataset/parallel_dataset.csv").then(function(d) {
   data_parallel = d;
   renderParallel();
 })
 
 function renderParallel() {
   var width = 800;
-  var height = 400;
+  var height = 350;
 
   var svg = d3.select("#parallelcoords")
   .append("svg")
@@ -21,15 +17,15 @@ function renderParallel() {
   .append("g")
 
 
-  // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called Species
-  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "Species" })
+  // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called team
+  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "team" })
 
   // For each dimension, I build a linear scale. I store all in a y object
   var y = {}
   for (i in dimensions) {
     name = dimensions[i]
     y[name] = d3.scaleLinear()
-      .domain( d3.extent(data, function(d) { return +d[name]; }) )
+      .domain( d3.extent(data_parallel, function(d) { return +d[name]; }) )
       .range([height, 0])
   }
 
