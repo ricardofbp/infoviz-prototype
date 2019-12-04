@@ -38,8 +38,8 @@ function render() {
     var h = 300;
 
     //circle options
-    var r = 3.9; //radius
-    var borderWidth = 2.3;
+    var r = 4; //radius
+    var borderWidth =0;
 
     var padding = 30;
 
@@ -118,7 +118,7 @@ function render() {
         .append("rect")
         .attr("width", w )
         .attr("height", h-padding )
-        .attr("x", padding+25)
+        .attr("x", padding+20)
         .attr("y", +5);
 
     svg_scatterplot = scatterplot.append("g")
@@ -251,7 +251,7 @@ function render() {
         svg_scatterplot.selectAll("circle." + player.replace(/\s+/g, ''))
             .transition().duration(200)
             .attr("r", r + 5)
-            .attr("stroke-width", borderWidth + 1);
+            .attr("stroke-width", borderWidth + 0);
     }
 
     function deAmplifyCircle(player) {

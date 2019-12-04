@@ -11,12 +11,12 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js" charset="utf-8"></script>
 <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
    -->
+  <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+  <script type="text/javascript" src="https://d3js.org/topojson.v3.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
    <script type = "text/javascript" src = "js/d3.js"></script>
    <script type = "text/javascript" src = "js/jquery.min.js"></script>
    <script type = "text/javascript" src = "js/bootstrap-slider.js"></script>
-   <script type = "text/javascript" src = "js/radarChart.js"></script>
-   <script type = "text/javascript" src = "js/scatterplot.js"></script>
-
   </head>
 
   <body onload="init();start_slider();">
@@ -71,11 +71,10 @@
         
           </div>
         </div>
-        <div class = "bottom-container" style = "display: inline-flex;">
+        <div class = "bottom-container" style = "display: flex;">
           <div id = "map">
-
-            <img src="placeholder_map.png" alt="" />
-
+            <div id = "map-title" class="titles">Where do teams draft players</div>
+            <div id = "USMap"></div>
           </div>
           <div id = "all_scatterplot">
             <div id = "scatterplot-title" class="titles">Players Points Per Game or Minute vs their Salary</div>
@@ -111,4 +110,7 @@
   </body>
 
   <script type = "text/javascript" src = "js/nba.js"></script>
+  <script type = "text/javascript" src = "js/map.js"></script>
+   <script type = "text/javascript" src = "js/scatterplot.js"></script>
+   <script type = "text/javascript" src = "js/radarChart.js"></script>
 </html>

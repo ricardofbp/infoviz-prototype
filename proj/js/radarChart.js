@@ -219,7 +219,7 @@ const wrap = (text, width) => {
 
 
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
-const outline_width = 2;
+const outline_width = 3.2;
 const outline_dots_radius = 4;
 
 var w = 250;
@@ -567,6 +567,7 @@ function gen_viz() {
 
 		blob
 		.append("path")
+		/*
 		.attr("class", "radarArea " + tag)
 			.attr("d", d => radarLine(d.axes))
 			.style("fill", teamColor(playerTeam, 1))
@@ -602,7 +603,7 @@ function gen_viz() {
 			.transition().duration(1000).call( function(selection) {
                 selection.style("opacity", 1);
             })
-
+		*/
 		//Create the outlines
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
@@ -610,7 +611,7 @@ function gen_viz() {
 			.style("stroke-width", outline_width + "px")
 			.style("stroke", (d,i) => teamColor(playerTeam, 1))
 			.style("fill", "none")
-			.style("filter" , "url(#glow)")
+			//.style("filter" , "url(#glow)")
 			.on("click",  () => {
 				removeBlob(player);
 				dispatch_scatter.call("deAmpPlayer", this, player);
@@ -663,6 +664,7 @@ function gen_viz() {
 			.enter().append("g")
 			.attr("class", "radarWrapper " + tag + " teamBlob")
 
+		/*
 		blob
 		.append("path")
 		.attr("class", "radarArea " + tag)
@@ -693,7 +695,7 @@ function gen_viz() {
 			.transition().duration(1000).call( function(selection) {
                 selection.style("opacity", 1);
             })
-
+		*/
 		//Create the outlines
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
@@ -701,7 +703,7 @@ function gen_viz() {
 			.style("stroke-width", outline_width + "px")
 			.style("stroke", (d,i) => teamColor(team, 2))
 			.style("fill", "none")
-			.style("filter" , "url(#glow)");
+			//.style("filter" , "url(#glow)");
 		
 		//Append the outline circles
 		blob.selectAll(".radarCircle." + tag)
@@ -773,13 +775,14 @@ function gen_viz() {
 			.data(teamData)
 			.transition().duration(1000);
 
+			/*
 			g.selectAll(".radarArea." + tag)
 			.data(teamData)
 			.transition().duration(1000)
 					.attr("d", d => radarLine(d.axes))
 					//.style("fill", (d,i) => teamColor(teamFilters[i], 1))
 					.style("fill-opacity", 0.4) //opacity area
-			
+			*/
 			//outlines
 			g.selectAll(".radarStroke." + tag)//.append("path")
 			.data(teamData)
@@ -788,7 +791,7 @@ function gen_viz() {
 				.style("stroke-width", outline_width + "px")
 				//.style("stroke", (d,i) => teamColor(teamFilters[i], 2))
 				.style("fill", "none")
-				.style("filter" , "url(#glow)");
+				//.style("filter" , "url(#glow)");
 		
 			//outline circles
 			g.selectAll(".radarWrapper." + tag)
