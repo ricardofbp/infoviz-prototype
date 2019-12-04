@@ -251,7 +251,7 @@ function changeTeams(team) {
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
-      return;
+      return false;
     }
   }
 
@@ -260,6 +260,7 @@ function changeTeams(team) {
   //TODO dispatch for parallel
   dispatch_radar.call("addTeam", this, team);
   dispatch_scatter.call("addTeam", this, team);
+  return true;
 }
 
 function updatePlayerDropdown(){

@@ -6,7 +6,7 @@ renderMap();
 function renderMap() {
   
 var width = 800;
-var mapRatio = 0.5;
+var mapRatio = 0.45;
 var height = width * mapRatio;
 
 var svg = d3.select("#USMap")
@@ -75,7 +75,14 @@ d3.json("../dataset/us.json").then(function(us) {
       return "translate(" + projection([d.long, d.lat]) + ")";
     })
     .on("click", (d) => {
-      changeTeams(d.team);
+      if (changeTeams(d.team)) {
+        svg.select(".mark." + d.team.replace(/\s+/g, ''))
+          .style("outline",  "1px solid gray");
+      }
+      else {
+        svg.select(".mark." + d.team.replace(/\s+/g, ''))
+          .style("outline",  "0px solid gray");
+      }
     })
     .on("mouseover", (d) => {
       svg.select(".mark." + d.team.replace(/\s+/g, ''))
