@@ -517,7 +517,7 @@ function gen_viz() {
 	});
 
 	function removeBlob(playerOrTeam) {
-		var tag = playerOrTeam.replace(/\s+/g, ''); 
+		var tag = playerOrTeam.replace(/[\s']+/g, ''); 
 		console.log("[INFO] removeblob tag: " + tag);
 		g.select(".radarWrapper." + tag)
 			.remove()
@@ -553,7 +553,7 @@ function gen_viz() {
 
 		var color = d3.interpolateSinebow(Math.random());
 
-		var tag = player.replace(/\s+/g, ''); 
+		var tag = player.replace(/[\s']+/g, ''); 
 		var teamTag = playerTeam.replace(/\s+/g, ''); 
 
 		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam + " " + tag);

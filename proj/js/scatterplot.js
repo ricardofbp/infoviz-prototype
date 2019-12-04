@@ -248,7 +248,7 @@ function render() {
 
     function amplifyCircle(player) {
         console.log("[INFO] Amping player " + player);
-        svg_scatterplot.selectAll("circle." + player.replace(/\s+/g, ''))
+        svg_scatterplot.selectAll("circle." + player.replace(/[\s']+/g, ''))
             .transition().duration(200)
             .attr("r", r + 5)
             .attr("stroke-width", borderWidth + 0);
@@ -256,14 +256,14 @@ function render() {
 
     function deAmplifyCircle(player) {
         console.log("[INFO] DeAmping player " + player);
-        svg_scatterplot.selectAll("circle." + player.replace(/\s+/g, ''))
+        svg_scatterplot.selectAll("circle." + player.replace(/[\s']+/g, ''))
             .transition().duration(200)
             .attr("r", r)
             .attr("stroke-width", borderWidth);
     }
 
     function removeCircles(team) {
-         svg_scatterplot.selectAll("circle." + team.replace(/\s+/g, ''))
+         svg_scatterplot.selectAll("circle." + team.replace(/[\s']+/g, ''))
             .transition().duration(1000)
                 .style("opacity", 0)
             .remove()
@@ -271,7 +271,7 @@ function render() {
 
     function addCircles(team) {
         //appends the circles
-        var tag = team.replace(/\s+/g, ''); 
+        var tag = team.replace(/[\s']+/g, ''); 
 
         svg_scatterplot.selectAll("circle." + tag)
             .data(data_scatter                
@@ -313,7 +313,7 @@ function render() {
 
     function updateCircles() {
         for (let i = 0; i < teamFilters.length; i++) {
-            var tag = teamFilters[i].replace(/\s+/g, ''); 
+            var tag = teamFilters[i].replace(/[\s']+/g, ''); 
 
             var elements = svg_scatterplot.selectAll("circle." + tag)
 
@@ -324,7 +324,7 @@ function render() {
             .transition().duration(1000)
             .attr("class", function(d) {
                     return tag + " " +
-                     d.name.replace(/\s+/g, '');
+                     d.name.replace(/[\s']+/g, '');
             })
             .attr("opacity", 1)
             .attr("r", r)
