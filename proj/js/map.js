@@ -54,31 +54,42 @@ d3.json("../dataset/us.json").then(function(us) {
         long: -119.417931
       }];
 
+  var logoWidth = 30;
+  var logoHeight = 30;
   svg.selectAll(".mark")
-    .data(marks)
+    .data(teamColors)
     .enter()
     .append("image")
-    .style("border-width", "2px")
-    .style("border-color", "gray")
-    .attr('class', 'mark')
-    .attr('width', 30)
-    .attr('height', 30)
-    .attr("xlink:href", 'logos/LosAngelsLakers.png')
-    .attr("transform", function(d) {
+    .attr('class', (d) => {
+      return 'mark ' +  d.team.replace(/\s+/g, '');
+    })
+    //the x and y centers the logos on the center of the state
+    .attr("x", -logoWidth/2)
+    .attr("y", -logoHeight/2)
+    .attr('width', logoWidth)
+    .attr('height', logoHeight)
+    .attr("xlink:href", (d) => {
+      return "logos/" + d.team.replace(/\s+/g, '') + ".png";
+    })
+    .attr("transform", (d) => {
       return "translate(" + projection([d.long, d.lat]) + ")";
     })
-    .on("click", function() {
-      changeTeams("Los Angeles Lakers");
+    .on("click", (d) => {
+      changeTeams(d.team);
     })
-    .on("mouseover", function() {
-      svg.selectAll(".mark")
-          .attr('width', 50)
-          .attr('height', 50);
+    .on("mouseover", (d) => {
+      svg.select(".mark." + d.team.replace(/\s+/g, ''))
+          .attr("x", -(logoWidth + 20)/2)
+          .attr("y", -(logoHeight + 20)/2)
+          .attr('width', logoWidth + 20)
+          .attr('height', logoHeight + 20);
     })
-    .on("mouseleave", function(selection) {
-      svg.selectAll(".mark")
-          .attr('width', 30)
-          .attr('height', 30);
+    .on("mouseleave", (d) => {
+      svg.select(".mark." + d.team.replace(/\s+/g, ''))
+          .attr("x", -logoWidth/2)
+          .attr("y", -logoHeight/2)
+          .attr('width', logoWidth)
+          .attr('height', logoHeight);
     })
 
   
