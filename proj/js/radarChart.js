@@ -31,7 +31,7 @@ var SalaryScale, WeightScale, HeightScale, PPGScale, PPMScale;
 	}
 }
 */
-d3.csv("../dataset/radarchart_dataset.csv").then(function(d){
+d3.csv("../dataset/radarchart_dataset2.csv").then(function(d){
 	data_radar = d;
 	gen_viz();
 	

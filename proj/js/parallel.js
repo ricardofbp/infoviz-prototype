@@ -47,7 +47,9 @@ function renderParallel() {
     .enter().append("path")
     .attr("d",  path)
     .style("fill", "none")
-    .style("stroke", "#69b3a2")
+    .style("stroke", (d) => {
+      return teamColor(d.team, 1);
+    })
     .style("opacity", 0.5)
 
   // Draw the axis:
