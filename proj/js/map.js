@@ -77,7 +77,7 @@ d3.json("../dataset/us.json").then(function(us) {
     .on("click", (d) => {
       if (changeTeams(d.team)) {
         svg.select(".mark." + d.team.replace(/\s+/g, ''))
-          .style("outline",  "1px solid gray");
+          .style("outline",  "1px solid " + teamColor(d.team, 1));
       }
       else {
         svg.select(".mark." + d.team.replace(/\s+/g, ''))

@@ -6,46 +6,79 @@ var teamColors =
 [
   {team: "Atlanta Hawks", color1: "#E03A3E", color2: "#C1D32F", lat: 33.247875, long: -83.441162},
   {team: "Boston Celtics", color1: "#007A33", color2: "#BA9653", lat: 42.407211, long: -71.382439},
-  {team: "Brooklyn Nets", color1: "#000000", color2: "#FFFFFF"},
+  {team: "Brooklyn Nets", color1: "#000000", color2: "#FFFFFF", lat: 43.000000, long: -75.000000},
   {team: "Charlotte Hornets", color1: "#1d1160", color2: "#00788C", lat: 35.782169, long: -80.793457},
   {team: "Chicago Bulls", color1: "#CE1141", color2: "#000000", lat: 40.000000, long: -89.000000},
-  {team: "Cleveland Cavaliers" , color1: "#860038" , color2: "#041E42", lat: 40.367474, long: -82.996216},
-  {team: "Dallas Mavericks", color1: "#00538C", color2: "#B8C4CA"},
+  {team: "Cleveland Cavaliers" , color1: "#860038" , color2: "#041E42", lat: 40.367474, long: -82.996216}, 
+  {team: "Dallas Mavericks", color1: "#00538C", color2: "#B8C4CA", lat: 29.000000, long: -98.500000},
   {team: "Denver Nuggets", color1: "#0E2240", color2: "#FEC524", lat: 39.113014, long: -105.358887},
   {team: "Detroit Pistons", color1: "#C8102E", color2: "#1d42ba", lat: 44.182205, long: -84.506836},
-  {team: "Golden State Warriors", color1: "#1D428A", color2: "#ffc72c"},
-  {team: "Houston Rockets", color1: "#CE1141", color2: "#000000"},
+  {team: "Golden State Warriors", color1: "#1D428A", color2: "#ffc72c", lat: 37.778259, long: -120.417931},
+  {team: "Houston Rockets", color1: "#CE1141", color2: "#000000", lat: 32.500000, long: -101.000000},
   {team: "Indiana Pacers", color1: "#002D62", color2: "#FDBB30", lat: 40.273502, long: -86.126976},
-  {team: "Los Angeles Clippers", color1: "#c8102E", color2: "#1d428a" },
-  {team: "Los Angeles Lakers", color1: "#552583" , color2: "#FDB927" },
-  {team: "Memphis Grizzlies", color1: "#5D76A9", color2: "#12173F", lat: 35.860119, long: -86.660156},
-  {team: "Miami Heat", color1: "#98002E", color2: "#F9A01B"},
+  {team: "Los Angeles Clippers", color1: "#c8102E", color2: "#1d428a", lat: 34.278259, long: -116.500000 },
+  {team: "Los Angeles Lakers", color1: "#552583" , color2: "#FDB927", lat: 35.778259, long: -118.417931},
+  {team: "Memphis Grizzlies", color1: "#5D76A9", color2: "#12173F", lat: 35.860119, long: -86.660156}, 
+  {team: "Miami Heat", color1: "#98002E", color2: "#F9A01B", lat: 26.994402, long: -80.760254},
   {team: "Milwaukee Bucks", color1: "#00471B", color2: "#EEE1C6", lat: 44.500000, long: -89.500000},
   {team: "Minnesota Timberwolves", color1: "#0C2340", color2: "#236192", lat: 46.392410, long: -94.636230},
-  {team: "New Orleans Pelicans", color1: "#0C2340", color2: "#C8102E", lat: 30.391830, long: -92.329102},
-  {team: "New York Knicks", color1: "#006BB6", color2: "#F58426"},
-  {team: "Oklahoma City Thunders", color1: "#007ac1", color2: "#ef3b24", lat: 36.084621, long: -96.921387},
-  {team: "Orlando Magic", color1: "#0077c0", color2: "#C4ced4"},
-  {team: "Philadelphia 76ers", color1: "#006bb6", color2: "#ed174c", lat: 41.203323, long: -77.194527},
+  {team: "New Orleans Pelicans", color1: "#0C2340", color2: "#C8102E", lat: 30.391830, long: -92.329102}, //?
+  {team: "New York Knicks", color1: "#006BB6", color2: "#F58426", lat: 45.000000,long: -75.000000},
+  {team: "Oklahoma City Thunder", color1: "#007ac1", color2: "#ef3b24", lat: 36.084621, long: -96.921387}, 
+  {team: "Orlando Magic", color1: "#0077c0", color2: "#C4ced4", lat: 28.999402, long: -81.760254},
+  {team: "Philadelphia 76ers", color1: "#006bb6", color2: "#ed174c", lat: 40.93323, long: -77.894527},
   {team: "Phoenix Suns", color1: "#1d1160", color2: "#e56020", lat: 34.048927, long: -111.093735},
   {team: "Portland Trail Blazers", color1: "#E03A3E", color2: "#000000", lat: 44.000000, long: -120.500000},
-  {team: "Sacramento Kings", color1: "#5a2d81", color2: "#63727A"},
-  {team: "San Antonio Spurs", color1: "#c4ced4", color2: "#000000"},
-  {team: "Toronto Raptros", color1: "#ce1141", color2: "#000000"},
+  {team: "Sacramento Kings", color1: "#5a2d81", color2: "#63727A", lat: 40.378259, long: -122.017931},
+  {team: "San Antonio Spurs", color1: "#c4ced4", color2: "#000000", lat: 32.000000, long: -96.000000},
+  {team: "Toronto Raptors", color1: "#ce1141", color2: "#000000", lat: 43.651070, long: -80.347015},
   {team: "Utah Jazz", color1: "#002B5C", color2: "#00471B", lat: 39.419220, long: -111.950684},
   {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837", lat: 47.751076, long: -120.740135}
-]
+];
+
+var colorScale =
+["#94537b",
+"#56c15e",
+"#9c50c7",
+"#87bb37",
+"#5e69d8",
+"#b9ae39",
+"#d547ad",
+"#4c8b29",
+"#d57de1",
+"#40854a",
+"#dd4481",
+"#58c49c",
+"#d43e4a",
+"#4ebcd9",
+"#ce5126",
+"#5895db",
+"#dd9230",
+"#5166a6",
+"#757421",
+"#8756a5",
+"#9eb56c",
+"#a93f88",
+"#2e8871",
+"#df7a5b",
+"#a696e0",
+"#9b5f2a",
+"#dd86b7",
+"#6d733b",
+"#a64556",
+"#d2a165",
+"#dd7d7f"]
 /* IN THE MAKING
 var stateCoords = 
 [
 {name: Wisconsin, lat: 44.500000, long: -89.500000},
 {West Virginia, 39.000000 -80.500000},
 {Vermont, 44.000000 -72.699997},
-{Texas, 31.000000 -100.000000},
+{name: Texas, lat: 31.000000, long: -100.000000},
 {South Dakota, 44.500000 -100.000000},
 {Rhode Island, 41.700001 -71.500000},
 {name: Oregon, lat: 44.000000, long: -120.500000},
-{New York, 43.000000 -75.000000},
+{name: New York, lat: 43.000000,long: -75.000000},
 {New Hampshire, 44.000000 -71.500000},
 {Nebraska, 41.500000 -100.000000},
 {Kansas, 38.500000 -98.000000},
@@ -56,7 +89,7 @@ var stateCoords =
 {Arkansas, 34.799999 -92.199997},
 {name: Indiana, lat: 40.273502, long: -86.126976},
 {Missouri State, 38.573936 -92.603760},
-{Florida, 27.994402 -81.760254},
+{name: Florida, lat: 27.994402, long: -81.760254},
 {Nevada, 39.876019 -117.224121},
 {Maine, 45.367584 -68.972168},
 {name: Michigan, lat: 44.182205, long: -84.506836},
@@ -83,7 +116,7 @@ var stateCoords =
 {name: Arizona, lat: 34.048927, long: -111.093735},
 {Maryland, 39.045753 -76.641273},
 {name, Massachusetts, lat: 42.407211, long: -71.382439},
-{California, 36.778259 -119.417931},
+{name: California, lat: 36.778259, long: -119.417931},
 {Idaho, 44.068203 -114.742043},
 {Wyoming, 43.075970 -107.290283},
 {name: North Carolina, lat: 35.782169, long: -80.793457},
@@ -117,9 +150,8 @@ function init() {
 function teamColor(teamName, type) {
     for (let i = 0; i < teamColors.length; i++) {
         if (teamColors[i].team == teamName) { 
-            //console.log(item.color);
-            if (type == 1) return teamColors[i].color1; 
-            if (type == 2) return teamColors[i].color2; 
+            return colorScale[i]
+            //console.log(d3.interpolateTurbo(i/31))
         }
     }
     //black is returned if something bad happens
