@@ -321,7 +321,7 @@ function gen_viz() {
 	////////////////////////////////////////////////////////	
 	new_data_aux = getTeamAverage(data_radar.
 		filter(function(d){ return d.Season == season_filter;}).
-		filter(function(d){ return d.Team == team_filter;}));
+		filter(function(d){ return d.Team == teamFilters[0];}));
 
 	findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));
 	console.log(maxSalary, maxPPG, maxHeight, maxWeight, maxPPM);
@@ -470,7 +470,6 @@ function gen_viz() {
 	//must be this order because, for some reason, it doesnt work otherwise
 	dispatch_radar.on("addPlayer", function(player, playerTeam) {
 		isShowingTeam = false;
-		
 		hideTeamBlobs()
 		addPlayerBlob(player, playerTeam);
 	});
@@ -478,7 +477,7 @@ function gen_viz() {
 	dispatch_radar.on("removePlayer", function(player, team) {
 		console.log("[INFO] dispatch removePlayer radar");
 		removeBlob(player + ".playerBlob." + team);
-
+		changePlayers(player);
 	});
 
 	dispatch_radar.on("year", function(){
@@ -639,7 +638,8 @@ function gen_viz() {
 			.style("fill-opacity", 0.8)
 			.on("click",  () => {
 				removeBlob(player);
-				dispatch_scatter.call("deAmpPlayer", this, players);
+				changePlayers(player);
+				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', (d) => {
 				showTooltip(d, player);
@@ -730,7 +730,7 @@ function gen_viz() {
 
 			new_data_aux = transformData(data_radar
 				.filter(function(d){ return d.Season == season_filter;})
-				.filter(function(d){ return d.Team == team_filter;}));
+				.filter(function(d){ return d.Team == teamFilters[0];}));
 
 			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
 		}

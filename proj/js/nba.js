@@ -68,63 +68,260 @@ var colorScale =
 "#a64556",
 "#d2a165",
 "#dd7d7f"]
-/* IN THE MAKING
-var stateCoords = 
+
+var states = 
 [
-{name: Wisconsin, lat: 44.500000, long: -89.500000},
-{West Virginia, 39.000000 -80.500000},
-{Vermont, 44.000000 -72.699997},
-{name: Texas, lat: 31.000000, long: -100.000000},
-{South Dakota, 44.500000 -100.000000},
-{Rhode Island, 41.700001 -71.500000},
-{name: Oregon, lat: 44.000000, long: -120.500000},
-{name: New York, lat: 43.000000,long: -75.000000},
-{New Hampshire, 44.000000 -71.500000},
-{Nebraska, 41.500000 -100.000000},
-{Kansas, 38.500000 -98.000000},
-{Mississippi, 33.000000 -90.000000},
-{name, Illinois, lat: 40.000000, long: -89.000000},
-{Delaware, 39.000000 -75.500000},
-{Connecticut, 41.599998 -72.699997},
-{Arkansas, 34.799999 -92.199997},
-{name: Indiana, lat: 40.273502, long: -86.126976},
-{Missouri State, 38.573936 -92.603760},
-{name: Florida, lat: 27.994402, long: -81.760254},
-{Nevada, 39.876019 -117.224121},
-{Maine, 45.367584 -68.972168},
-{name: Michigan, lat: 44.182205, long: -84.506836},
-{name: Georgia, lat: 33.247875, long: -83.441162},
-{Hawaii, 20.716179 -158.214676},
-{Alaska, 66.160507 -153.369141},
-{name: Tennessee, lat: 35.860119, long: -86.660156},
-{Virginia, 37.926868 -78.024902},
-{New Jersey, 39.833851 -74.871826},
-{Kentucky, 37.839333 -84.270020},
-{North Dakota, 47.650589 -100.437012},
-{name: Minnesota, lat: 46.392410, long: -94.636230},
-{name: Oklahoma, lat: 36.084621, long: -96.921387},
-{Montana, 46.965260 -109.533691},
-{name: Washington, lat: 47.751076, long: -120.740135},
-{name: Utah, lat: 39.419220, long: -111.950684},
-{name: Colorado, lat: 39.113014, long: -105.358887},
-{name: Ohio, lat: 40.367474, long: -82.996216},
-{Alabama, 32.318230 -86.902298},
-{Iowa, 42.032974 -93.581543},
-{New Mexico, 34.307144 -106.018066},
-{South Carolina, 33.836082 -81.163727},
-{name: Pennsylvania, lat: 41.203323, long: -77.194527},
-{name: Arizona, lat: 34.048927, long: -111.093735},
-{Maryland, 39.045753 -76.641273},
-{name, Massachusetts, lat: 42.407211, long: -71.382439},
-{name: California, lat: 36.778259, long: -119.417931},
-{Idaho, 44.068203 -114.742043},
-{Wyoming, 43.075970 -107.290283},
-{name: North Carolina, lat: 35.782169, long: -80.793457},
-{name: Louisiana, lat: 30.391830, long: -92.329102}
+  {
+    "state":"Alaska",
+    "latitude":61.3850,
+    "longitude":-152.2683
+  },
+  {
+    "state":"Alabama",
+    "latitude":32.7990,
+    "longitude":-86.8073
+  },
+  {
+    "state":"Arkansas",
+    "latitude":34.9513,
+    "longitude":-92.3809
+  },
+  {
+    "state":"Arizona",
+    "latitude":33.7712,
+    "longitude":-111.3877
+  },
+  {
+    "state":"California",
+    "latitude":36.1700,
+    "longitude":-119.7462
+  },
+  {
+    "state":"Colorado",
+    "latitude":39.0646,
+    "longitude":-105.3272
+  },
+  {
+    "state":"Connecticut",
+    "latitude":41.5834,
+    "longitude":-72.7622
+  },
+  {
+    "state":"Delaware",
+    "latitude":39.3498,
+    "longitude":-75.5148
+  },
+  {
+    "state":"Florida",
+    "latitude":27.8333,
+    "longitude":-81.7170
+  },
+  {
+    "state":"Georgia",
+    "latitude":32.9866,
+    "longitude":-83.6487
+  },
+  {
+    "state":"Hawaii",
+    "latitude":21.1098,
+    "longitude":-157.5311
+  },
+  {
+    "state":"Iowa",
+    "latitude":42.0046,
+    "longitude":-93.2140
+  },
+  {
+    "state":"Idaho",
+    "latitude":44.2394,
+    "longitude":-114.5103
+  },
+  {
+    "state":"Illinois",
+    "latitude":40.3363,
+    "longitude":-89.0022
+  },
+  {
+    "state":"Indiana",
+    "latitude":39.8647,
+    "longitude":-86.2604
+  },
+  {
+    "state":"Kansas",
+    "latitude":38.5111,
+    "longitude":-96.8005
+  },
+  {
+    "state":"Kentucky",
+    "latitude":37.6690,
+    "longitude":-84.6514
+  },
+  {
+    "state":"Louisiana",
+    "latitude":31.1801,
+    "longitude":-91.8749
+  },
+  {
+    "state":"Massachusetts",
+    "latitude":42.2373,
+    "longitude":-71.5314
+  },
+  {
+    "state":"Maryland",
+    "latitude":39.0724,
+    "longitude":-76.7902
+  },
+  {
+    "state":"Maine",
+    "latitude":44.6074,
+    "longitude":-69.3977
+  },
+  {
+    "state":"Michigan",
+    "latitude":43.3504,
+    "longitude":-84.5603
+  },
+  {
+    "state":"Minnesota",
+    "latitude":45.7326,
+    "longitude":-93.9196
+  },
+  {
+    "state":"Missouri",
+    "latitude":38.4623,
+    "longitude":-92.3020
+  },
+  {
+    "state":"Mississippi",
+    "latitude":32.7673,
+    "longitude":-89.6812
+  },
+  {
+    "state":"Montana",
+    "latitude":46.9048,
+    "longitude":-110.3261
+  },
+  {
+    "state":"North Carolina",
+    "latitude":35.6411,
+    "longitude":-79.8431
+  },
+  {
+    "state":"North Dakota",
+    "latitude":47.5362,
+    "longitude":-99.7930
+  },
+  {
+    "state":"Nebraska",
+    "latitude":41.1289,
+    "longitude":-98.2883
+  },
+  {
+    "state":"New Hampshire",
+    "latitude":43.4108,
+    "longitude":-71.5653
+  },
+  {
+    "state":"New Jersey",
+    "latitude":40.3140,
+    "longitude":-74.5089
+  },
+  {
+    "state":"New Mexico",
+    "latitude":34.8375,
+    "longitude":-106.2371
+  },
+  {
+    "state":"Nevada",
+    "latitude":38.4199,
+    "longitude":-117.1219
+  },
+  {
+    "state":"New York",
+    "latitude":42.1497,
+    "longitude":-74.9384
+  },
+  {
+    "state":"Ohio",
+    "latitude":40.3736,
+    "longitude":-82.7755
+  },
+  {
+    "state":"Oklahoma",
+    "latitude":35.5376,
+    "longitude":-96.9247
+  },
+  {
+    "state":"Oregon",
+    "latitude":44.5672,
+    "longitude":-122.1269
+  },
+  {
+    "state":"Pennsylvania",
+    "latitude":40.5773,
+    "longitude":-77.2640
+  },
+  {
+    "state":"Rhode Island",
+    "latitude":41.6772,
+    "longitude":-71.5101
+  },
+  {
+    "state":"South Carolina",
+    "latitude":33.8191,
+    "longitude":-80.9066
+  },
+  {
+    "state":"South Dakota",
+    "latitude":44.2853,
+    "longitude":-99.4632
+  },
+  {
+    "state":"Tennessee",
+    "latitude":35.7449,
+    "longitude":-86.7489
+  },
+  {
+    "state":"Texas",
+    "latitude":31.1060,
+    "longitude":-97.6475
+  },
+  {
+    "state":"Utah",
+    "latitude":40.1135,
+    "longitude":-111.8535
+  },
+  {
+    "state":"Virginia",
+    "latitude":37.7680,
+    "longitude":-78.2057
+  },
+  {
+    "state":"Vermont",
+    "latitude":44.0407,
+    "longitude":-72.7093
+  },
+  {
+    "state":"Washington",
+    "latitude":47.3917,
+    "longitude":-121.5708
+  },
+  {
+    "state":"Wisconsin",
+    "latitude":44.2563,
+    "longitude":-89.6385
+  },
+  {
+    "state":"West Virginia",
+    "latitude":38.4680,
+    "longitude":-80.9696
+  },
+  {
+    "state":"Wyoming",
+    "latitude":42.7475,
+    "longitude":-107.2085
+  }
 ]
-*/
-var team_filter = "Atlanta Hawks"; 
-var player1_filter = "Wayne Turner";
 
 var teamFilters = [];
 var playerFilters = [];
@@ -133,6 +330,7 @@ var season_filter = 2000;
 var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
 var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam");
+var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 
 var slider;
 
@@ -158,6 +356,21 @@ function teamColor(teamName, type) {
     return "#000000";
 }
 
+function getTeamCoords(team) {
+  for (let i = 0; i < teamColors.length; i++) {
+    if (teamColors[i].team == team) {
+      return [teamColors[i].long, teamColors[i].lat]
+    }
+  }
+}
+
+function getStateCoords(state) {
+  for (let i = 0; i < states.length; i++) {
+    if (states[i].state == state) {
+      return [states[i].longitude, states[i].latitude]
+    }
+  }
+}
 function team_dropdown() {
   document.getElementById("team_dropdown").classList.toggle("show");
 }
@@ -257,6 +470,7 @@ function changeTeam(e) {
       //TODO dispatch for parallel
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
+      dispatch_map.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
       e.style.backgroundColor = "#f6f6f6"
@@ -270,6 +484,7 @@ function changeTeam(e) {
   //TODO dispatch for parallel
   dispatch_radar.call("addTeam", this, e.innerText);
   dispatch_scatter.call("addTeam", this, e.innerText);
+  dispatch_map.call("addTeam", this, e.innerText);
   e.style.backgroundColor = "gray";
 }
 
@@ -281,6 +496,7 @@ function changeTeams(team) {
       //TODO dispatch for parallel
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
+      dispatch_map.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
       return false;
@@ -291,10 +507,12 @@ function changeTeams(team) {
   teamFilters.push(team);
   //TODO dispatch for parallel
   dispatch_radar.call("addTeam", this, team);
-  dispatch_scatter.call("addTeam", this, team);
+  dispatch_scatter.call("addTeam", this, team)
+  dispatch_map.call("addTeam", this, team);
   return true;
 }
 
+/*
 function updatePlayerDropdown(){
 	var element;
 	var linkTest;
@@ -319,6 +537,7 @@ function updatePlayerDropdown(){
 		
   }
 }
+*/
 
 function changePlayer1(e){
   console.log("changePlayer1" + player1_filter);

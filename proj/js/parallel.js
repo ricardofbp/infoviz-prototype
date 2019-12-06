@@ -40,6 +40,18 @@ function renderParallel() {
       return d3.line()(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
   }
 
+  function addLine() {
+    //TODO
+  }
+
+  function removeLine() {
+    //TODO
+  }
+
+  function updateLines() {
+    //TODO
+  }
+  
   // Draw the lines
   svg
     .selectAll("myPath")

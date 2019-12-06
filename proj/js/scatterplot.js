@@ -246,6 +246,8 @@ function render() {
     //                    FUNCTIONS                       //
     ////////////////////////////////////////////////////////
 
+    var transitionDuration = 500;
+
     function amplifyCircle(player) {
         console.log("[INFO] Amping player " + player);
         svg_scatterplot.selectAll("circle." + player.replace(/[\s']+/g, ''))
@@ -257,14 +259,14 @@ function render() {
     function deAmplifyCircle(player) {
         console.log("[INFO] DeAmping player " + player);
         svg_scatterplot.selectAll("circle." + player.replace(/[\s']+/g, ''))
-            .transition().duration(200)
+            .transition().duration(transitionDuration)
             .attr("r", r)
             .attr("stroke-width", borderWidth);
     }
 
     function removeCircles(team) {
          svg_scatterplot.selectAll("circle." + team.replace(/[\s']+/g, ''))
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
                 .style("opacity", 0)
             .remove()
     }
@@ -305,7 +307,7 @@ function render() {
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
-            .transition().duration(1000).call( function(selection) {
+            .transition().duration(transitionDuration).call( function(selection) {
                 selection.style("opacity", 1);
             })
             
@@ -353,7 +355,7 @@ function render() {
                 .filter(function(d){ return d.season == season_filter; })
                 .filter(function(d){ return d.team == teamFilters[i]; }))
             .exit()
-                .transition().duration(1000)
+                .transition().duration(transitionDuration)
                 .style("opacity", 0)
                 .remove()
         }
@@ -437,13 +439,13 @@ function render() {
          }
         // Update axis and circle position
         xaxis
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
             .attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisBottom(x)
                 .ticks(10, tickFormat));
 
         yaxis
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
             //.attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisLeft(hscale));
                 //.ticks(10, tickFormat));
