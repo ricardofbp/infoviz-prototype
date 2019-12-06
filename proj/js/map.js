@@ -47,7 +47,8 @@ Promise.all(promises).then(ready)
   });
 
   dispatch_map.on("year", function() { 
-        
+    console.log("[INFO] year map");
+    changeLines()
   });
 
   dispatch_map.on("ampTeam", function(team) {
@@ -86,6 +87,41 @@ Promise.all(promises).then(ready)
     .remove()
   }
 
+  function changeLines() {
+    for (let i = 0; i < teamFilters.length; i++) {
+      var tag = teamFilters[i].replace(/[\s']+/g, '');
+      
+      var lines = svg.selectAll("path." + tag);
+      console.log("LOGGING LINES: " + lines);
+      lines
+        .data(data_map
+          .filter(function(d){ return d.draft_year == season_filter; })
+          .filter(function(d){ return d.team == teamFilters[i]; }))
+        .transition().duration(transitionDuration + 800)
+        .attr("class", tag)
+        .attr("d", (d) => {
+          return lngLatToArc(getStateCoords(d.state), getTeamCoords(d.team), 0.7);
+        })
+        .style("fill", "none")
+        .style("stroke", (d) => {
+          return teamColor(d.team);
+        })
+        .style("stroke-width", 2);
+      /*
+        */
+      addLine(teamFilters[i]);
+      /*
+      */
+      lines
+        .data(data_map                
+            .filter(function(d){ return d.draft_year == season_filter; })
+            .filter(function(d){ return d.team == teamFilters[i]; }))
+        .exit()
+            .transition().duration(transitionDuration)
+            .style("opacity", 0)
+            .remove()
+    }
+  }
 
   function amplifyTeam(team) {
     svg.select(".mark." + team.replace(/\s+/g, ''))

@@ -326,6 +326,7 @@ var states =
 var teamFilters = [];
 var playerFilters = [];
 var season_filter = 2000;
+var old_season_filter;
 
 var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
@@ -428,10 +429,12 @@ function start_slider(){
   slider.on('slideStop', function(value){
       var new_val = document.getElementById("year").value;
       if(original_value != new_val){
+        old_season_filter = season_filter;
         season_filter = new_val;
       }
       dispatch_radar.call("year");
       dispatch_scatter.call("year");
+      dispatch_map.call("year");
       updatePlayerDropdown();
 
     });
