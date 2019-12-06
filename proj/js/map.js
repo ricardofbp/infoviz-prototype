@@ -83,6 +83,7 @@ Promise.all(promises).then(ready)
     .enter().append("path")
       .attr("class", tag)
       .attr("d", (d) => {
+        //return link(getStateCoords(d.state), getTeamCoords(d.team));
         return lngLatToArc(getStateCoords(d.state), getTeamCoords(d.team), 0.7);
       })
       .style("fill", "none")
@@ -113,6 +114,7 @@ Promise.all(promises).then(ready)
         //.transition().duration(transitionDuration + 800)
         .attr("class", tag)
         .attr("d", (d) => {
+          //return link(getStateCoords(d.state), getTeamCoords(d.team));
           return lngLatToArc(getStateCoords(d.state), getTeamCoords(d.team), 0.7);
         })
         .style("fill", "none")
@@ -180,12 +182,21 @@ Promise.all(promises).then(ready)
       // To avoid a whirlpool effect, make the bend direction consistent regardless of whether the source is east or west of the target
       var west_of_source = (targetX - sourceX) < 0;
       if (west_of_source) return "M" + targetX + "," + targetY + "A" + dr + "," + dr + " 0 0,1 " + sourceX + "," + sourceY;
-      return "M" + sourceX + "," + sourceY + "A" + dr + "," + dr + " 0 0,1 " + targetX + "," + targetY;
+     return "M" + targetX + "," + targetY + "A" + dr + "," + dr + " 0 0,0 " + sourceX + "," + sourceY;
       
     } else {
       return "M0,0,l0,0z";
     }
   }
+
+  function link(p1, p2) {
+            var start = projection(p1);
+            var end = projection(p2);
+            return "M" + start[0] + "," + start[1]
+                + "C" + (start[0] + end[0]) / 2 + "," + start[1]
+                + " " + (start[0] + end[0]) / 2 + "," + start[1]
+                + " " + end[0] + "," + end[1];
+        }
 
   d3.json("../dataset/us.json").then(function(us) {
     svg.append("g")
