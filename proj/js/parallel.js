@@ -18,7 +18,7 @@ function renderParallel() {
 
 
   // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called team
-  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "team" })
+  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "team" && d != "season" })
 
   // For each dimension, I build a linear scale. I store all in a y object
   var y = {}
@@ -40,30 +40,67 @@ function renderParallel() {
       return d3.line()(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
   }
 
-  function addLine() {
-    //TODO
+  dispatch_parallel.on("year", function() {
+    updateLines();
+  })
+
+  dispatch_parallel.on("addTeam", function(team) {
+    addLine(team);
+  });
+
+  dispatch_parallel.on("removeTeam", function(team) {
+    removeLine(team);
+  });
+
+  var transitionDuration = 1000;
+
+  function addLine(team) {
+    var tag = team.replace(/[\s']+/g, ''); 
+
+    var line = svg.selectAll("path.parallelPath." + tag);
+
+    line
+      .data(data_parallel
+        .filter(function(d){ return d.season == season_filter; })
+        .filter(function(d){ return d.team == team; })) 
+      .enter().append("path")
+      .attr("class", (d) => {
+        return "parallelPath " + tag;
+      })
+      .attr("d",  path)
+      .style("fill", "none")
+      .style("stroke-width", 2)
+      .style("stroke", (d) => {
+        return teamColor(d.team, 1);
+      })
+      .style("opacity", 1);
+
   }
 
-  function removeLine() {
-    //TODO
+  function removeLine(team) {
+    svg.selectAll("path.parallelPath." + team.replace(/[\s']+/g, ''))
+        .transition().duration(transitionDuration)
+        .style("opacity", 0)
+    .remove()
   }
 
   function updateLines() {
-    //TODO
+    for (let i = 0; i < teamFilters.length; i++) {
+      var tag = teamFilters[i].replace(/[\s']+/g, ''); 
+
+      console.log(svg.selectAll("path.parallelPath." + tag));
+      svg.selectAll("path.parallelPath." + tag)
+        .data(data_parallel
+          .filter(function(d){ return d.season == season_filter; })
+          .filter(function(d){ return d.team == teamFilters[i]; })) 
+        .transition().duration(transitionDuration)
+        .attr("d",  path);
+
+    }
   }
   
   // Draw the lines
-  svg
-    .selectAll("myPath")
-    .data(data_parallel)
-    .enter().append("path")
-    .attr("d",  path)
-    .style("fill", "none")
-    .style("stroke", (d) => {
-      return teamColor(d.team, 1);
-    })
-    .style("opacity", 0.5)
-
+  
   // Draw the axis:
   svg.selectAll("myAxis")
     // For each dimension of the dataset I add a 'g' element:

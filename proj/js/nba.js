@@ -435,6 +435,7 @@ function start_slider(){
       dispatch_radar.call("year");
       dispatch_scatter.call("year");
       dispatch_map.call("year");
+      dispatch_parallel.call("year");
       updatePlayerDropdown();
 
     });
@@ -474,6 +475,7 @@ function changeTeam(e) {
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
       dispatch_map.call("removeTeam", this, teamFilters[i]);
+      dispatch_parallel.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
       e.style.backgroundColor = "#f6f6f6"
@@ -488,6 +490,7 @@ function changeTeam(e) {
   dispatch_radar.call("addTeam", this, e.innerText);
   dispatch_scatter.call("addTeam", this, e.innerText);
   dispatch_map.call("addTeam", this, e.innerText);
+  dispatch_parallel.call("addTeam", this, e.innerText);
   e.style.backgroundColor = "gray";
 }
 
@@ -500,6 +503,7 @@ function changeTeams(team) {
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
       dispatch_map.call("removeTeam", this, teamFilters[i]);
+      dispatch_parallel.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
       return false;
@@ -512,6 +516,7 @@ function changeTeams(team) {
   dispatch_radar.call("addTeam", this, team);
   dispatch_scatter.call("addTeam", this, team)
   dispatch_map.call("addTeam", this, team);
+  dispatch_parallel.call("addTeam", this, team);
   return true;
 }
 
