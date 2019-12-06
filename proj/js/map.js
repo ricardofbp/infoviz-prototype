@@ -61,6 +61,18 @@ Promise.all(promises).then(ready)
 
   var transitionDuration = 200;
 
+  function tweenDash() {
+    var l = this.getTotalLength(),
+        i = d3.interpolateString("0," + l, l + "," + l);
+    return function (t) { return i(t); };
+  }
+
+  function appearLineTransition(path) {
+    path.transition()
+        .duration(1000)
+        .attrTween("stroke-dasharray", tweenDash);
+  }
+
   function addLine(team) {
     var tag = team.replace(/[\s']+/g, ''); 
 
@@ -71,13 +83,14 @@ Promise.all(promises).then(ready)
     .enter().append("path")
       .attr("class", tag)
       .attr("d", (d) => {
-        return lngLatToArc(getTeamCoords(d.team), getStateCoords(d.state), 0.7);
+        return lngLatToArc(getStateCoords(d.state), getTeamCoords(d.team), 0.7);
       })
       .style("fill", "none")
       .style("stroke", (d) => {
         return teamColor(d.team);
       })
-      .style("stroke-width", 2);
+      .style("stroke-width", 2)
+      .call(appearLineTransition);
   }
 
   function removeLine(team) {
@@ -97,7 +110,7 @@ Promise.all(promises).then(ready)
         .data(data_map
           .filter(function(d){ return d.draft_year == season_filter; })
           .filter(function(d){ return d.team == teamFilters[i]; }))
-        .transition().duration(transitionDuration + 800)
+        //.transition().duration(transitionDuration + 800)
         .attr("class", tag)
         .attr("d", (d) => {
           return lngLatToArc(getStateCoords(d.state), getTeamCoords(d.team), 0.7);
@@ -106,7 +119,8 @@ Promise.all(promises).then(ready)
         .style("stroke", (d) => {
           return teamColor(d.team);
         })
-        .style("stroke-width", 2);
+        .style("stroke-width", 2)
+        .call(appearLineTransition);
       /*
         */
       addLine(teamFilters[i]);
