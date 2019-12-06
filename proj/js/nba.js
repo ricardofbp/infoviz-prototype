@@ -336,14 +336,11 @@ var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAm
 var slider;
 
 function init() {
-
-  console.log("[INFO] INIT EVERYTHING");
-  teamFilters.push("Atlanta Hawks");
-  dispatch_radar.call("addTeam", this, "Atlanta Hawks");
-  dispatch_scatter.call("addTeam", this, "Atlanta Hawks");
-  dispatch_radar.call("year");
-  dispatch_scatter.call("year");
-  document.getElementById("Atlanta Hawks").style.backgroundColor = "gray";
+  var teamToInit = "Atlanta Hawks";
+  changeTeams(teamToInit);
+  d3.select(".mark." + teamToInit.replace(/\s+/g, ''))
+    .style("outline",  "2px solid " + teamColor(teamToInit, 1));
+  start_slider();
 }
 
 function teamColor(teamName, type) {
@@ -416,6 +413,7 @@ function filterFunction_player() {
 var original_value = 2000;
 
 function start_slider(){
+  console.log("START SLIDER")
   var slider = new Slider("#year", {
     ticks: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016],
     ticks_snap_bounds: 30,
@@ -436,7 +434,7 @@ function start_slider(){
       dispatch_scatter.call("year");
       dispatch_map.call("year");
       dispatch_parallel.call("year");
-      updatePlayerDropdown();
+      //updatePlayerDropdown();
 
     });
 }
@@ -444,7 +442,7 @@ function start_slider(){
 //to be used in scatter
 //will need to be changed to "match" the changeTeam, as we have a dropdown for players
 function changePlayers(playerName, playerTeam) {
-  console.log("[INFO] changePlayers " + playerName + " " + playerTeam);
+  //console.log("[INFO] changePlayers " + playerName + " " + playerTeam);
   document.getElementById("radarchart-title").innerText = "Player Attributes";
   for (let i = 0; i < playerFilters.length; i++) {
     if (playerFilters[i] == playerName) {
@@ -456,50 +454,17 @@ function changePlayers(playerName, playerTeam) {
     }
   }
 
-  console.log("[INFO] changePlayers adding");
+  //console.log("[INFO] changePlayers adding");
   playerFilters.push(playerName);
   dispatch_radar.call("addPlayer", this, playerName, playerTeam);
 
 }
 
-
-
-function changeTeam(e) {
- //if (teamFilters.length == 1) { return; } //meaning, we show at least 1 team
-    team_dropdown();
-  for (let i = 0; i < teamFilters.length; i++) {
-    console.log("[INFO] changeTeam for " + i);
-    document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
-    if (teamFilters[i] == e.innerText) { //clicked team is selected
-      //TODO dispatch for parallel
-      dispatch_radar.call("removeTeam", this, teamFilters[i]);
-      dispatch_scatter.call("removeTeam", this, teamFilters[i]);
-      dispatch_map.call("removeTeam", this, teamFilters[i]);
-      dispatch_parallel.call("removeTeam", this, teamFilters[i]);
-      console.log("[INFO] changeTeam deselect");
-      teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
-      e.style.backgroundColor = "#f6f6f6"
-      team_dropdown();
-      return;
-    }
-  }
-
-  console.log("[INFO] changeTeam select");
-  teamFilters.push(e.innerText);
-  //TODO dispatch for parallel
-  dispatch_radar.call("addTeam", this, e.innerText);
-  dispatch_scatter.call("addTeam", this, e.innerText);
-  dispatch_map.call("addTeam", this, e.innerText);
-  dispatch_parallel.call("addTeam", this, e.innerText);
-  e.style.backgroundColor = "gray";
-}
-
 function changeTeams(team) {
   for (let i = 0; i < teamFilters.length; i++) {
-    console.log("[INFO] changeTeam for " + i);
+    //console.log("[INFO] changeTeam for " + i);
     document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
     if (teamFilters[i] == team) { //clicked team is selected
-      //TODO dispatch for parallel
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);
       dispatch_map.call("removeTeam", this, teamFilters[i]);
@@ -510,9 +475,8 @@ function changeTeams(team) {
     }
   }
 
-  console.log("[INFO] changeTeam select");
+  //console.log("[INFO] changeTeam select");
   teamFilters.push(team);
-  //TODO dispatch for parallel
   dispatch_radar.call("addTeam", this, team);
   dispatch_scatter.call("addTeam", this, team)
   dispatch_map.call("addTeam", this, team);
@@ -520,37 +484,8 @@ function changeTeams(team) {
   return true;
 }
 
-/*
-function updatePlayerDropdown(){
-	var element;
-	var linkTest;
-
-	//First remove if there are players already being shown
-	var drop = document.getElementById("player1_dropdown");
-	while(drop.childElementCount != 1){
-		drop.removeChild(drop.lastChild);
-	}
-	//update the players' list
-	for(var i = 0; i < new_data_aux.length; i++){
-		//console.log(new_data[i].Player);
-		element = document.createElement('a');
-		linkTest = document.createTextNode(new_data_aux[i].Player);
-		element.appendChild(linkTest);
-    element.id = "p-" + new_data_aux[i].Team;
-		element.href = "#" + new_data_aux[i].Player;
-    //console.log(element.id);
-		element.onclick = function(){changePlayer1(this)};
-		//console.log(element);
-		drop.appendChild(element);
-		
-  }
-}
-*/
-
-function changePlayer1(e){
-  console.log("changePlayer1" + player1_filter);
-	player1_filter = e.innerHTML;
-  dispatch_radar.call("player");
-  player1_dropdown();
-  
-}
+window.onload = function(){
+  console.log("INIT")
+    //init();
+    var interval = setTimeout(init, 2000);
+};

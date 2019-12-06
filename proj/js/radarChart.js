@@ -417,7 +417,7 @@ function gen_viz() {
 		.style("stroke", " #000000")
 		.style("stroke-width", "1px");
 
-	console.log("axis");
+	//console.log("axis");
 
 	axis.append("text")
 		.attr("class", "legend")
