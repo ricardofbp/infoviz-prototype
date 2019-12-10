@@ -1,4 +1,4 @@
-var margin = { top: 50, right: 80, bottom: 50, left: 80 };
+var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 
 var isShowingTeam = true;
 var data_radar;
@@ -260,7 +260,7 @@ function gen_viz() {
 	    //.style("top", 1000 + "px")	
 	    .style("z-index", -1);
 	}
-
+	/*
 	var changeTooltipBlob = function(d, name) {
 		var name;
 
@@ -275,6 +275,7 @@ function gen_viz() {
 	        //.style("top", (d3.event.pageY - 500*1.7) + "px")
 		.style("font-family", "sans-serif");
 	}
+	*/
 
 	var changeTooltipCircle = function(d, name){
 		var v;
@@ -312,8 +313,8 @@ function gen_viz() {
 		.html("<b>" + name + "</b><br><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
 		.style("position", "relative")
 		.style("width", "180px")
-	        .style("left", (d3.event.pageX - 350*2.6) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        .style("top", (d3.event.pageY - 600*1.6) + "px")
+	        .style("left", (d3.event.pageX - (w + margin.left)*3.15) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", (d3.event.pageY - (h + margin.top)*3.6) + "px")
 		.style("font-family", "sans-serif");
 	}
 	////////////////////////////////////////////////////////
@@ -368,31 +369,25 @@ function gen_viz() {
 	//// Draw the axes /////////////////////
 	////////////////////////////////////////
 
-	//Scales
-
 	//Scale for salary
 	SalaryScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minSalary, maxSalary]);
-
 
 	//Scale for height
 	HeightScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minHeight, maxHeight]);
 
-
 	//Scale for weight
 	WeightScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minWeight, maxWeight]);
 
-
 	//Scale for the PPM
 	PPMScale = d3.scaleLinear()
 		.range([0, radius])
 		.domain([minPPM, maxPPM]);
-
 
 	//Scale for PPG
 	PPGScale = d3.scaleLinear()
@@ -427,7 +422,7 @@ function gen_viz() {
 		.attr("x", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * cos(angleSlice * i - HALF_PI))
 		.attr("y", (d,i) => eval(allAxis[i] + "Scale")(eval("max" + allAxis[i]) * 1.05) * sin(angleSlice * i - HALF_PI))
 		.text((d, i) => d + allAxis_units[i])
-		.call(wrap, 60);
+		.call(wrap, 70);
 
 	//tooltip related
 	tooltip = d3.select("#radarChart")

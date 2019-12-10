@@ -369,6 +369,7 @@ function getStateCoords(state) {
     }
   }
 }
+
 function team_dropdown() {
   document.getElementById("team_dropdown").classList.toggle("show");
 }

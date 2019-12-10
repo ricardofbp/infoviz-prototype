@@ -147,7 +147,7 @@ function render() {
 
     var mousemove = function(d) {
         tooltip
-        .html("<b> " + d.name + "<br></b><br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
+        .html("<b> " + d.name + "<br></b>(From " + d.team + ")<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
         .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
         .style("top", (d3.event.pageY - 110) + "px")
     }

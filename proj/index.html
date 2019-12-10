@@ -19,10 +19,10 @@
    <script type = "text/javascript" src = "js/bootstrap-slider.js"></script>
   </head>
 
-  <body onload="start_slider()">
     <h1 id= "header">Team and Player statistics from NBA</h1>
     <div id = "dashboard" >
       <div id ="selectors">
+        <!--
         <div class="dropdown">
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
@@ -59,14 +59,13 @@
               <a href="#washington_wizards" class ="team" onclick="changeTeam(this)">Washington Wizards</a>
             </div>
           </div>
-          <div id="year" >
-          </div>
-
+        -->
+          <div id="year" ></div>
       </div>
       <div class = "idioms" style=" flex-flow: row wrap;">
         <div class = "top-container" style = "display: inline-flex;">
           <div id = "all_map">
-            <div id = "map-title" class="titles">Team distribution and states where teams draft players</div>
+            <div id = "map-title" class="titles">Team distribution and states where teams draft new players</div>
             <div id = "USMap"></div>
           </div>
           <div id = "all_scatterplot">
@@ -107,7 +106,6 @@
         </div>
     </div>
   </body>
-
   <script type = "text/javascript" src = "js/map.js"></script>
   <script type = "text/javascript" src = "js/parallel.js"></script>
   <script type = "text/javascript" src = "js/scatterplot.js"></script>

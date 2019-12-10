@@ -189,8 +189,7 @@ body:after {
 }
 
 #all_radar{
-  margin-left: 5%;
-  padding-top: 10px;
+  margin-left: 10%;
   font-family: inherit;
   text-align: center;
 }
@@ -199,15 +198,14 @@ body:after {
   padding-top: 10px;
   text-align: center;
   font-family: inherit;
-  margin-left: 5%;
+
 }
 
 
 #header {
-  font-size: 30px;
+  font-size: 25px;
   font-family: inherit;
   padding-top: 5px;
-  padding-bottom: 5px;
   text-align: center;
 }
 

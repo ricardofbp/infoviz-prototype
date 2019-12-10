@@ -10,8 +10,8 @@ d3.csv("../dataset/map_dataset.csv").then(function(d) {
 
 function renderMap() {
 
-  var width = 800;
-  var mapRatio = 0.45;
+  var width = 760;
+  var mapRatio = 0.5;
   var height = width * mapRatio;
 
   var logoWidth = 30;

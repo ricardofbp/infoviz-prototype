@@ -7,26 +7,35 @@ d3.csv("../dataset/parallel_dataset.csv").then(function(d) {
 })
 
 function renderParallel() {
-  var width = 800;
-  var height = 350;
+  var width = 750;
+  var height = 300;
+  var padding = 20;
 
   var svg = d3.select("#parallelcoords")
   .append("svg")
+    .attr("transform", "translate(0, " + 0 + ")")
     .attr("width", width)
     .attr("height", height)
   .append("g")
 
 
   // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called team
-  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "team" && d != "season" })
+  dimensions = d3.keys(data_parallel[0]).filter(function(d) { return d != "team" && d != "season" && d != "attend/g"})
 
   // For each dimension, I build a linear scale. I store all in a y object
   var y = {}
   for (i in dimensions) {
-    name = dimensions[i]
-    y[name] = d3.scaleLinear()
-      .domain( d3.extent(data_parallel, function(d) { return +d[name]; }) )
-      .range([height, 0])
+    name = dimensions[i];
+    if (name == "rank") {
+      y[name] = d3.scaleLinear()
+        .domain( d3.extent(data_parallel, function(d) { return +d[name]; }) )
+        .range([padding, height-padding])
+    }
+    else {
+      y[name] = d3.scaleLinear()
+        .domain( d3.extent(data_parallel, function(d) { return +d[name]; }) )
+        .range([height-padding, padding])
+    }
   }
 
   // Build the X scale -> it find the best position for each Y axis
@@ -113,6 +122,8 @@ function renderParallel() {
     // Add axis title
     .append("text")
       .style("text-anchor", "middle")
+      .attr("transform", "translate(0, " + (padding) + ")")
+      .attr("class", "p-label")
       .attr("y", -9)
       .text(function(d) { return d; })
       .style("fill", "black")
