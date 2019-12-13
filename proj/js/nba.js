@@ -437,7 +437,7 @@ function start_slider(){
       dispatch_scatter.call("year");
       dispatch_map.call("year");
       dispatch_parallel.call("year");
-      //updatePlayerDropdown();
+      updatePlayerDropdown();
 
     });
 }
@@ -474,6 +474,7 @@ function changeTeams(team) {
       dispatch_parallel.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
+      updatePlayerDropdown();
       return false;
     }
   }
@@ -484,7 +485,45 @@ function changeTeams(team) {
   dispatch_scatter.call("addTeam", this, team)
   dispatch_map.call("addTeam", this, team);
   dispatch_parallel.call("addTeam", this, team);
+  updatePlayerDropdown();
   return true;
+}
+
+function updatePlayerDropdown(){
+
+  var element;
+  var linkTest;
+
+  //First remove if there are players already being shown
+  var drop = document.getElementById("player1_dropdown");
+  while(drop.childElementCount != 1){
+    drop.removeChild(drop.lastChild);
+  }
+  //update the players' list
+  for (let i = 0; i < teamFilters.length; i++) {
+    var team = teamFilters[i];
+    console.log("UPDATED P DROP FOR " + team);
+    var aux = data_scatter                
+              .filter(function(d){ return d.season == season_filter; })
+              .filter(function(d){ return d.team == team; });
+
+    for(let j = 0; j < aux.length; j++){
+      var playerName = aux[j].name;
+      //console.log(new_data[i].Player);
+      element = document.createElement('a');
+      element.className = team;
+      linkTest = document.createTextNode(playerName);
+      element.appendChild(linkTest);
+      //element.id = "p-" + new_data_aux[i].Team;
+      element.href = "#" + playerName;
+      console.log("DROPDOWN PLAYER: " + playerName + " " + team);
+      element.onclick = function(){
+        changePlayers(this.innerText, this.className);
+      };
+      //console.log(element);
+      drop.appendChild(element);
+      }
+  }
 }
 
 function changeTeam(element){

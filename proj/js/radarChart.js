@@ -472,7 +472,6 @@ function gen_viz() {
 	dispatch_radar.on("removePlayer", function(player, team) {
 		console.log("[INFO] dispatch removePlayer radar");
 		removeBlob(player + ".playerBlob." + team);
-		changePlayers(player);
 	});
 
 	dispatch_radar.on("year", function(){
@@ -550,7 +549,7 @@ function gen_viz() {
 		var tag = player.replace(/[\s']+/g, ''); 
 		var teamTag = playerTeam.replace(/\s+/g, ''); 
 
-		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam + " " + tag);
+		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam );
 		var blob = g.selectAll(".radarWrapper." + tag + ".playerBlob." + teamTag)
 			.data(transformData(data_radar
 					.filter(function(d){ return d.Season == season_filter;})
