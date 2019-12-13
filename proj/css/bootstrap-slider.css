@@ -48,7 +48,7 @@
   width: 900px;
   height: 20px;
   margin-top: 16px;
-  margin-left: 150px;
+  text-align: center;
 }
 .slider.slider-horizontal .slider-track {
   height: 10px;
