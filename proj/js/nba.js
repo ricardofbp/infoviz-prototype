@@ -330,9 +330,11 @@ var old_season_filter;
 
 var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
-var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam");
+var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 
+var lineWidth = 3;
+var fadingTransitionDuration = 200;
 var slider;
 
 function init() {
@@ -341,6 +343,13 @@ function init() {
   d3.select(".mark." + teamToInit.replace(/\s+/g, ''))
     .style("outline",  "2px solid " + teamColor(teamToInit, 1));
   start_slider();
+}
+
+function isTeamSelected(team) {
+  for (let i = 0; i < teamFilters.length; i++) {
+    if (team == teamFilters[i]) {return true;}
+  }
+  return false;
 }
 
 function teamColor(teamName, type) {
@@ -426,6 +435,7 @@ function start_slider(){
   });
 
   slider.on('slideStop', function(value){
+      document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
       var new_val = document.getElementById("year").value;
       if(original_value != new_val){
         old_season_filter = season_filter;
@@ -435,7 +445,7 @@ function start_slider(){
       dispatch_scatter.call("year");
       dispatch_map.call("year");
       dispatch_parallel.call("year");
-      //updatePlayerDropdown();
+      updatePlayerDropdown();
 
     });
 }
@@ -472,6 +482,7 @@ function changeTeams(team) {
       dispatch_parallel.call("removeTeam", this, teamFilters[i]);
       console.log("[INFO] changeTeam deselect");
       teamFilters.splice(i,1); //removes 1 element from current position <=> removing selected team
+      updatePlayerDropdown();
       return false;
     }
   }
@@ -482,8 +493,47 @@ function changeTeams(team) {
   dispatch_scatter.call("addTeam", this, team)
   dispatch_map.call("addTeam", this, team);
   dispatch_parallel.call("addTeam", this, team);
+  updatePlayerDropdown();
   return true;
 }
+
+function updatePlayerDropdown(){
+
+  var element;
+  var linkTest;
+
+  //First remove if there are players already being shown
+  var drop = document.getElementById("player1_dropdown");
+  while(drop.childElementCount != 1){
+    drop.removeChild(drop.lastChild);
+  }
+  //update the players' list
+  for (let i = 0; i < teamFilters.length; i++) {
+    var team = teamFilters[i];
+    console.log("UPDATED P DROP FOR " + team);
+    var aux = data_scatter                
+              .filter(function(d){ return d.season == season_filter; })
+              .filter(function(d){ return d.team == team; });
+
+    for(let j = 0; j < aux.length; j++){
+      var playerName = aux[j].name;
+      //console.log(new_data[i].Player);
+      element = document.createElement('a');
+      element.className = team;
+      linkTest = document.createTextNode(playerName);
+      element.appendChild(linkTest);
+      //element.id = "p-" + new_data_aux[i].Team;
+      element.href = "#" + playerName;
+      console.log("DROPDOWN PLAYER: " + playerName + " " + team);
+      element.onclick = function(){
+        changePlayers(this.innerText, this.className);
+      };
+      //console.log(element);
+      drop.appendChild(element);
+      }
+  }
+}
+
 function changeTeam(element){
   console.log()
 }

@@ -17,6 +17,19 @@ function renderMap() {
   var logoWidth = 30;
   var logoHeight = 30;
 
+  var tooltip = d3.select("#USMap")
+      .append("div")
+      .attr("id", "tooltip_r")
+      .style("z-index", 1)
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("color", "white")
+      .style("background-color", "#373434")
+      .style("border", "1px solid #ddd")
+      .style("border-width", "1px")
+      .style("padding", "10px")
+      .style("font-family", "sans-serif");
+
   var svg = d3.select("#USMap")
     .append("svg")
     .attr("width", width)
@@ -36,14 +49,22 @@ var promises = [
 Promise.all(promises).then(ready)
 */
 
+ 
+
   dispatch_map.on("removeTeam", function(team) {
     console.log("[INFO] removeTeam map");
     removeLine(team); 
+    svg.select(".mark." + team.replace(/\s+/g, ''))
+      .transition().duration(transitionDuration- 100)
+      .style("outline",  "0px solid " + teamColor(team, 1));
   });
 
   dispatch_map.on("addTeam", function(team) {
     console.log("[INFO] addTeam map");
-    addLine(team);      
+    addLine(team);
+    svg.select(".mark." + team.replace(/\s+/g, ''))
+      .transition().duration(transitionDuration- 100)
+      .style("outline",  "2px solid " + teamColor(team, 1));      
   });
 
   dispatch_map.on("year", function() { 
@@ -52,11 +73,11 @@ Promise.all(promises).then(ready)
   });
 
   dispatch_map.on("ampTeam", function(team) {
-      amplifyCircle(team);
+      amplifyTeam(team);
   });
 
   dispatch_map.on("deAmpTeam", function(team) {
-      deAmplifyCircle(team);
+      deAmplifyTeam(team);
   })
 
   var transitionDuration = 200;
@@ -90,7 +111,27 @@ Promise.all(promises).then(ready)
       .style("stroke", (d) => {
         return teamColor(d.team);
       })
-      .style("stroke-width", 2)
+      .style("stroke-width", 2.5 + "px")
+      .on("mouseover", () => {
+        tooltip
+          .style("opacity", 1);
+      })
+      .on("mousemove", (d) => {
+        tooltip
+          .html("<b> " + team + "</b> drafted players from <b>" + d.state + "</b>" )
+          .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+          .style("top", (d3.event.pageY - 50) + "px");
+
+      })
+      .on("mouseleave", () => {
+        tooltip
+          .transition()
+          .duration(0)
+          .style("opacity", 0)
+          .style("left", 0 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+          .style("top", 0 + "px");
+
+      })
       .call(appearLineTransition);
   }
 
@@ -142,10 +183,10 @@ Promise.all(promises).then(ready)
   function amplifyTeam(team) {
     svg.select(".mark." + team.replace(/\s+/g, ''))
       .transition().duration(transitionDuration)
-      .attr("x", -(logoWidth + 20)/2)
-      .attr("y", -(logoHeight + 20)/2)
-      .attr('width', logoWidth + 20)
-      .attr('height', logoHeight + 20);
+      .attr("x", -(logoWidth + 24)/2)
+      .attr("y", -(logoHeight + 24)/2)
+      .attr('width', logoWidth + 24)
+      .attr('height', logoHeight + 24);
   }
 
   function deAmplifyTeam(team) {
@@ -204,6 +245,7 @@ Promise.all(promises).then(ready)
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
       .enter().append("path")
+      .attr("fill", "#adadad")
       .attr("d", path)
       .attr("class", "state")
 
@@ -212,7 +254,7 @@ Promise.all(promises).then(ready)
       .attr("id", "state-borders")
       .attr("d", path)
       .attr("fill", "none")
-      .attr("stroke", "#fff")
+      .attr("stroke", "white")
       .attr("stroke-width", "1.2px");
 
     svg.selectAll(".mark")
@@ -236,20 +278,22 @@ Promise.all(promises).then(ready)
       .on("click", (d) => {
         if (changeTeams(d.team)) {
           svg.select(".mark." + d.team.replace(/\s+/g, ''))
-            .transition().duration(transitionDuration- 100)
+            //.transition().duration(transitionDuration- 100)
             .style("outline",  "2px solid " + teamColor(d.team, 1));
         }
         else {
           svg.select(".mark." + d.team.replace(/\s+/g, ''))
-            .transition().duration(transitionDuration- 100)
+            //.transition().duration(transitionDuration- 100)
             .style("outline",  "0px solid " + teamColor(d.team, 1));
         }
       })
       .on("mouseover", (d) => {
         amplifyTeam(d.team);
+        if (isTeamSelected(d.team)) dispatch_parallel.call("ampTeam", this, d.team);
       })
       .on("mouseleave", (d) => {
         deAmplifyTeam(d.team);
+        if (isTeamSelected(d.team)) dispatch_parallel.call("deAmpTeam", this, d.team);
       })
 
   });

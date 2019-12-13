@@ -219,7 +219,7 @@ const wrap = (text, width) => {
 
 
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
-const outline_width = 3.2;
+const outline_width = 2.5;
 const outline_dots_radius = 4;
 
 var w = 250;
@@ -472,7 +472,6 @@ function gen_viz() {
 	dispatch_radar.on("removePlayer", function(player, team) {
 		console.log("[INFO] dispatch removePlayer radar");
 		removeBlob(player + ".playerBlob." + team);
-		changePlayers(player);
 	});
 
 	dispatch_radar.on("year", function(){
@@ -550,7 +549,7 @@ function gen_viz() {
 		var tag = player.replace(/[\s']+/g, ''); 
 		var teamTag = playerTeam.replace(/\s+/g, ''); 
 
-		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam + " " + tag);
+		console.log("[INFO] addPlayerBlob " + player + " " + playerTeam );
 		var blob = g.selectAll(".radarWrapper." + tag + ".playerBlob." + teamTag)
 			.data(transformData(data_radar
 					.filter(function(d){ return d.Season == season_filter;})
@@ -602,7 +601,7 @@ function gen_viz() {
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
 			.attr("d", function(d,i) { return radarLine(d.axes); })
-			.style("stroke-width", outline_width + "px")
+			.style("stroke-width", lineWidth + "px")
 			.style("stroke", (d,i) => teamColor(playerTeam, 1))
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)")
@@ -695,7 +694,7 @@ function gen_viz() {
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
 			.attr("d", function(d,i) { return radarLine(d.axes); })
-			.style("stroke-width", outline_width + "px")
+			.style("stroke-width", lineWidth + "px")
 			.style("stroke", (d,i) => teamColor(team, 1))
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)");
@@ -711,11 +710,19 @@ function gen_viz() {
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 			.style("fill", (d) => teamColor(team, 1))
 			.style("fill-opacity", 0.8)
-			.on('mouseover', showTooltip )
+			.on('mouseover', () => {
+				showTooltip();
+				dispatch_map.call("ampTeam", this, team);
+				//dispatch_parallel.call("ampTeam", this, team);
+			})
 			.on('mousemove',  (d) => {
 				changeTooltipCircle(d, team); 
 			})
-			.on("mouseleave", closeTooltip);
+			.on("mouseleave", () => {
+				closeTooltip();
+				dispatch_map.call("deAmpTeam", this, team);
+				//dispatch_parallel.call("deAmpTeam", this, team);
+			});
 	}
 
 	function changeRadar(option){ //only needed for teams? players dont "change" with transitions
@@ -783,7 +790,7 @@ function gen_viz() {
 			.data(teamData)
 			.transition().duration(1000)
 				.attr("d", function(d,i) { return radarLine(d.axes); })
-				.style("stroke-width", outline_width + "px")
+				.style("stroke-width", lineWidth + "px")
 				//.style("stroke", (d,i) => teamColor(teamFilters[i], 2))
 				.style("fill", "none")
 				//.style("filter" , "url(#glow)");
