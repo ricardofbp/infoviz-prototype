@@ -56,7 +56,7 @@ function renderParallel() {
 
   dispatch_parallel.on("addTeam", function(team) {
     addLine(team);
-    addCircles(team);
+    //addCircles(team);
   });
 
   dispatch_parallel.on("removeTeam", function(team) {
@@ -127,7 +127,7 @@ function renderParallel() {
       })
       .attr("d",  path)
       .style("fill", "none")
-      .style("stroke-width", 3.2 + "px")
+      .style("stroke-width", lineWidth + "px")
       .style("stroke", (d) => {
         return teamColor(d.team, 1);
       })
@@ -157,7 +157,7 @@ function renderParallel() {
         .data(data_parallel
           .filter(function(d){ return d.season == season_filter; })
           .filter(function(d){ return d.team == teamFilters[i]; })) 
-        .transition().duration(transitionDuration)
+        //.transition().duration(transitionDuration)
         .attr("d",  path);
 
     }

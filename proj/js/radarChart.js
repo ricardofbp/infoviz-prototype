@@ -219,7 +219,7 @@ const wrap = (text, width) => {
 
 
 const color = d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]);
-const outline_width = 3.2;
+const outline_width = 2.5;
 const outline_dots_radius = 4;
 
 var w = 250;
@@ -602,7 +602,7 @@ function gen_viz() {
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
 			.attr("d", function(d,i) { return radarLine(d.axes); })
-			.style("stroke-width", outline_width + "px")
+			.style("stroke-width", lineWidth + "px")
 			.style("stroke", (d,i) => teamColor(playerTeam, 1))
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)")
@@ -695,7 +695,7 @@ function gen_viz() {
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
 			.attr("d", function(d,i) { return radarLine(d.axes); })
-			.style("stroke-width", outline_width + "px")
+			.style("stroke-width", lineWidth + "px")
 			.style("stroke", (d,i) => teamColor(team, 1))
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)");
@@ -789,7 +789,7 @@ function gen_viz() {
 			.data(teamData)
 			.transition().duration(1000)
 				.attr("d", function(d,i) { return radarLine(d.axes); })
-				.style("stroke-width", outline_width + "px")
+				.style("stroke-width", lineWidth + "px")
 				//.style("stroke", (d,i) => teamColor(teamFilters[i], 2))
 				.style("fill", "none")
 				//.style("filter" , "url(#glow)");

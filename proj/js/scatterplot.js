@@ -160,8 +160,8 @@ function render() {
             .transition()
             .duration(0)
             .style("opacity", 0)
-            .style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-            .style("top", 1000 + "px")
+            //.style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            //.style("top", 1000 + "px")
     }
 
     //changes circles when changing to PPG
@@ -362,30 +362,34 @@ function render() {
     }
 
     function resetAxis() {
-        xscalePPM = d3.scaleLinear()
-            .domain([0, maxPPM])
-            .range([padding+25,w-padding+25]);
 
-        xscalePPG = d3.scaleLinear()
-            .domain([0, maxPPG])
-            .range([padding+25,w-padding+25]);
-
-        xPPG = d3.axisBottom()
-            .scale(d3.scaleLinear()
-            .domain([0, maxPPG])
-            .range([padding+bar_w/2,w-padding-bar_w/2]))
-
-        xPPM = d3.axisBottom()
-            .scale(d3.scaleLinear()
-            .domain([0, maxPPM])
-            .range([padding+bar_w/2,w-padding-bar_w/2]))
-
-        hscale = d3.scaleLinear()
+        hscale
         .domain([0,d3.max(data_scatter, function(d) { return d.salary;}) / 10000])
         .range([h-padding,padding]);
 
-        ySalary = d3.axisLeft()
+        ySalary
           .scale(hscale);
+
+        console.log("RESET Y AXIS");
+        xscalePPM
+            .domain([0, maxPPM])
+            .range([padding+25,w-padding+25]);
+
+        xscalePPG
+            .domain([0, maxPPG])
+            .range([padding+25,w-padding+25]);
+
+        xPPG
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPG])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+
+        xPPM
+            .scale(d3.scaleLinear()
+            .domain([0, maxPPM])
+            .range([padding+bar_w/2,w-padding-bar_w/2]))
+
+        
 
     }
 

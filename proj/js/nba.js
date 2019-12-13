@@ -333,6 +333,7 @@ var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "
 var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam");
 var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 
+var lineWidth = 3;
 var slider;
 
 function init() {
