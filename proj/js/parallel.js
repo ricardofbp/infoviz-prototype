@@ -50,9 +50,32 @@ function renderParallel() {
       return d3.line()(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
   }
 
+  function ampLine(team) {
+    var tag = team.replace(/[\s']+/g, ''); 
+    svg.selectAll(".parallelPath")
+    .style("opacity", 0.3);
+
+    svg.selectAll("path.parallelPath." + tag)
+    .style("opacity", 1);
+  }
+
+  function deAmpLine(team) {
+    svg.selectAll("path.parallelPath")
+        .style("opacity", 1);
+  }
+
+
+  dispatch_parallel.on("ampTeam", function(team) {
+    ampLine(team);
+  });
+
+  dispatch_parallel.on("deAmpTeam", function(team) {
+    deAmpLine(team);
+  });
+
   dispatch_parallel.on("year", function() {
     updateLines();
-  })
+  });
 
   dispatch_parallel.on("addTeam", function(team) {
     addLine(team);
@@ -137,9 +160,12 @@ function renderParallel() {
       .style("opacity", 1)
       .on("mouseover", () => {
         dispatch_map.call("ampTeam", this, team);
+        svg.selectAll("path.parallelPath")
+        ampLine(team);
       })
       .on("mouseleave", () => {
         dispatch_map.call("deAmpTeam", this, team);
+        deAmpLine(team)
       })
       .transition().duration(fadingTransitionDuration).call( function(selection) {
         selection.style("opacity", 1);

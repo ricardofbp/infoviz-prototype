@@ -330,7 +330,7 @@ var old_season_filter;
 
 var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer");
-var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam");
+var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 
 var lineWidth = 3;

@@ -289,9 +289,11 @@ Promise.all(promises).then(ready)
       })
       .on("mouseover", (d) => {
         amplifyTeam(d.team);
+        dispatch_parallel.call("ampTeam", this, d.team);
       })
       .on("mouseleave", (d) => {
         deAmplifyTeam(d.team);
+        dispatch_parallel.call("deAmpTeam", this, d.team);
       })
 
   });
