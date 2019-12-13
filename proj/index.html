@@ -22,45 +22,56 @@
     <h1 id= "header">Team and Player statistics from NBA</h1>
     <div id = "dashboard" >
       <div id ="selectors">
-        <!--
-        <div class="dropdown">
+        <div class="dropdown_team">
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
               <input type="text" placeholder="Search.." id="teamInput" onkeyup='filterFunction_team()'>
-              <a href="#atlanta_hawks" id="Atlanta Hawks" class ="team" onclick="changeTeam(this)">Atlanta Hawks</a>
-              <a href="#boston_celtics" id="Boston Celtics" class ="team" onclick="changeTeam(this)">Boston Celtics</a>
-              <a href="#brooklyn_nets" class ="team" onclick="changeTeam(this)">Brooklyn Nets</a>
-              <a href="#charlotte_hornet" class ="team" onclick="changeTeam(this)">Charlotte Hornets</a>
-              <a href="#chicago_bulls" class ="team" onclick="changeTeam(this)">Chicago Bulls</a>
-              <a href="#cleveland_cavaliers" class ="team" onclick="changeTeam(this)">Cleveland Cavaliers</a>
-              <a href="#dallas_mavericks" class ="team" onclick="changeTeam(this)">Dallas Mavericks</a>
-              <a href="#denver_nuggets" class ="team" onclick="changeTeam(this)">Denver Nuggets</a>
-              <a href="#detroit_pistons" class ="team" onclick="changeTeam(this)">Detroit Pistons</a>
-              <a href="#gsw"  class ="team" onclick="changeTeam(this)">Golden State Warriors</a>
-              <a href="#houston_rockets" class ="team" onclick="changeTeam(this)">Houston Rockets</a>
-              <a href="#indiana_pacers" class ="team" onclick="changeTeam(this)">Indiana Pacers</a>
-              <a href="#la_clippers" class ="team" onclick="changeTeam(this)">Los Angeles Clippers</a>
-              <a href="#la_lakers" class ="team" onclick="changeTeam(this)">Los Angeles Lakers</a>
-              <a href="#memphis_grizzlies" class ="team" onclick="changeTeam(this)">Memphis Grizzlies</a>
-              <a href="#miami_heat" class ="team" onclick="changeTeam(this)">Miami Heat</a>
-              <a href="#milwaukee_bucks" class ="team" onclick="changeTeam(this)">Milwaukee Bucks</a>
-              <a href="#minnesota_timberwolves" class ="team" onclick="changeTeam(this)">Minnesota Timberwolves</a>
-              <a href="#no_pelicans" class ="team" onclick="changeTeam(this)">New Orleans Pelicans</a>
-              <a href="#ny_knicks" class ="team" onclick="changeTeam(this)">New York Knicks</a>
-              <a href="#okc_thunder" class ="team" onclick="changeTeam(this)">Oklahoma City Thunder</a>
-              <a href="#orlando_magic" class ="team" onclick="changeTeam(this)">Orlando Magic</a>
-              <a href="#76ers" class ="team" onclick="changeTeam(this)">Philadelphia 76ers</a>
-              <a href="#phoenix_suns" class ="team" onclick="changeTeam(this)">Phoenix Suns</a>
-              <a href="#pt_blazers" class ="team" onclick="changeTeam(this)">Portland Trail Blazers</a>
-              <a href="#sacramento_kings" class ="team" onclick="changeTeam(this)">Sacramento Kings</a>
-              <a href="#san_antonio_spurs" class ="team" onclick="changeTeam(this)">San Antonio Spurs</a>
-              <a href="#toronto_raptors" class ="team" onclick="changeTeam(this)">Toronto Raptors</a>
-              <a href="#utah_jazz" class ="team" onclick="changeTeam(this)">Utah Jazz</a>
-              <a href="#washington_wizards" class ="team" onclick="changeTeam(this)">Washington Wizards</a>
+              <a href="#atlanta_hawks" id="Atlanta Hawks" class ="team" onclick="changeTeams(this.innerText)">Atlanta Hawks</a>
+              <a href="#boston_celtics" id="Boston Celtics" class ="team" onclick="changeTeams(this.innerText)">Boston Celtics</a>
+              <a href="#brooklyn_nets" class ="team" onclick="changeTeams(this.innerText)">Brooklyn Nets</a>
+              <a href="#charlotte_hornet" class ="team" onclick="changeTeams(this.innerText)">Charlotte Hornets</a>
+              <a href="#chicago_bulls" class ="team" onclick="changeTeams(this.innerText)">Chicago Bulls</a>
+              <a href="#cleveland_cavaliers" class ="team" onclick="changeTeams(this.innerText)">Cleveland Cavaliers</a>
+              <a href="#dallas_mavericks" class ="team" onclick="changeTeams(this.innerText)">Dallas Mavericks</a>
+              <a href="#denver_nuggets" class ="team" onclick="changeTeams(this.innerText)">Denver Nuggets</a>
+              <a href="#detroit_pistons" class ="team" onclick="changeTeams(this.innerText)">Detroit Pistons</a>
+              <a href="#gsw"  class ="team" onclick="changeTeams(this.innerText)">Golden State Warriors</a>
+              <a href="#houston_rockets" class ="team" onclick="changeTeams(this.innerText)">Houston Rockets</a>
+              <a href="#indiana_pacers" class ="team" onclick="changeTeams(this.innerText)">Indiana Pacers</a>
+              <a href="#la_clippers" class ="team" onclick="changeTeams(this.innerText)">Los Angeles Clippers</a>
+              <a href="#la_lakers" class ="team" onclick="changeTeams(this.innerText)">Los Angeles Lakers</a>
+              <a href="#memphis_grizzlies" class ="team" onclick="changeTeams(this.innerText)">Memphis Grizzlies</a>
+              <a href="#miami_heat" class ="team" onclick="changeTeams(this.innerText)">Miami Heat</a>
+              <a href="#milwaukee_bucks" class ="team" onclick="changeTeams(this.innerText)">Milwaukee Bucks</a>
+              <a href="#minnesota_timberwolves" class ="team" onclick="changeTeams(this.innerText)">Minnesota Timberwolves</a>
+              <a href="#no_pelicans" class ="team" onclick="changeTeams(this.innerText)">New Orleans Pelicans</a>
+              <a href="#ny_knicks" class ="team" onclick="changeTeams(this.innerText)">New York Knicks</a>
+              <a href="#okc_thunder" class ="team" onclick="changeTeams(this.innerText)">Oklahoma City Thunder</a>
+              <a href="#orlando_magic" class ="team" onclick="changeTeams(this.innerText)">Orlando Magic</a>
+              <a href="#76ers" class ="team" onclick="changeTeams(this.innerText)">Philadelphia 76ers</a>
+              <a href="#phoenix_suns" class ="team" onclick="changeTeams(this.innerText)">Phoenix Suns</a>
+              <a href="#pt_blazers" class ="team" onclick="changeTeams(this.innerText)">Portland Trail Blazers</a>
+              <a href="#sacramento_kings" class ="team" onclick="changeTeams(this.innerText)">Sacramento Kings</a>
+              <a href="#san_antonio_spurs" class ="team" onclick="changeTeams(this.innerText)">San Antonio Spurs</a>
+              <a href="#toronto_raptors" class ="team" onclick="changeTeams(this.innerText)">Toronto Raptors</a>
+              <a href="#utah_jazz" class ="team" onclick="changeTeams(this.innerText)">Utah Jazz</a>
+              <a href="#washington_wizards" class ="team" onclick="changeTeams(this.innerText)">Washington Wizards</a>
             </div>
           </div>
-        -->
           <div id="year" ></div>
+          <div class="dropdown_player">
+            <button onclick="player1_dropdown()" class="dropbtn_player1">Select a player</button>
+            <div id="player1_dropdown" class="dropdown-content-player">
+              <input type="text" placeholder="Search.." id = "playerInput1" class="playerInput" onkeyup="filterFunction_player()">
+            </div>
+          </div>
+          <div id = "player_buttons" style="position: absolute;">
+          <!--<div class="dropdown">
+            <button onclick="player2_dropdown()" class="dropbtn_player1">Select a player</button>
+            <div id="player1_dropdown" class="dropdown-content-player">
+              <input type="text" placeholder="Search.." class="playerInput" onkeyup="filterFunction()">
+            </div>
+          </div>-->
       </div>
       <div class = "idioms" style=" flex-flow: row wrap;">
         <div class = "top-container" style = "display: inline-flex;">
@@ -85,21 +96,6 @@
           <div id = "all_radar">
             <div id = "radarchart-title" class="titles">Teams Average Attributes</div>
             <div id = "radarChart" class="radarChart" style="position: relative;">
-              <!--
-              <div id = "player_buttons" style="position: absolute;">
-              <div class="dropdown">
-                <button onclick="player1_dropdown()" class="dropbtn_player1">Select a player</button>
-                <div id="player1_dropdown" class="dropdown-content-player">
-                  <input type="text" placeholder="Search.." id = "playerInput1" class="playerInput" onkeyup="filterFunction_player()">
-                </div>
-              </div>
-              <div class="dropdown">
-                <button onclick="player2_dropdown()" class="dropbtn_player1">Select a player</button>
-                <div id="player1_dropdown" class="dropdown-content-player">
-                  <input type="text" placeholder="Search.." class="playerInput" onkeyup="filterFunction()">
-                </div>
-              </div>
-              -->
             </div>
             </div>
           </div>

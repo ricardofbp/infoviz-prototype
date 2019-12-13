@@ -484,6 +484,9 @@ function changeTeams(team) {
   dispatch_parallel.call("addTeam", this, team);
   return true;
 }
+function changeTeam(element){
+  console.log()
+}
 
 window.onload = function(){
   console.log("INIT")
