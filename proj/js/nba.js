@@ -334,6 +334,7 @@ var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam");
 var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 
 var lineWidth = 3;
+var fadingTransitionDuration = 200;
 var slider;
 
 function init() {

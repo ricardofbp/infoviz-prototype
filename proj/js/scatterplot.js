@@ -34,6 +34,19 @@ function render() {
         }
       }
 
+      var tooltip = d3.select("#scatterplot")
+        .append("div")
+        .attr("id", "tooltip_s")
+        .style("z-index", 1)
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("color", "white")
+        .style("background-color", "#373434")
+        .style("border", "1px solid #ddd")
+        .style("border-width", "1px")
+        .style("padding", "10px")
+        .style("font-family", "sans-serif");
+
     var w = 300;
     var h = 300;
 
@@ -100,19 +113,6 @@ function render() {
         .style("text-anchor", "middle")
         .text("Salary (in 10k $)");
 
-    var tooltip = d3.select("#scatterplot")
-        .append("div")
-        .attr("id", "tooltip_s")
-        .style("z-index", 1)
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("color", "white")
-        .style("background-color", "#373434")
-        .style("border", "1px solid #ddd")
-        .style("border-width", "1px")
-        .style("padding", "10px")
-        .style("font-family", "sans-serif");
-
     var clip = scatterplot.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -157,11 +157,13 @@ function render() {
         deAmplifyCircle(d.name);
         console.log("mouseleave tooltip")
         tooltip
+        .html("")
             .transition()
             .duration(0)
+            
             .style("opacity", 0)
-            //.style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-            //.style("top", 1000 + "px")
+            .style("left", 0 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", 0 + "px")
     }
 
     //changes circles when changing to PPG
@@ -179,7 +181,7 @@ function render() {
             console.log("isppmSTART");
             
             xaxis
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
             .attr("transform","translate(25," + (h-padding) + ")")
             .call(xPPG);
 
@@ -203,7 +205,7 @@ function render() {
             console.log("isppg START");
             
             xaxis
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
             .attr("transform","translate(25," + (h-padding) + ")")
             .call(xPPM);
 
@@ -266,7 +268,7 @@ function render() {
 
     function removeCircles(team) {
          svg_scatterplot.selectAll("circle." + team.replace(/[\s']+/g, ''))
-            .transition().duration(transitionDuration)
+            .transition().duration(fadingTransitionDuration)
                 .style("opacity", 0)
             .remove()
     }
@@ -307,7 +309,7 @@ function render() {
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
-            .transition().duration(transitionDuration).call( function(selection) {
+            .transition().duration(fadingTransitionDuration).call( function(selection) {
                 selection.style("opacity", 1);
             })
             
@@ -323,7 +325,7 @@ function render() {
             .data(data_scatter                
                 .filter(function(d){ return d.season == season_filter; })
                 .filter(function(d){ return d.team == teamFilters[i]; }))
-            .transition().duration(1000)
+            .transition().duration(transitionDuration)
             .attr("class", function(d) {
                     return tag + " " +
                      d.name.replace(/[\s']+/g, '');
@@ -355,7 +357,7 @@ function render() {
                 .filter(function(d){ return d.season == season_filter; })
                 .filter(function(d){ return d.team == teamFilters[i]; }))
             .exit()
-                .transition().duration(transitionDuration)
+                .transition().duration(fadingTransitionDuration)
                 .style("opacity", 0)
                 .remove()
         }
@@ -443,13 +445,13 @@ function render() {
          }
         // Update axis and circle position
         xaxis
-            .transition().duration(transitionDuration+100)
+            .transition().duration(transitionDuration)
             .attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisBottom(x)
                 .ticks(10, tickFormat));
 
         yaxis
-            .transition().duration(transitionDuration+100)
+            .transition().duration(transitionDuration)
             //.attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisLeft(hscale));
                 //.ticks(10, tickFormat));

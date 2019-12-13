@@ -106,9 +106,11 @@ function renderParallel() {
         .on("mouseover", mouseover )
         .on("mousemove", mousemove )
         .on("mouseleave", mouseleave )
-      .transition().duration(transitionDuration).call( function(selection) {
+      /*
+      .transition().duration(0).call( function(selection) {
           selection.style("opacity", 1);
-      })       
+      })      
+      */ 
       }
   }
 
@@ -126,6 +128,7 @@ function renderParallel() {
         return "parallelPath " + tag;
       })
       .attr("d",  path)
+      .style("opacity", 0)
       .style("fill", "none")
       .style("stroke-width", lineWidth + "px")
       .style("stroke", (d) => {
@@ -138,12 +141,15 @@ function renderParallel() {
       .on("mouseleave", () => {
         dispatch_map.call("deAmpTeam", this, team);
       })
+      .transition().duration(fadingTransitionDuration).call( function(selection) {
+        selection.style("opacity", 1);
+      })
 
   }
 
   function removeLine(team) {
     svg.selectAll("path.parallelPath." + team.replace(/[\s']+/g, ''))
-        .transition().duration(transitionDuration)
+        .transition().duration(fadingTransitionDuration)
         .style("opacity", 0)
     .remove()
   }
@@ -157,7 +163,7 @@ function renderParallel() {
         .data(data_parallel
           .filter(function(d){ return d.season == season_filter; })
           .filter(function(d){ return d.team == teamFilters[i]; })) 
-        //.transition().duration(transitionDuration)
+        .transition().duration(transitionDuration)
         .attr("d",  path);
 
     }
