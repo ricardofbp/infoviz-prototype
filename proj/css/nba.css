@@ -115,14 +115,12 @@ body:after {
 .dropdown_team {
   position: relative;
   display: inline;
-  margin-left: -350px;
   margin-right: 100px;
 }
 
 .dropdown_player {
   position: relative;
   display: inline;
-  margin-right: -350px;
   margin-left: 100px;
 }
 
