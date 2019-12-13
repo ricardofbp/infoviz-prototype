@@ -439,13 +439,13 @@ function render() {
          }
         // Update axis and circle position
         xaxis
-            .transition().duration(transitionDuration)
+            .transition().duration(transitionDuration+100)
             .attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisBottom(x)
                 .ticks(10, tickFormat));
 
         yaxis
-            .transition().duration(transitionDuration)
+            .transition().duration(transitionDuration+100)
             //.attr("transform","translate(0," + (h-padding) + ")")
             .call(d3.axisLeft(hscale));
                 //.ticks(10, tickFormat));

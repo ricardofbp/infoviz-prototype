@@ -426,6 +426,7 @@ function start_slider(){
   });
 
   slider.on('slideStop', function(value){
+      document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
       var new_val = document.getElementById("year").value;
       if(original_value != new_val){
         old_season_filter = season_filter;
@@ -484,6 +485,7 @@ function changeTeams(team) {
   dispatch_parallel.call("addTeam", this, team);
   return true;
 }
+
 function changeTeam(element){
   console.log()
 }

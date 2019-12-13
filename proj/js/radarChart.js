@@ -711,11 +711,17 @@ function gen_viz() {
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 			.style("fill", (d) => teamColor(team, 1))
 			.style("fill-opacity", 0.8)
-			.on('mouseover', showTooltip )
+			.on('mouseover', () => {
+				showTooltip();
+				dispatch_map.call("ampTeam", this, team);
+			})
 			.on('mousemove',  (d) => {
 				changeTooltipCircle(d, team); 
 			})
-			.on("mouseleave", closeTooltip);
+			.on("mouseleave", () => {
+				closeTooltip();
+				dispatch_map.call("deAmpTeam", this, team);
+			});
 	}
 
 	function changeRadar(option){ //only needed for teams? players dont "change" with transitions

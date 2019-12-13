@@ -39,11 +39,17 @@ Promise.all(promises).then(ready)
   dispatch_map.on("removeTeam", function(team) {
     console.log("[INFO] removeTeam map");
     removeLine(team); 
+    svg.select(".mark." + team.replace(/\s+/g, ''))
+      .transition().duration(transitionDuration- 100)
+      .style("outline",  "0px solid " + teamColor(team, 1));
   });
 
   dispatch_map.on("addTeam", function(team) {
     console.log("[INFO] addTeam map");
-    addLine(team);      
+    addLine(team);
+    svg.select(".mark." + team.replace(/\s+/g, ''))
+      .transition().duration(transitionDuration- 100)
+      .style("outline",  "2px solid " + teamColor(team, 1));      
   });
 
   dispatch_map.on("year", function() { 
@@ -52,11 +58,11 @@ Promise.all(promises).then(ready)
   });
 
   dispatch_map.on("ampTeam", function(team) {
-      amplifyCircle(team);
+      amplifyTeam(team);
   });
 
   dispatch_map.on("deAmpTeam", function(team) {
-      deAmplifyCircle(team);
+      deAmplifyTeam(team);
   })
 
   var transitionDuration = 200;
