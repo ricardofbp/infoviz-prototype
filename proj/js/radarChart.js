@@ -713,7 +713,7 @@ function gen_viz() {
 			.on('mouseover', () => {
 				showTooltip();
 				dispatch_map.call("ampTeam", this, team);
-				dispatch_parallel.call("ampTeam", this, team);
+				//dispatch_parallel.call("ampTeam", this, team);
 			})
 			.on('mousemove',  (d) => {
 				changeTooltipCircle(d, team); 
@@ -721,7 +721,7 @@ function gen_viz() {
 			.on("mouseleave", () => {
 				closeTooltip();
 				dispatch_map.call("deAmpTeam", this, team);
-				dispatch_parallel.call("deAmpTeam", this, team);
+				//dispatch_parallel.call("deAmpTeam", this, team);
 			});
 	}
 

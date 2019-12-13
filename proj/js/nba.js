@@ -345,6 +345,13 @@ function init() {
   start_slider();
 }
 
+function isTeamSelected(team) {
+  for (let i = 0; i < teamFilters.length; i++) {
+    if (team == teamFilters[i]) {return true;}
+  }
+  return false;
+}
+
 function teamColor(teamName, type) {
     for (let i = 0; i < teamColors.length; i++) {
         if (teamColors[i].team == teamName) { 
