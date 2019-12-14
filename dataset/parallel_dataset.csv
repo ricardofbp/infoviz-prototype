@@ -1,4 +1,4 @@
-rank,team,avg_age,win,loss,ORtg,DRtg,NRtg,pace,attend,attend/g,season,win%,eFG%
+Rank,team,Avg Age,Wins,Losses,ORtg,DRtg,NRtg,Pace,Attendance,attend/g,season,Win%,eFG%
 1,Los Angeles Lakers,29.2,67,15,107.3,98.2,9.1,93.3,771420,,2000,81.707,0.484
 2,Portland Trail Blazers,29.6,59,23,107.9,100.8,7.1,89.9,835078,,2000,71.951,0.501
 3,San Antonio Spurs,30.9,53,29,105,98.6,6.4,90.8,884450,,2000,64.634,0.488

@@ -34,10 +34,11 @@ body:after {
   text-align: center;
   background-color: #373434;
   color: white;
-  margin: 2px;
+  margin: 5px;
   padding: 10px;
   width: 50px;
   font-size: 10px;
+  transform: translate(-70pt, 120px);
   border: none;
   cursor: pointer;
   z-index: 0;

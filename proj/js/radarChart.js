@@ -509,6 +509,39 @@ function gen_viz() {
 		removeBlob(team);
 	});
 
+	dispatch_radar.on("ampTeam", function(team) {
+		ampTeam(team);
+	});
+
+	dispatch_radar.on("deAmpTeam", function(team) {
+		deAmpTeam(team);
+	});
+
+	function ampTeam(team) {
+		var tag = team.replace(/[\s']+/g, ''); 
+		g.selectAll(".radarStroke")
+   		.style("opacity", 0.3);
+
+   		g.selectAll(".radarStroke." + tag)
+   		.style("opacity", 1);
+
+   		g.selectAll(".radarCircle")
+   		.style("opacity", 0.3);
+
+   		g.selectAll(".radarCircle." + tag)
+   		.style("opacity", 1);
+
+	}
+
+	function deAmpTeam(team) {
+		var tag = team.replace(/[\s']+/g, ''); 
+		g.selectAll(".radarStroke")
+   		.style("opacity", 1);
+
+   		g.selectAll(".radarCircle")
+   		.style("opacity", 1);
+	}
+
 	function removeBlob(playerOrTeam) {
 		var tag = playerOrTeam.replace(/[\s']+/g, ''); 
 		console.log("[INFO] removeblob tag: " + tag);
@@ -516,7 +549,7 @@ function gen_viz() {
 			.remove()
 	}
 
-	function addPlayerBlob(player, playerTeam) { //BEWARE: DOES IT NEED TEAM IN CLASS?
+	function addPlayerBlob(player, playerTeam) {
 
 		findMinMax_players(data_radar.filter(function(d){ return d.Season == season_filter}));
 
@@ -560,43 +593,7 @@ function gen_viz() {
 
 		blob
 		.append("path")
-		/*
-		.attr("class", "radarArea " + tag)
-			.attr("d", d => radarLine(d.axes))
-			.style("fill", teamColor(playerTeam, 1))
-			.style("fill-opacity", 0.35) //opacity area
-			.on("click",  () => {
-				removeBlob(player);
-				changePlayers(player, playerTeam);
-				dispatch_scatter.call("deAmpPlayer", this, player);
-			})
-			.on('mouseover', function(d, i) {
-				//showTooltip(d, "player");
-				dispatch_scatter.call("ampPlayer", this, player);
-				//Dim all blobs
-				parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.1);
-				//Bring back the hovered over blob
-				d3.select(this)
-					.transition().duration(200)
-					.style("fill-opacity", 0.7);
-			})
-			.on('mousemove',  (d) => {
-				//changeTooltipBlob(d, player); 
-			})
-			.on('mouseleave', (d) => {
-				//Bring back all blobs
-				//closeTooltip(d);
-				dispatch_scatter.call("deAmpPlayer", this, player);
-				parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.35); //opacity area
-			})
-			.transition().duration(1000).call( function(selection) {
-                selection.style("opacity", 1);
-            })
-		*/
+
 		//Create the outlines
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)
@@ -658,38 +655,6 @@ function gen_viz() {
 			.enter().append("g")
 			.attr("class", "radarWrapper " + tag + " teamBlob")
 
-		/*
-		blob
-		.append("path")
-		.attr("class", "radarArea " + tag)
-			.attr("d", d => radarLine(d.axes))
-			.style("fill", (d,i) => teamColor(team, 1))
-			.style("fill-opacity", 0.35) //opacity area
-			.on('mouseover', function(d, i) {
-				//showTooltip(d, "team");
-				//Dim all blobs
-				parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.1);
-				//Bring back the hovered over blob
-				d3.select(this)
-					.transition().duration(200)
-					.style("fill-opacity", 0.7);
-			})
-			.on('mousemove',  (d) => {
-				//changeTooltipBlob(d, team); 
-			})
-			.on('mouseout', () => {
-				//Bring back all blobs
-				//closeTooltip();
-				parent.selectAll(".radarArea")
-					.transition().duration(200)
-					.style("fill-opacity", 0.35); //opacity area
-			})
-			.transition().duration(1000).call( function(selection) {
-                selection.style("opacity", 1);
-            })
-		*/
 		//Create the outlines
 		blob.append("path")
 			.attr("class", "radarStroke " + tag)

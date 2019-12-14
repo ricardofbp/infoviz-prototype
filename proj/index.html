@@ -79,13 +79,15 @@
             <div id = "map-title" class="titles">Team distribution and states where teams draft new players</div>
             <div id = "USMap"></div>
           </div>
-          <div id = "all_scatterplot">
+          <div id = "all_scatterplot" >
             <div id = "scatterplot-title" class="titles">Players Points Per Game or Minute vs their Salary</div>
-            <div id="scatterplot"></div>
-            <div style="display: inline-flex;">
-              <div class="scatter-btn" id="ppg"> PPG </div> 
-              <div class="scatter-btn" id="ppm"> PPM </div>
-            </div>
+              <div style="display: inline-flex;">
+                <div style="width: 0">
+                <div style = "flex-grow: 0;" class="scatter-btn" id="ppg"> PPG </div> 
+                <div style = "flex-grow: 0;" class="scatter-btn" id="ppm"> PPM </div>
+                </div>
+                <div id="scatterplot"></div>
+              </div>
           </div>
         </div>
         <div class = "bottom-container" style = "display: flex;">

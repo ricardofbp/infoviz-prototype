@@ -96,6 +96,16 @@ function render() {
         .attr("transform","translate(25," + (h-padding) + ")")
         .call(xPPG);
 
+    var xlabel = scatterplot.append("text")  
+        .attr("id", "xlabel")
+        .style("font-family", "sans-serif")
+        .style("font-size", "12px")
+        .attr("y", h  - 15)
+        .attr("x", w/2 + padding)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Points per game (PPG)");
+
     var yaxis = scatterplot.append("g")
         .attr("id", "yaxis")
        // .style("padding-left", "100px")

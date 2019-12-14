@@ -289,11 +289,17 @@ Promise.all(promises).then(ready)
       })
       .on("mouseover", (d) => {
         amplifyTeam(d.team);
-        if (isTeamSelected(d.team)) dispatch_parallel.call("ampTeam", this, d.team);
+        if (isTeamSelected(d.team)) {
+          dispatch_parallel.call("ampTeam", this, d.team);
+          dispatch_radar.call("ampTeam", this, d.team);
+        }
       })
       .on("mouseleave", (d) => {
         deAmplifyTeam(d.team);
-        if (isTeamSelected(d.team)) dispatch_parallel.call("deAmpTeam", this, d.team);
+        if (isTeamSelected(d.team)) {
+          dispatch_parallel.call("deAmpTeam", this, d.team);
+          dispatch_radar.call("deAmpTeam", this, d.team);
+        }
       })
 
   });
