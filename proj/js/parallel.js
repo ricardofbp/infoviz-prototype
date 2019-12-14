@@ -164,14 +164,21 @@ function renderParallel() {
         dispatch_map.call("ampTeam", this, team);
         svg.selectAll("path.parallelPath")
         ampLine(team);
+        mouseover();
       })
       .on("mouseleave", () => {
         dispatch_map.call("deAmpTeam", this, team);
-        deAmpLine(team)
+        deAmpLine(team);
+        mouseleave();
+      })
+      .on("mousemove", () => 
+      {
+        mousemove("line", team);
       })
       .transition().duration(fadingTransitionDuration).call( function(selection) {
         selection.style("opacity", 1);
-      })
+      });
+
 
   }
 
@@ -216,6 +223,18 @@ function renderParallel() {
       .attr("y", -9)
       .text(function(d) { return d; })
       .style("fill", "black")
+      .on("mouseover", () => 
+      {
+        mouseover();
+      })
+      .on("mousemove", (d) => 
+      {
+        mousemove("label", d);
+      })
+      .on("mouseleave", () => 
+      {
+        mouseleave();
+      })
 
   var tooltip = d3.select("#parallelcoords")
         .append("div")
@@ -230,30 +249,78 @@ function renderParallel() {
         .style("padding", "10px")
         .style("font-family", "sans-serif");
 
-  var mouseover = function(d) {
-        amplifyCircle(d.name);
+  var mouseover = function() {
         console.log("mouseover tooltip");
         tooltip
         .style("opacity", 1);
     }
 
-    var mousemove = function(d) {
-        tooltip
-        .html("<b> " + d.name + "<br></b>(From " + d.team + ")<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
-        .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.event.pageY - 110) + "px")
+    var mousemove = function(type, label) {
+      var tooltipText;
+      switch (label) {
+        case "Rank":
+          tooltipText = "Team ranking in regular season";
+          break;
+        case "Avg Age":
+          tooltipText = "Average age of players in team";
+          break;
+        case "Wins":
+          tooltipText = "Number of wins";
+          break;
+        case "Losses":
+          tooltipText = "Number of losses";
+          break;
+        case "ORtg":
+          tooltipText = "Offense rating, TODO";
+          break;
+        case "NRtg":
+          tooltipText = "Offense rating, TODO";
+          break;
+        case "ORtg":
+          tooltipText = "TODO";
+          break;
+        case "DRtg":
+          tooltipText = "TODO";
+          break;
+        case "Pace":
+          tooltipText = "TODO";
+          break;
+        case "Attendance":
+          tooltipText = "Total public attendance in team games";
+          break;
+        case "Win%":
+          tooltipText = "Win-rate";
+          break;
+        case "eFG%":
+          tooltipText = "TODO";
+          break;
+        default:
+          tooltipText = "";
+          break;
+      }
+        if (type == "label"){
+          console.log("PARALLEL TOOOOOOOOOOOOOOOOOOOOOLTIP");
+          console.log(tooltipText);
+          tooltip
+          .html(tooltipText)
+          .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+          .style("top", (d3.event.pageY - 50) + "px")
+        }
+        else if (type == "line"){
+          tooltip
+          .html("<b>" + label + "</b>")
+          .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+          .style("top", (d3.event.pageY - 50) + "px")
+        }
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
     var mouseleave = function(d) {
-        
-        deAmplifyCircle(d.name);
         console.log("mouseleave tooltip")
         tooltip
-            .transition()
-            .duration(0)
+        .html("")
             .style("opacity", 0)
-            .style("left", 1000 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-            .style("top", 1000 + "px")
+            .style("left", 0 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", 0 + "px")
     }
 }
