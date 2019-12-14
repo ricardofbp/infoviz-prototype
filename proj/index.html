@@ -21,7 +21,7 @@
 
     <h1 id= "header">NBA Teams and Players Statistics</h1>
     <div id = "dashboard" >
-      <div id ="selectors">
+      <div id ="selectors" style=" flex-flow: row wrap;">
         <div class="dropdown_team">
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
@@ -73,14 +73,16 @@
             </div>
           </div>-->
       </div>
-      <div class = "idioms" style=" flex-flow: row wrap;">
+      <div class = "idioms" style=" flex-flow: row wrap; flex-direction: column;">
         <div class = "top-container" style = "display: inline-flex;">
           <div id = "all_map">
             <div id = "map-title" class="titles">Team distribution and states where teams drafted new players</div>
             <div id = "USMap"></div>
           </div>
           <div id = "all_scatterplot" >
-            <div id = "scatterplot-title" class="titles">Players Points Per Game or Minute vs Annual Salary</div>
+            <div id = "scatterplot-title" class="titles">Players Points Per Game or Minute vs Annual Salary
+              <div class="sub-titles">(cick-n-drag to zoom, double click to reset)</div>
+            </div>
               <div style="display: inline-flex;">
                 <div style="width: 0">
                 <div style = "flex-grow: 0;" class="scatter-btn" id="ppg"> PPG </div> 
@@ -90,7 +92,7 @@
               </div>
           </div>
         </div>
-        <div class = "bottom-container" style = "display: flex;">
+        <div class = "bottom-container" style = "display: inline-flex;">
           <div id = "all_parallelcoords">
             <div id= "parallelcoords-title" class="titles">Team statistics</div>
             <div id = "parallelcoords"></div>

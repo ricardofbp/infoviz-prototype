@@ -126,7 +126,7 @@ function render() {
     var clip = scatterplot.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
-        .attr("width", w * 3)
+        .attr("width", w)
         .attr("height", h-padding )
         .attr("x", padding+20)
         .attr("y", +5);

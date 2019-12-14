@@ -184,14 +184,17 @@ body:after {
 .idioms{
 
   margin: 20 10 10 10;
-  position: absolute;
-  left: 50%;
-  transform: translate(-60%,0);
+
 }
 
 .titles{
   text-align: center;
   font-size: 20px;
+}
+
+.sub-titles{
+  text-align: center;
+  font-size: 12px;
 }
 
 #bottom-container {
@@ -205,23 +208,24 @@ body:after {
 }
 
 #all_radar{
-  margin-left: 5%;
+  margin-left: 0%;
   font-family: inherit;
   text-align: center;
 }
 
 #all_scatterplot {
-  margin-left: 5%
+  margin-left: 0%;
   text-align: center;
   font-family: inherit;
 }
 
 #all_map {
-  margin-right: 10%;
+  margin-right: 0%;
 }
 
 #all_parallelcoords {
   margin-right: 8%;
+  margin-left: -10%
 }
 
 
