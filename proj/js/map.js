@@ -276,6 +276,10 @@ Promise.all(promises).then(ready)
         return "translate(" + projection([d.long, d.lat]) + ")";
       })
       .on("click", (d) => {
+        console.log("MOSE UPPPPPPPPPPPPPPPPPPPPPPP");
+          dispatch_parallel.call("deAmpTeam", this, d.team);
+          dispatch_radar.call("deAmpTeam", this, d.team);
+          dispatch_scatter.call("deAmpTeam", this, d.team);
         if (changeTeams(d.team)) {
           svg.select(".mark." + d.team.replace(/\s+/g, ''))
             //.transition().duration(transitionDuration- 100)
@@ -303,6 +307,7 @@ Promise.all(promises).then(ready)
           dispatch_scatter.call("deAmpTeam", this, d.team);
         }
       })
+
 
   });
 
