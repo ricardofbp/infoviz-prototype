@@ -38,7 +38,7 @@ body:after {
   padding: 10px;
   width: 50px;
   font-size: 10px;
-  transform: translate(-70pt, 120px);
+  transform: translate(-50pt, 120px);
   border: none;
   cursor: pointer;
   z-index: 0;
@@ -184,10 +184,9 @@ body:after {
 .idioms{
 
   margin: 20 10 10 10;
-  display: flex;
-    /* flex-direction: column;*/
-    align-items: center;
-    /* justify-content: center;*/
+  position: absolute;
+  left: 50%;
+  transform: translate(-60%,0);
 }
 
 .titles{
@@ -206,15 +205,25 @@ body:after {
 }
 
 #all_radar{
-  margin-left: 10%;
+  margin-left: 5%;
   font-family: inherit;
   text-align: center;
 }
 
 #all_scatterplot {
+  margin-left: 5%
   text-align: center;
   font-family: inherit;
 }
+
+#all_map {
+  margin-right: 10%;
+}
+
+#all_parallelcoords {
+  margin-right: 8%;
+}
+
 
 #header {
   font-size: 25px;
