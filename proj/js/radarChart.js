@@ -260,22 +260,6 @@ function gen_viz() {
 	    //.style("top", 1000 + "px")	
 	    .style("z-index", -1);
 	}
-	/*
-	var changeTooltipBlob = function(d, name) {
-		var name;
-
-		tooltip
-		.style("z-index", 1)
-		.html("<b>" + name + "</b>")
-		.style("position", "relative")
-		.style("width", "180px")
-			.style("left", (d3.mouse[this][0]) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        .style("top", (d3.mouse[this][1]) + "px")
-	        //.style("left", (d3.event.pageX - 350*2.2) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        //.style("top", (d3.event.pageY - 500*1.7) + "px")
-		.style("font-family", "sans-serif");
-	}
-	*/
 
 	var changeTooltipCircle = function(d, name){
 		var v;

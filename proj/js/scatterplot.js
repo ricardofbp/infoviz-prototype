@@ -264,7 +264,7 @@ function render() {
     //                    FUNCTIONS                       //
     ////////////////////////////////////////////////////////
 
-    var transitionDuration = 500;
+    var transitionDuration = 800;
 
     function amplifyCircle(player) {
         console.log("[INFO] Amping player " + player);
