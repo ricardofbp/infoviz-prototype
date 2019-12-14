@@ -65,14 +65,6 @@ function renderParallel() {
   }
 
 
-  dispatch_parallel.on("ampTeam", function(team) {
-    ampLine(team);
-  });
-
-  dispatch_parallel.on("deAmpTeam", function(team) {
-    deAmpLine(team);
-  });
-
   dispatch_parallel.on("year", function() {
     updateLines();
   });
@@ -84,6 +76,16 @@ function renderParallel() {
 
   dispatch_parallel.on("removeTeam", function(team) {
     removeLine(team);
+  });
+
+  dispatch_parallel.on("ampTeam", function(team) {
+    console.log("AMP LINE PARALLEL");
+    ampLine(team);
+  });
+
+  dispatch_parallel.on("deAmpTeam", function(team) {
+    console.log("DEAMP LINE PARALLEL");
+    deAmpLine(team);
   });
 
   var transitionDuration = 800;

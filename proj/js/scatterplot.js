@@ -259,12 +259,33 @@ function render() {
         deAmplifyCircle(player);
     })
 
+    dispatch_scatter.on("ampTeam", function(team) {
+        ampTeam(team);
+    });
+
+    dispatch_scatter.on("deAmpTeam", function(team) {
+        deAmpTeam(team);
+    });
 
     ////////////////////////////////////////////////////////
     //                    FUNCTIONS                       //
     ////////////////////////////////////////////////////////
 
     var transitionDuration = 800;
+
+    function ampTeam(team) {
+        var tag = team.replace(/[\s']+/g, ''); 
+        svg_scatterplot.selectAll("circle")
+        .style("opacity", 0.3);
+
+        svg_scatterplot.selectAll("circle." + tag)
+        .style("opacity", 1);
+    }
+
+    function deAmpTeam(team) {
+        svg_scatterplot.selectAll("circle")
+        .style("opacity", 1);
+    }
 
     function amplifyCircle(player) {
         console.log("[INFO] Amping player " + player);

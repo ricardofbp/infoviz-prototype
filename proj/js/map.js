@@ -292,6 +292,7 @@ Promise.all(promises).then(ready)
         if (isTeamSelected(d.team)) {
           dispatch_parallel.call("ampTeam", this, d.team);
           dispatch_radar.call("ampTeam", this, d.team);
+          dispatch_scatter.call("ampTeam", this, d.team);
         }
       })
       .on("mouseleave", (d) => {
@@ -299,6 +300,7 @@ Promise.all(promises).then(ready)
         if (isTeamSelected(d.team)) {
           dispatch_parallel.call("deAmpTeam", this, d.team);
           dispatch_radar.call("deAmpTeam", this, d.team);
+          dispatch_scatter.call("deAmpTeam", this, d.team);
         }
       })
 

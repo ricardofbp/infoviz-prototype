@@ -33,7 +33,7 @@ var teamColors =
   {team: "San Antonio Spurs", color1: "#c4ced4", color2: "#000000", lat: 32.000000, long: -96.000000},
   {team: "Toronto Raptors", color1: "#ce1141", color2: "#000000", lat: 43.651070, long: -80.347015},
   {team: "Utah Jazz", color1: "#002B5C", color2: "#00471B", lat: 39.419220, long: -111.950684},
-  {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837", lat: 47.751076, long: -120.740135}
+  {team: "Washington Wizards", color1: "#002B5C", color2: "#e31837", lat: 38.89511, long: -77.03637}
 ];
 
 var colorScale =
@@ -328,7 +328,7 @@ var playerFilters = [];
 var season_filter = 2000;
 var old_season_filter;
 
-var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer");   //two functions can be called when dispatch is called
+var dispatch_scatter = d3.dispatch("year", "removeTeam", "addTeam", "ampPlayer", "deAmpPlayer", "ampTeam", "deAmpTeam");
 var dispatch_radar = d3.dispatch("year", "removeTeam", "addTeam", "addPlayer", "removePlayer", "ampTeam", "deAmpTeam");
 var dispatch_parallel = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
 var dispatch_map = d3.dispatch("year", "addTeam", "removeTeam", "ampTeam", "deAmpTeam");
@@ -524,7 +524,7 @@ function updatePlayerDropdown(){
       element.appendChild(linkTest);
       //element.id = "p-" + new_data_aux[i].Team;
       element.href = "#" + playerName;
-      console.log("DROPDOWN PLAYER: " + playerName + " " + team);
+      //console.log("DROPDOWN PLAYER: " + playerName + " " + team);
       element.onclick = function(){
         changePlayers(this.innerText, this.className);
       };
