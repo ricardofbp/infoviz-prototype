@@ -104,7 +104,7 @@ function render() {
         .attr("x", w/2 + padding)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Points per game (PPG)");
+        .text("Points per Game (PPG)");
 
     var yaxis = scatterplot.append("g")
         .attr("id", "yaxis")
@@ -182,6 +182,9 @@ function render() {
             isPPG = true; 
             resetAxis();
 
+            d3.select("#xlabel")
+                .text("Points per Game (PPG)");
+
             d3.select("#ppg")
                 .style("background-color", "gray");
 
@@ -205,6 +208,9 @@ function render() {
         .on("click", function() { 
             isPPG = false;
             resetAxis();
+
+            d3.select("#xlabel")
+                .text("Points per Minute (PPM)");
 
             d3.select("#ppm")
             .style("background-color", "gray");
