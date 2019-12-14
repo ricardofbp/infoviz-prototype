@@ -34,7 +34,7 @@ function render() {
         }
       }
 
-      var tooltip = d3.select("#scatterplot")
+      var tooltip = d3.select("body")
         .append("div")
         .attr("id", "tooltip_s")
         .style("z-index", 1)
@@ -126,7 +126,7 @@ function render() {
     var clip = scatterplot.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
-        .attr("width", w )
+        .attr("width", w * 3)
         .attr("height", h-padding )
         .attr("x", padding+20)
         .attr("y", +5);
@@ -159,7 +159,7 @@ function render() {
         tooltip
         .html("<b> " + d.name + "<br></b>(From " + d.team + ")<br><b>PPG</b>: " + d.ppg + "<br><b>PPM:</b> " + d.ppm + "<br><b>Salary:</b> $" + d.salary)
         .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-        .style("top", (d3.event.pageY - 110) + "px")
+        .style("top", (d3.event.pageY - 120) + "px")
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again

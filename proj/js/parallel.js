@@ -26,7 +26,7 @@ function renderParallel() {
   var y = {}
   for (i in dimensions) {
     name = dimensions[i];
-    if (name == "rank") {
+    if (name == "Rank") {
       y[name] = d3.scaleLinear()
         .domain( d3.extent(data_parallel, function(d) { return +d[name]; }) )
         .range([padding, height-padding])

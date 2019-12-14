@@ -17,7 +17,7 @@ function renderMap() {
   var logoWidth = 30;
   var logoHeight = 30;
 
-  var tooltip = d3.select("#USMap")
+  var tooltip = d3.select("body")
       .append("div")
       .attr("id", "tooltip_r")
       .style("z-index", 1)

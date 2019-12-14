@@ -297,8 +297,8 @@ function gen_viz() {
 		.html("<b>" + name + "</b><br><br><b>" + d.axis + ":</b> " + v + "<br><b>Year Minimum:</b> " + eval("min" + d.axis).toFixed(decimals) + "<br><b>Year Maximum:</b> " + eval("max" + d.axis).toFixed(decimals))
 		.style("position", "relative")
 		.style("width", "180px")
-	        .style("left", (d3.event.pageX - (w + margin.left)*3.15) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-	        .style("top", (d3.event.pageY - (h + margin.top)*3.6) + "px")
+	        .style("left", d3.event.pageX + 10 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+	        .style("top", d3.event.pageY  - 790 + "px")
 		.style("font-family", "sans-serif");
 	}
 	////////////////////////////////////////////////////////
@@ -409,17 +409,18 @@ function gen_viz() {
 		.call(wrap, 70);
 
 	//tooltip related
-	tooltip = d3.select("#radarChart")
+	tooltip = d3.select("body")
 		.append("div")
-		.attr("id", "tooltip_r")
-		//.style("z-index", 2)
-		.style("opacity", 0)
-		.attr("class", "tooltip")
-		.style("color", "white")
-		.style("background-color", "#373434")
-		.style("border", "1px solid #ddd")
-		.style("border-width", "1px")
-		.style("padding", "10px");
+        .attr("id", "tooltip_r")
+        .style("z-index", 1)
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("color", "white")
+        .style("background-color", "#373434")
+        .style("border", "1px solid #ddd")
+        .style("border-width", "1px")
+        .style("padding", "10px")
+        .style("font-family", "sans-serif");
 
 	/////////////////////////////////////////////////////////
 	///////////// Draw the radar chart blobs ////////////////
@@ -455,13 +456,20 @@ function gen_viz() {
 
 	dispatch_radar.on("removePlayer", function(player, team) {
 		console.log("[INFO] dispatch removePlayer radar");
+
 		removeBlob(player + ".playerBlob." + team);
+		if (playerFilters.length == 0) { 
+			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter})); 
+			changeScale();
+			document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
+			isShowingTeam = true 
+			showTeamBlobs();
+		}
 	});
 
 	dispatch_radar.on("year", function(){
 		isShowingTeam = true;
 		console.log("[INFO] dispatch year " + season_filter + " radar");
-		isShowingTeam = true;
 
 		showTeamBlobs();
 
@@ -474,17 +482,7 @@ function gen_viz() {
 	});
 
 	dispatch_radar.on("addTeam", function(team) {
-		isShowingTeam = true;
-		console.log("[INFO] dispatch addTeam radar");
-
-		showTeamBlobs();
-
-		for (let i = 0; i < playerFilters.length; i++) {
-			removeBlob(playerFilters[i]);	
-		}
-
-		playerFilters = [];
-		addBlob(team, null, null);
+		if (isShowingTeam) { addBlob(team, null, null); }
 	});
 
 	dispatch_radar.on("removeTeam", function(team) {
@@ -526,8 +524,36 @@ function gen_viz() {
    		.style("opacity", 1);
 	}
 
+	function changeScale() {
+		SalaryScale = d3.scaleLinear()
+		.range([0, radius])
+		.domain([minSalary, maxSalary]);
+
+		//Scale for height
+		HeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minHeight, maxHeight]);
+
+		//Scale for weight
+		WeightScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minWeight, maxWeight]);
+
+		//Scale for the PPM
+		PPMScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPM, maxPPM]);
+
+		//Scale for PPG
+		PPGScale = d3.scaleLinear()
+			.range([0, radius])
+			.domain([minPPG, maxPPG]);
+	}
+
 	function removeBlob(playerOrTeam) {
 		var tag = playerOrTeam.replace(/[\s']+/g, ''); 
+		console.log("REMOVE BLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOB PLAYEEEER");
+		console.log(g.select(".radarWrapper." + tag) )
 		console.log("[INFO] removeblob tag: " + tag);
 		g.select(".radarWrapper." + tag)
 			.remove()
@@ -587,7 +613,7 @@ function gen_viz() {
 			.style("fill", "none")
 			//.style("filter" , "url(#glow)")
 			.on("click",  () => {
-				removeBlob(player);
+				changePlayers(player, playerTeam);
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', () => {
@@ -611,9 +637,10 @@ function gen_viz() {
 			.attr("cy", (d,i) => eval(allAxis[i] + "Scale")(d.value) * sin(angleSlice * i - HALF_PI))
 			.style("fill", (d) => teamColor(playerTeam, 1))
 			.style("fill-opacity", 0.8)
-			.on("click",  () => {
-				removeBlob(player);
-				changePlayers(player);
+			.on("click",  (d) => {
+				//removeBlob(player);
+				changePlayers(player, playerTeam);
+				closeTooltip(d);
 				dispatch_scatter.call("deAmpPlayer", this, player);
 			})
 			.on('mouseover', (d) => {
@@ -678,17 +705,20 @@ function gen_viz() {
 		console.log("[INFO] Update radar");
 		var filter;
 		if (option == "team") {
-
+/*
 			new_data_aux = transformData(data_radar
 				.filter(function(d){ return d.Season == season_filter;})
 				.filter(function(d){ return d.Team == teamFilters[0];}));
+				*/
 
-			findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
+			//findMinMax(data_radar.filter(function(d){ return d.Season == season_filter}));  //update the values for max/min
 		}
 	
 		//////////////////////////////////////////////////////////////
 		///////////////////// Update the Axis ////////////////////////
 		//////////////////////////////////////////////////////////////
+
+		findMinMax(data_radar.filter(function(d){ return d.Season == season_filter})); 
 
 		SalaryScale = d3.scaleLinear()
 		.range([0, radius])

@@ -458,8 +458,8 @@ function changePlayers(playerName, playerTeam) {
   for (let i = 0; i < playerFilters.length; i++) {
     if (playerFilters[i] == playerName) {
       console.log("[INFO] changePlayers removing" + playerName + " " + playerTeam);
-      dispatch_radar.call("removePlayer", this, playerFilters[i], playerTeam);
       playerFilters.splice(i,1);
+      dispatch_radar.call("removePlayer", this, playerName, playerTeam);
       //TODO change dropdown
       return;
     }
