@@ -270,7 +270,7 @@ Promise.all(promises).then(ready)
       .attr('width', logoWidth)
       .attr('height', logoHeight)
       .attr("xlink:href", (d) => {
-        return "logos/" + d.team.replace(/\s+/g, '') + ".png";
+        return "../assets/logos/" + d.team.replace(/\s+/g, '') + ".png";
       })
       .attr("transform", (d) => {
         return "translate(" + projection([d.long, d.lat]) + ")";

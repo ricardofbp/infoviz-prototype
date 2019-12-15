@@ -257,7 +257,7 @@
   top: 0;
   width: 20px;
   height: 20px;
-  background-image: url('../basketball.png');
+  background-image: url('../assets/basketball.png');
   background-size: contain;
   /*
   background-image: -webkit-linear-gradient(top, #337ab7 0%, #2e6da4 100%);
