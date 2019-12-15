@@ -18,10 +18,10 @@
    <script type = "text/javascript" src = "js/jquery.min.js"></script>
    <script type = "text/javascript" src = "js/bootstrap-slider.js"></script>
   </head>
-
+  <body>
     <h1 id= "header">NBA Teams and Players Statistics</h1>
     <div id = "dashboard" >
-      <div id ="selectors" style=" flex-flow: row wrap;">
+      <div id ="selectors">
         <div class="dropdown_team">
             <button onclick="team_dropdown()" class="dropbtn_team">Select a team</button>
             <div id="team_dropdown" class="dropdown-content-team">
@@ -65,7 +65,6 @@
               <input type="text" placeholder="Search.." id = "playerInput1" class="playerInput" onkeyup="filterFunction_player()">
             </div>
           </div>
-          <div id = "player_buttons" style="position: absolute;">
           <!--<div class="dropdown">
             <button onclick="player2_dropdown()" class="dropbtn_player1">Select a player</button>
             <div id="player1_dropdown" class="dropdown-content-player">
@@ -74,7 +73,7 @@
           </div>-->
       </div>
       <div class = "idioms" style=" flex-flow: row wrap; flex-direction: column;">
-        <div class = "top-container" style = "display: inline-flex;">
+        <div class = "top-container" style = "display: flex; align-content: center; justify-content: center; margin-left: -100px;">
           <div id = "all_map">
             <div id = "map-title" class="titles">Team Distribution and States Where Teams Drafted New Players</div>
             <div id = "USMap"></div>
@@ -92,7 +91,7 @@
               </div>
           </div>
         </div>
-        <div class = "bottom-container" style = "display: inline-flex;">
+        <div class = "bottom-container" style = "display: flex; align-items: center; align-content: center; justify-content: center;">
           <div id = "all_parallelcoords">
             <div id= "parallelcoords-title" class="titles">Team Statistics</div>
             <div id = "parallelcoords"></div>
