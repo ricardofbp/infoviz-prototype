@@ -474,7 +474,7 @@ function changePlayers(playerName, playerTeam) {
 function changeTeams(team) {
   for (let i = 0; i < teamFilters.length; i++) {
     //console.log("[INFO] changeTeam for " + i);
-    document.getElementById("radarchart-title").innerText = "Teams Average Attributes";
+    
     if (teamFilters[i] == team) { //clicked team is selected
       dispatch_radar.call("removeTeam", this, teamFilters[i]);
       dispatch_scatter.call("removeTeam", this, teamFilters[i]);

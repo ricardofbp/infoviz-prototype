@@ -482,7 +482,8 @@ function gen_viz() {
 	});
 
 	dispatch_radar.on("addTeam", function(team) {
-		if (isShowingTeam) { addBlob(team, null, null); }
+		if (isShowingTeam) { addBlob(team, 1); }
+		else { addBlob(team, 0); }
 	});
 
 	dispatch_radar.on("removeTeam", function(team) {
@@ -656,7 +657,7 @@ function gen_viz() {
 			});
 	}
 	
-	function addBlob(team) {
+	function addBlob(team, opacity) {
 		var tag = team.replace(/\s+/g, ''); 
 
 		var blob = g.selectAll("radarWrapper." + tag + ".teamBlob")
@@ -665,6 +666,7 @@ function gen_viz() {
 				.filter(function(d){ return d.Team == team;})))
 			.enter().append("g")
 			.attr("class", "radarWrapper " + tag + " teamBlob")
+			.style("opacity", opacity)
 
 		//Create the outlines
 		blob.append("path")
