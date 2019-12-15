@@ -64,28 +64,48 @@ function renderParallel() {
         .style("opacity", 1);
   }
 
+  function ampCircle(team) {
+    var tag = team.replace(/[\s']+/g, ''); 
+    svg.selectAll("circle.parallelCircle")
+    .style("opacity", 0.3);
+
+    for (let i = 0; i < dimensions.length; i++){ 
+      svg.selectAll("circle.parallelCircle." + tag +i)
+        .style("opacity", 1);
+    }
+  }
+
+  function deAmpCircle(team) {
+    svg.selectAll("circle.parallelCircle")
+        .style("opacity", 1);
+  }
+
 
   dispatch_parallel.on("year", function() {
     updateLines();
+    updateCircles();
   });
 
   dispatch_parallel.on("addTeam", function(team) {
     addLine(team);
-    //addCircles(team);
+    addCircles(team);
   });
 
   dispatch_parallel.on("removeTeam", function(team) {
     removeLine(team);
+    removeCircles(team);
   });
 
   dispatch_parallel.on("ampTeam", function(team) {
     console.log("AMP LINE PARALLEL");
     ampLine(team);
+    ampCircle(team);
   });
 
   dispatch_parallel.on("deAmpTeam", function(team) {
     console.log("DEAMP LINE PARALLEL");
     deAmpLine(team);
+    deAmpCircle(team);
   });
 
   var transitionDuration = 800;
@@ -98,14 +118,19 @@ function renderParallel() {
     var tag = team.replace(/[\s']+/g, ''); 
 
     for (let i = 0; i < dimensions.length; i ++) {
-    svg_scatterplot.selectAll("circle." + "parallel" + tag)
-      .data(data_scatter                
+      console.log(dimensions)
+      console.log("ADD CIRCLES PARALLELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ");
+
+      var circle = svg.selectAll("circle.parallelCircle." + tag + i);
+
+      circle
+      .data(data_parallel                
         .filter(function(d){ return d.season == season_filter; })
         .filter(function(d){ return d.team == team; }))
       .enter().append("circle")
-        .style("opacity", 0)
+        .style("opacity", 1)
         .attr("class", function(d) {
-            return "parallel " + tag;;
+            return "parallelCircle " + tag + i;
         })
         .attr("r", r)
         .attr("fill", function(d){
@@ -117,6 +142,7 @@ function renderParallel() {
         .attr("stroke-width", borderWidth)
         .attr("cx", function(d){
           //if (d.ppg == 0) {return padding+25;}
+          console.log(d);
           console.log("t: " + x(dimensions[i]) );
           return x(dimensions[i]);
           //return x(10);
@@ -125,17 +151,34 @@ function renderParallel() {
           console.log("T: " + y[dimensions[i]](d[dimensions[i]]) );
             return y[dimensions[i]](d[dimensions[i]]);
         })
-        .on("click", function(d) {
-            changePlayers(d.name, d.team);
-        })
-        .on("mouseover", mouseover )
-        .on("mousemove", mousemove )
-        .on("mouseleave", mouseleave )
-      /*
-      .transition().duration(0).call( function(selection) {
-          selection.style("opacity", 1);
-      })      
-      */ 
+      .on("mouseover", () => {
+        dispatch_map.call("ampTeam", this, team);
+        ampLine(team);
+        ampCircle(team);
+        mouseover();
+      })
+      .on("mouseleave", () => {
+        dispatch_map.call("deAmpTeam", this, team);
+        deAmpLine(team);
+        deAmpCircle(team);
+        mouseleave();
+      })
+      .on("mousemove", (d) => 
+      {
+        mousemove("circle", dimensions[i], d);
+      })
+      }
+  }
+
+  function removeCircles(team) {
+    //appends the circles
+    var tag = team.replace(/[\s']+/g, ''); 
+
+    for (let i = 0; i < dimensions.length; i ++) {
+      svg.selectAll("circle.parallelCircle." + team.replace(/[\s']+/g, '') + i)
+        .transition().duration(fadingTransitionDuration)
+        .style("opacity", 0)
+    .remove()
       }
   }
 
@@ -162,18 +205,20 @@ function renderParallel() {
       .style("opacity", 1)
       .on("mouseover", () => {
         dispatch_map.call("ampTeam", this, team);
-        svg.selectAll("path.parallelPath")
+        svg.selectAll("circle.parallel")
         ampLine(team);
+        ampCircle(team);
         mouseover();
       })
       .on("mouseleave", () => {
         dispatch_map.call("deAmpTeam", this, team);
         deAmpLine(team);
+        deAmpCircle(team);
         mouseleave();
       })
       .on("mousemove", () => 
       {
-        mousemove("line", team);
+        mousemove("line", null, team);
       })
       .transition().duration(fadingTransitionDuration).call( function(selection) {
         selection.style("opacity", 1);
@@ -203,6 +248,39 @@ function renderParallel() {
 
     }
   }
+
+  function updateCircles() {
+    //appends the circles
+
+    for (let j = 0; j < teamFilters.length; j++) {
+      var tag = teamFilters[j].replace(/[\s']+/g, ''); 
+      for (let i = 0; i < dimensions.length; i++) {
+      console.log("WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tag + i);
+      console.log(svg.selectAll(".parallelCircle." + tag ));
+        var circles = svg.selectAll("circle.parallelCircle." + tag + i);
+
+        circles
+        .data(data_parallel                
+          .filter(function(d){ return d.season == season_filter; })
+          .filter(function(d){ return d.team == teamFilters[j]; }))
+        .transition().duration(transitionDuration)
+          .attr("class", function(d) {
+              return "parallelCircle " + tag + i;
+          })
+          .attr("cx", function(d){
+            //if (d.ppg == 0) {return padding+25;}
+            console.log(d);
+            console.log("t: " + x(dimensions[i]) );
+            return x(dimensions[i]);
+            //return x(10);
+          })
+          .attr("cy", function(d) {
+            console.log("T: " + y[dimensions[i]](d[dimensions[i]]) );
+              return y[dimensions[i]](d[dimensions[i]]);
+          })
+        }
+      }
+  }
   
   // Draw the lines
   
@@ -229,12 +307,12 @@ function renderParallel() {
       })
       .on("mousemove", (d) => 
       {
-        mousemove("label", d);
+        mousemove("label", d, null);
       })
       .on("mouseleave", () => 
       {
         mouseleave();
-      })
+      });
 
   var tooltip = d3.select("#parallelcoords")
         .append("div")
@@ -255,7 +333,7 @@ function renderParallel() {
         .style("opacity", 1);
     }
 
-    var mousemove = function(type, label) {
+    var mousemove = function(type, label, data) {
       var tooltipText;
       switch (label) {
         case "Rank":
@@ -308,7 +386,13 @@ function renderParallel() {
         }
         else if (type == "line"){
           tooltip
-          .html("<b>" + label + "</b>")
+          .html("<b>" + data + "</b>")
+          .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+          .style("top", (d3.event.pageY - 50) + "px")
+        }
+        else if (type == "circle"){
+          tooltip
+          .html("<b>" + data.team + "</b>" + "<br><b>" + label + ": </b>" + data[label])
           .style("left", (d3.event.pageX + 10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
           .style("top", (d3.event.pageY - 50) + "px")
         }

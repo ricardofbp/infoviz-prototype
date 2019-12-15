@@ -168,9 +168,6 @@ function render() {
         console.log("mouseleave tooltip")
         tooltip
         .html("")
-            .transition()
-            .duration(0)
-            
             .style("opacity", 0)
             .style("left", 0 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", 0 + "px")
