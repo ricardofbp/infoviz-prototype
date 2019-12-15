@@ -183,10 +183,10 @@ Promise.all(promises).then(ready)
   function amplifyTeam(team) {
     svg.select(".mark." + team.replace(/\s+/g, ''))
       .transition().duration(transitionDuration)
-      .attr("x", -(logoWidth + 24)/2)
-      .attr("y", -(logoHeight + 24)/2)
-      .attr('width', logoWidth + 24)
-      .attr('height', logoHeight + 24);
+      .attr("x", -(logoWidth + 26)/2)
+      .attr("y", -(logoHeight + 26)/2)
+      .attr('width', logoWidth + 26)
+      .attr('height', logoHeight + 26);
   }
 
   function deAmplifyTeam(team) {
@@ -276,7 +276,6 @@ Promise.all(promises).then(ready)
         return "translate(" + projection([d.long, d.lat]) + ")";
       })
       .on("click", (d) => {
-        console.log("MOSE UPPPPPPPPPPPPPPPPPPPPPPP");
           dispatch_parallel.call("deAmpTeam", this, d.team);
           dispatch_radar.call("deAmpTeam", this, d.team);
           dispatch_scatter.call("deAmpTeam", this, d.team);
