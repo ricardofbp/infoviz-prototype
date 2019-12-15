@@ -349,19 +349,16 @@ function renderParallel() {
           tooltipText = "Number of losses";
           break;
         case "ORtg":
-          tooltipText = "Offense rating, TODO";
-          break;
-        case "NRtg":
-          tooltipText = "Offense rating, TODO";
-          break;
-        case "ORtg":
-          tooltipText = "TODO";
+          tooltipText = "Offense rating, efficiency of producing points";
           break;
         case "DRtg":
-          tooltipText = "TODO";
+          tooltipText = "Defense rating, points allowed per 100 possessions";
+          break;
+        case "NRtg":
+          tooltipText = "Team rating coefficient";
           break;
         case "Pace":
-          tooltipText = "TODO";
+          tooltipText = "Number of possessions per game";
           break;
         case "Attendance":
           tooltipText = "Total public attendance in team games";
@@ -370,7 +367,7 @@ function renderParallel() {
           tooltipText = "Win-rate";
           break;
         case "eFG%":
-          tooltipText = "TODO";
+          tooltipText = "Effective field goal";
           break;
         default:
           tooltipText = "";
